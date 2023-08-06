@@ -10,7 +10,7 @@ import { Choice } from '../../choices/entities/choice.entity';
 import { Media } from '../../medias/entities/media.entity';
 import { Image } from '../../images/entities/image.entity';
 
-@Entity('question')
+@Entity()
 export class Question {
   @PrimaryGeneratedColumn()
   id: number;

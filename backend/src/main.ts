@@ -3,10 +3,6 @@ import { AppModule } from './app.module';
 import * as bodyParser from 'body-parser';
 import { ValidationPipe } from '@nestjs/common';
 
-import * as dotenv from 'dotenv';
-dotenv.config();
-
-console.log(process.env.NODE_ENV);
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(bodyParser.json({ limit: '50mb' }));
