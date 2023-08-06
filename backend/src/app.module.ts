@@ -12,6 +12,18 @@ import { SessionsModule } from './sessions/sessions.module';
 
 @Module({
   imports: [
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'phpmyadmin',
+      password: 'phpmyadmin',
+      database: 'share_your_quizz',
+      entities: [__dirname + '/**/*.entity.ts'],
+      synchronize: true,
+      autoLoadEntities: true,
+      logging: true,
+    }),
     UsersModule,
     QuizzsModule,
     QuestionsModule,
