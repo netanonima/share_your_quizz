@@ -16,7 +16,7 @@ import { ChoicesModule } from './choices/choices.module';
 import { ImagesModule } from './images/images.module';
 import { MediasModule } from './medias/medias.module';
 import { SessionsModule } from './sessions/sessions.module';
-import { AuthModule } from 'auth/auth.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [

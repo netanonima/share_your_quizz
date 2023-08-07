@@ -29,6 +29,7 @@ An app to generate dynamic quizz and share them with your friends, customers, st
     npm install
   ```
 - Change your JWT secret by a strong one in `backend/src/auth/constants.ts`
+- Copy 'backend/.env-lock' to 'backend/.env' and set your values
 - Launch the backend
   ```bash
     cd backend
