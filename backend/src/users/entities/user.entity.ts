@@ -1,4 +1,10 @@
-import {Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn} from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  CreateDateColumn,
+} from 'typeorm';
 import { Quizz } from '../../quizzs/entities/quizz.entity';
 import { Exclude } from 'class-transformer';
 
