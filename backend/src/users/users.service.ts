@@ -7,15 +7,16 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as argon2 from 'argon2';
-import { find } from 'rxjs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'users/entities/user.entity';
 import { Repository } from 'typeorm';
+import { MailService } from 'mail/mail.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    private readonly mailService: MailService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -56,7 +57,13 @@ export class UsersService {
     }
   }
 
-  findAll() {
+  async findAll() {
+    await this.mailService.sendMail(
+      'altordj@gmail.com',
+      'testName',
+      'blabla bla',
+      'sdfsdafsafddf',
+    );
     return this.userRepository.find();
   }
 
