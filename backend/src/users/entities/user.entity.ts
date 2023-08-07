@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn} from 'typeorm';
 import { Quizz } from '../../quizzs/entities/quizz.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User {
@@ -10,12 +11,14 @@ export class User {
   username: string;
 
   @Column({ length: 256 })
+  @Exclude()
   password: string;
 
   @Column({ length: 254 })
   email: string;
 
   @Column()
+  @CreateDateColumn()
   created_on: Date;
 
   @Column({ nullable: true })
@@ -24,10 +27,10 @@ export class User {
   @Column({ nullable: true })
   confirm_before: Date;
 
-  @Column()
+  @Column({ nullable: true })
   account_confirmed_on: Date;
 
-  @Column()
+  @Column({ nullable: true })
   deleted_on: Date;
 
   @Column({ default: 0 })
