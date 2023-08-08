@@ -6,14 +6,20 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ForgotPasswordDto } from './dto/forgot-password';
 import * as argon2 from 'argon2';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'users/entities/user.entity';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { MailService } from 'mail/mail.service';
+import { ForgotPasswordRetrieveDto } from 'users/dto/forgot-password-retrieve.dto';
+import moment from 'moment';
+import { ConfigService } from '@nestjs/config';
+import { ConfirmAccountDto } from 'users/dto/confirm-account.dto';
 
 @Injectable()
 export class UsersService {
+  config = new ConfigService();
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     private readonly mailService: MailService,
@@ -25,14 +31,122 @@ export class UsersService {
     user.username = createUserDto.username;
     user.password = await this.hashPassword(createUserDto.password);
     user.email = createUserDto.email;
+    user.confirmation_token = Math.random().toString(36).slice(2);
+    user.confirm_before = moment()
+      .add(this.config.get('HOURS_FOR_ACCOUNT_CONFIRMATION'), 'hours')
+      .toDate();
 
     try {
+      await this.mailService.sendMail(
+        user.email,
+        user.username,
+        "'Share your quizz' account confirmation",
+        user.confirmation_token,
+        'confirm-account',
+      );
+
       return await this.userRepository.save(user);
     } catch (error) {
       throw new BadRequestException('Failed to create user.');
     }
   }
 
+  async confirmAccount(confirmAccountDto: ConfirmAccountDto) {
+    const currentTime = moment().toDate();
+
+    const user = await this.userRepository.findOne({
+      where: {
+        username: confirmAccountDto.username,
+        confirmation_token: confirmAccountDto.confirmation_token,
+        confirm_before: MoreThan(currentTime),
+        account_confirmed_on: null,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        `User with username ${confirmAccountDto.username} and this token not found, the delay is passed or this account was already confirmed.`,
+      );
+    }
+
+    user.account_confirmed_on = currentTime;
+    user.confirmation_token = null;
+    user.confirm_before = null;
+
+    try {
+      return await this.userRepository.save(user);
+    } catch (error) {
+      throw new BadRequestException('Failed to confirm account.');
+    }
+  }
+
+  async forgotPasswordRetrieve(
+    forgotPasswordRetrieveDto: ForgotPasswordRetrieveDto,
+  ) {
+    const user = await this.userRepository.findOne({
+      where: {
+        email: forgotPasswordRetrieveDto.email,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        `User with e-mail ${forgotPasswordRetrieveDto.email} not found.`,
+      );
+    }
+
+    user.confirmation_token = Math.random().toString(36).slice(2);
+    user.confirm_before = moment()
+      .add(this.config.get('MINUTES_FOR_PASSWORD_RESET'), 'minutes')
+      .toDate();
+
+    try {
+      await this.mailService.sendMail(
+        user.email,
+        user.username,
+        "'Share your quizz' password reset",
+        user.confirmation_token,
+        'password-reset',
+      );
+      return await this.userRepository.save(user);
+    } catch (error) {
+      throw new BadRequestException('Failed to update password.');
+    }
+  }
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    const currentTime = moment().toDate();
+
+    const user = await this.userRepository.findOne({
+      where: {
+        username: forgotPasswordDto.username,
+        confirmation_token: forgotPasswordDto.confirmation_token,
+        confirm_before: MoreThan(currentTime),
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        `User with username ${forgotPasswordDto.username} and this token not found or the delay is passed.`,
+      );
+    }
+
+    user.password = await this.hashPassword(forgotPasswordDto.password);
+    if (user.account_confirmed_on === null) {
+      user.confirmation_token = Math.random().toString(36).slice(2);
+      user.confirm_before = moment()
+        .add(this.config.get('HOURS_FOR_ACCOUNT_CONFIRMATION'), 'hours')
+        .toDate();
+    } else {
+      user.confirmation_token = null;
+      user.confirm_before = null;
+    }
+
+    try {
+      return await this.userRepository.save(user);
+    } catch (error) {
+      throw new BadRequestException('Failed to update password.');
+    }
+  }
   private async hashPassword(password: string): Promise<string> {
     return await argon2.hash(password);
   }
@@ -58,12 +172,6 @@ export class UsersService {
   }
 
   async findAll() {
-    await this.mailService.sendMail(
-      'altordj@gmail.com',
-      'testName',
-      'blabla bla',
-      'sdfsdafsafddf',
-    );
     return this.userRepository.find();
   }
 
@@ -92,10 +200,8 @@ export class UsersService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    // Update user data
     Object.assign(user, updateUserDto);
 
-    // Save updated user
     return this.userRepository.save(user);
   }
 

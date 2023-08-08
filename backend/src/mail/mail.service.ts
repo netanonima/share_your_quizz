@@ -9,15 +9,22 @@ export class MailService {
     private config: ConfigService,
   ) {}
 
-  async sendMail(email: string, name: string, subject: string, token: string) {
+  async sendMail(
+    email: string,
+    name: string,
+    subject: string,
+    token: string,
+    template: string,
+  ) {
     await this.mailerService.sendMail({
       to: email,
       subject: subject,
-      template: './email',
+      template: './' + template,
       context: {
         name: name,
         token: token,
-        url: this.config.get('ACCOUNT_CONFIRMATION_URL'),
+        account_confirmation_url: this.config.get('ACCOUNT_CONFIRMATION_URL'),
+        password_reset_url: this.config.get('PASSWORD_RESET_URL'),
       },
     });
   }
