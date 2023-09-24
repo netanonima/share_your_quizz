@@ -13,7 +13,7 @@ import { User } from 'users/entities/user.entity';
 import { MoreThan, Repository } from 'typeorm';
 import { MailService } from 'mail/mail.service';
 import { ForgotPasswordRetrieveDto } from 'users/dto/forgot-password-retrieve.dto';
-import moment from 'moment';
+import * as moment from "moment";
 import { ConfigService } from '@nestjs/config';
 import { ConfirmAccountDto } from 'users/dto/confirm-account.dto';
 
@@ -36,18 +36,26 @@ export class UsersService {
       .add(this.config.get('HOURS_FOR_ACCOUNT_CONFIRMATION'), 'hours')
       .toDate();
 
-    try {
-      await this.mailService.sendMail(
-        user.email,
-        user.username,
-        "'Share your quizz' account confirmation",
-        user.confirmation_token,
-        'confirm-account',
-      );
+    if(this.config.get('EMAIL_HOST')=='' || this.config.get('EMAIL_USER')=='' || this.config.get('EMAIL_PASSWORD')=='' || this.config.get('ACCOUNT_CONFIRMATION_URL')==''){
+      try{
+        return await this.userRepository.save(user);
+      } catch (error) {
+        throw new BadRequestException('Failed to create user.');
+      }
+    }else{
+      try {
+        await this.mailService.sendMail(
+            user.email,
+            user.username,
+            "'Share your quizz' account confirmation",
+            user.confirmation_token,
+            'account-confirmation',
+        );
 
-      return await this.userRepository.save(user);
-    } catch (error) {
-      throw new BadRequestException('Failed to create user.');
+        return await this.userRepository.save(user);
+      } catch (error) {
+        throw new BadRequestException('Failed to create user.');
+      }
     }
   }
 
