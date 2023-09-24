@@ -12,6 +12,8 @@ import { QuizzsService } from './quizzs.service';
 import { CreateQuizzDto } from './dto/create-quizz.dto';
 import { UpdateQuizzDto } from './dto/update-quizz.dto';
 import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
+import { GetUser } from './../decorators/user.decorator';
+import {User} from "users/entities/user.entity";
 
 @Controller('quizzs')
 export class QuizzsController {
@@ -25,8 +27,8 @@ export class QuizzsController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.quizzsService.findAll();
+  findAll(@GetUser() user: User) {
+    return this.quizzsService.findAll(user);
   }
 
   @UseGuards(JwtAuthGuard)
