@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne} from 'typeorm';
 import { Question } from '../../questions/entities/question.entity';
 
 @Entity()
@@ -6,7 +6,7 @@ export class Media {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Question, (question) => question.medias)
+  @OneToOne(() => Question, (question) => question.medias)
   question: Question;
 
   @Column({ length: 60 })
