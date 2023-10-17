@@ -47,7 +47,7 @@ export class QuizzsService {
         const choice = new Choice();
         choice.choice = choiceData.choice;
         choice.is_correct = choiceData.is_correct;
-        choice.question = question; // Link the choice to the question
+        choice.question = question;
         return choice;
       });
       question.choices = choices;
