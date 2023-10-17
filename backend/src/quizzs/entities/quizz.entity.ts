@@ -4,10 +4,13 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Question } from '../../questions/entities/question.entity';
 import { Session } from '../../sessions/entities/session.entity';
+import { Media } from "medias/entities/media.entity";
+import { Image } from "images/entities/image.entity";
 
 @Entity()
 export class Quizz {
@@ -31,4 +34,10 @@ export class Quizz {
 
   @OneToMany(() => Session, (session) => session.quizz)
   sessions: Session[];
+
+  @OneToOne(() => Media, (media) => media.question)
+  medias: Media[];
+
+  @OneToOne(() => Image, (image) => image.question)
+  images: Image[];
 }
