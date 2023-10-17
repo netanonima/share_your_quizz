@@ -64,8 +64,6 @@ export class QuizzsService {
     return quizz;
   }
 
-
-
   async update(id: number, updateQuizzDto: UpdateQuizzDto, currentUser: User): Promise<Quizz> {
     const quizz = await this.quizzRepository.findOne({ where: { id: id }, relations: ['user'] });
     if (!quizz) {
