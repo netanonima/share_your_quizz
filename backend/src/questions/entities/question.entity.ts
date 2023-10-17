@@ -3,7 +3,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  OneToMany,
+  OneToMany, OneToOne, JoinColumn,
 } from 'typeorm';
 import { Quizz } from '../../quizzs/entities/quizz.entity';
 import { Choice } from '../../choices/entities/choice.entity';
@@ -24,9 +24,12 @@ export class Question {
   @OneToMany(() => Choice, (choice) => choice.question)
   choices: Choice[];
 
-  @OneToMany(() => Media, (media) => media.question)
-  medias: Media[];
+  @OneToOne(() => Media, (media) => media.question)
+  @JoinColumn()
+  medias: Media;
 
-  @OneToMany(() => Image, (image) => image.question)
-  images: Image[];
+  @OneToOne(() => Image, (image) => image.question)
+  @JoinColumn()
+  images: Image;
+
 }
