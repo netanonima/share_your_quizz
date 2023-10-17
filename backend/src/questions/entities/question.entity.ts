@@ -26,10 +26,10 @@ export class Question {
 
   @OneToOne(() => Media, (media) => media.question, { cascade: true })
   @JoinColumn()
-  medias: Media[];
+  media: Media;
 
   @OneToOne(() => Image, (image) => image.question, { cascade: true })
   @JoinColumn()
-  images: Image[];
+  image: Image;
 
 }

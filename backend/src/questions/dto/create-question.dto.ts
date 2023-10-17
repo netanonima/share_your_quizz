@@ -9,6 +9,6 @@ export class CreateQuestionDto {
   readonly question: string;
 
   readonly choice: CreateChoiceDto[];
-  readonly media: CreateMediaDto[];
-  readonly image: CreateImageDto[];
+  readonly media: CreateMediaDto;
+  readonly image: CreateImageDto;
 }

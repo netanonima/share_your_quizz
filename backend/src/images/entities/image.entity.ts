@@ -6,7 +6,7 @@ export class Image {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Question, (question) => question.images)
+  @OneToOne(() => Question, (question) => question.image)
   question: Question;
 
   @Column({ length: 60 })

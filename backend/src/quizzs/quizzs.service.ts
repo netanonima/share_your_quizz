@@ -52,38 +52,45 @@ export class QuizzsService {
       });
       question.choices = choices;
 
-      const medias = questionData.media.map(mediaData => {
-        const media = new Media();
-        media.file_path = mediaData.file_path;
-        media.filename = mediaData.filename;
-        media.size = mediaData.size;
-        media.type = mediaData.type;
-        media.extension = mediaData.extension;
-        media.question = question;
-        return media;
-      });
-      question.medias = medias;
+      const media = new Media();
+      media.file_path = questionData.media.file_path;
+      media.filename = questionData.media.filename;
+      media.size = questionData.media.size;
+      media.type = questionData.media.type;
+      media.extension = questionData.media.extension;
+      question.media = media;
 
-      const images = questionData.image.map(imageData => {
-        const image = new Image();
-        image.file_path = imageData.file_path;
-        image.filename = imageData.filename;
-        image.size = imageData.size;
-        image.type = imageData.type;
-        image.extension = imageData.extension;
-        image.question = question;
-        return image;
-      });
-      question.images = images;
+      const image = new Image();
+      image.file_path = questionData.image.file_path;
+      image.filename = questionData.image.filename;
+      image.size = questionData.image.size;
+      image.type = questionData.image.type;
+      image.extension = questionData.image.extension;
+      question.image = image;
 
-      question.quizz = quizz;
+
 
       return question;
     });
 
     quizz.questions = questions;
 
-    return this.quizzRepository.save(quizz);
+    console.log('================================');
+    console.log(quizz);
+    console.log('================================');
+    console.log('== choices ==');
+    console.log(quizz.questions[0].choices[0]);
+    console.log('================================');
+    console.log('== medias ==');
+    console.log(quizz.questions[0].media);
+    console.log('================================');
+    console.log('== images ==');
+    console.log(quizz.questions[0].image);
+    console.log('================================');
+
+    let returnQuizz = await this.quizzRepository.save(quizz);
+    returnQuizz.questions = null;
+    return returnQuizz;
   }
 
   async findAll(user: User): Promise<Quizz[]> {
