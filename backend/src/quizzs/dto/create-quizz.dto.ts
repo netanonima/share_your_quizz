@@ -1,26 +1,26 @@
 import { CreateQuestionDto } from "questions/dto/create-question.dto";
-import {IsDateString, IsInt, IsNotEmpty, IsOptional} from "class-validator";
+import { IsDateString, IsInt, IsNotEmpty, IsOptional } from "class-validator";
 
 export class CreateQuizzDto {
   @IsOptional()
   @IsInt()
-  id?: number;
+  readonly id?: number;
 
   @IsNotEmpty()
   @IsDateString()
-  created_on?: Date;
+  readonly created_on?: Date;
 
   @IsOptional()
   @IsDateString()
-  modified_on?: Date;
+  readonly modified_on?: Date | null;
 
   @IsOptional()
   @IsDateString()
-  deleted_on?: Date | null;
+  readonly deleted_on?: Date | null;
 
   @IsNotEmpty()
   @IsInt()
-  userId: number;
+  readonly userId: number;
 
-  question: CreateQuestionDto[];
+  readonly question: CreateQuestionDto[];
 }
