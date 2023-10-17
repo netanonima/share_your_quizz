@@ -1,11 +1,10 @@
-import { IsNotEmpty, IsInt, IsDateString } from 'class-validator';
+import { CreateQuestionDto } from "questions/dto/create-question.dto";
 
 export class CreateQuizzDto {
-  @IsNotEmpty()
-  @IsInt()
-  readonly fk_user_id: number;
-
-  @IsNotEmpty()
-  @IsDateString()
-  readonly created_on: string;
+  id?: number;
+  created_on?: Date;
+  modified_on?: Date;
+  deleted_on?: Date | null;
+  userId: number;
+  question: CreateQuestionDto[];
 }
