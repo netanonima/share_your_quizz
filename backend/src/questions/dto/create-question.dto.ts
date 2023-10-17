@@ -1,35 +1,10 @@
-import {
-  IsNotEmpty,
-  IsString,
-  IsArray,
-  IsInt,
-  ValidateNested,
-  ArrayNotEmpty,
-  IsOptional,
-} from 'class-validator';
-import { Type } from 'class-transformer';
-
-class CreateChoiceDto {
-  @IsNotEmpty()
-  @IsString()
-  choice: string;
-
-  @IsNotEmpty()
-  is_correct: boolean;
-}
+import { CreateChoiceDto } from "choices/dto/create-choice.dto";
+import { CreateMediaDto } from "medias/dto/create-media.dto";
+import { CreateImageDto } from "images/dto/create-image.dto";
 
 export class CreateQuestionDto {
-  @IsNotEmpty()
-  @IsInt()
-  quizzId: number;
-
-  @IsNotEmpty()
-  @IsString()
   question: string;
-
-  @ArrayNotEmpty()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CreateChoiceDto)
-  choices: CreateChoiceDto[];
+  choice: CreateChoiceDto[];
+  media: CreateMediaDto[];
+  image: CreateImageDto[];
 }

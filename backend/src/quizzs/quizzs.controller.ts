@@ -14,6 +14,7 @@ import { UpdateQuizzDto } from './dto/update-quizz.dto';
 import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
 import { GetUser } from './../decorators/user.decorator';
 import {User} from "users/entities/user.entity";
+import {Quizz} from "quizzs/entities/quizz.entity";
 
 @Controller('quizzs')
 export class QuizzsController {
@@ -33,19 +34,19 @@ export class QuizzsController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.quizzsService.findOne(+id);
+  findOne(@Param('id') id: number, @GetUser() user: User): Promise<Quizz> {
+    return this.quizzsService.findOne(id, user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateQuizzDto: UpdateQuizzDto) {
-    return this.quizzsService.update(+id, updateQuizzDto);
+  async update(@Param('id') id: number, @Body() updateQuizzDto: UpdateQuizzDto, @GetUser() user: User): Promise<Quizz> {
+    return this.quizzsService.update(id, updateQuizzDto, user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.quizzsService.remove(+id);
+  async remove(@Param('id') id: number, @GetUser() user: User): Promise<void> {
+    return this.quizzsService.remove(id, user);
   }
 }
