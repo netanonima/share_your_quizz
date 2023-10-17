@@ -6,7 +6,7 @@ export class Media {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Question, (question) => question.medias)
+  @OneToOne(() => Question, (question) => question.media)
   question: Question;
 
   @Column({ length: 60 })
