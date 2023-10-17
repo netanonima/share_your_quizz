@@ -6,9 +6,9 @@ import {IsNotEmpty, IsString} from "class-validator";
 export class CreateQuestionDto {
   @IsNotEmpty()
   @IsString()
-  question: string;
+  readonly question: string;
 
-  choice: CreateChoiceDto[];
-  media: CreateMediaDto[];
-  image: CreateImageDto[];
+  readonly choice: CreateChoiceDto[];
+  readonly media: CreateMediaDto[];
+  readonly image: CreateImageDto[];
 }

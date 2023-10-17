@@ -23,21 +23,16 @@ export class Quizz {
   @Column()
   created_on: Date;
 
-  @Column()
+  @Column({nullable: true})
   modified_on: Date;
 
-  @Column()
+  @Column({nullable: true})
   deleted_on: Date;
 
-  @OneToMany(() => Question, (question) => question.quizz)
+  @OneToMany(() => Question, (question) => question.quizz, { cascade: true })
   questions: Question[];
 
   @OneToMany(() => Session, (session) => session.quizz)
   sessions: Session[];
 
-  @OneToOne(() => Media, (media) => media.question)
-  medias: Media[];
-
-  @OneToOne(() => Image, (image) => image.question)
-  images: Image[];
 }

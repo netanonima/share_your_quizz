@@ -22,22 +22,62 @@ export class QuizzsService {
       @InjectRepository(Media)
       private mediaRepository: Repository<Media>,
       @InjectRepository(Image)
-      private imageRepository: Repository<Image>
+      private imageRepository: Repository<Image>,
+      @InjectRepository(User)
+      private userRepository: Repository<User>
   ) {}
   async create(createQuizzDto: CreateQuizzDto): Promise<Quizz> {
     const quizz = new Quizz();
 
+    quizz.created_on = new Date(createQuizzDto.created_on);
+    quizz.modified_on = createQuizzDto.modified_on ? new Date(createQuizzDto.modified_on) : null;
+    quizz.deleted_on = createQuizzDto.deleted_on ? new Date(createQuizzDto.deleted_on) : null;
+
+    const user = await this.userRepository.findOne({ where: { id: createQuizzDto.userId }});
+    if (!user) {
+      throw new NotFoundException(`User with id ${createQuizzDto.userId} not found`);
+    }
+    quizz.user = user;
+
     const questions = createQuizzDto.question.map(questionData => {
       const question = new Question();
-      // Assign properties to question from questionData...
+      question.question = questionData.question;
 
       const choices = questionData.choice.map(choiceData => {
         const choice = new Choice();
-        // Assign properties to choice from choiceData...
+        choice.choice = choiceData.choice;
+        choice.is_correct = choiceData.is_correct;
+        choice.question = question; // Link the choice to the question
         return choice;
       });
-
       question.choices = choices;
+
+      const medias = questionData.media.map(mediaData => {
+        const media = new Media();
+        media.file_path = mediaData.file_path;
+        media.filename = mediaData.filename;
+        media.size = mediaData.size;
+        media.type = mediaData.type;
+        media.extension = mediaData.extension;
+        media.question = question;
+        return media;
+      });
+      question.medias = medias;
+
+      const images = questionData.image.map(imageData => {
+        const image = new Image();
+        image.file_path = imageData.file_path;
+        image.filename = imageData.filename;
+        image.size = imageData.size;
+        image.type = imageData.type;
+        image.extension = imageData.extension;
+        image.question = question;
+        return image;
+      });
+      question.images = images;
+
+      question.quizz = quizz;
+
       return question;
     });
 

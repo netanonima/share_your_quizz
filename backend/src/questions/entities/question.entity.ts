@@ -21,15 +21,15 @@ export class Question {
   @Column({ length: 80 })
   question: string;
 
-  @OneToMany(() => Choice, (choice) => choice.question)
+  @OneToMany(() => Choice, (choice) => choice.question, { cascade: true })
   choices: Choice[];
 
-  @OneToOne(() => Media, (media) => media.question)
+  @OneToOne(() => Media, (media) => media.question, { cascade: true })
   @JoinColumn()
-  medias: Media;
+  medias: Media[];
 
-  @OneToOne(() => Image, (image) => image.question)
+  @OneToOne(() => Image, (image) => image.question, { cascade: true })
   @JoinColumn()
-  images: Image;
+  images: Image[];
 
 }
