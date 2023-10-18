@@ -19,6 +19,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     if (!user) {
       throw new UnauthorizedException();
     }
+    if (!user.account_confirmed_on) {
+      throw new UnauthorizedException('Account not confirmed');
+    }
     return user;
   }
 }
