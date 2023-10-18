@@ -3,6 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateQuizzDto } from './dto/create-quizz.dto';
 import { UpdateQuizzDto } from './dto/update-quizz.dto';
+
+import { UpdateQuestionDto } from '../questions/dto/update-question.dto';
+import { UpdateChoiceDto } from '../choices/dto/update-choice.dto';
+import { UpdateMediaDto } from '../medias/dto/update-media.dto';
+import { UpdateImageDto } from '../images/dto/update-image.dto';
+
 import { Quizz } from './entities/quizz.entity';
 import {Question} from "questions/entities/question.entity";
 import {Choice} from "choices/entities/choice.entity";
@@ -119,52 +125,71 @@ export class QuizzsService {
     quizz.modified_on = updateQuizzDto.modified_on ? new Date(updateQuizzDto.modified_on) : null;
     quizz.deleted_on = updateQuizzDto.deleted_on ? new Date(updateQuizzDto.deleted_on) : null;
 
-    if(updateQuizzDto.question){
-      // Suppression des questions existantes
-      await this.questionRepository.remove(quizz.questions);
+    if(updateQuizzDto.questions){
+      for (const questionData of updateQuizzDto.questions) {
+        if (questionData.deleted) {
+          const questionToDelete = quizz.questions.find(q => q.id === questionData.id);
+          if (questionToDelete) {
+            await this.questionRepository.remove(questionToDelete);
+          }
+          continue;
+        }
 
-      // Ajout des nouvelles questions
-      const questions = updateQuizzDto.question.map(questionData => {
-        const question = new Question();
+        let question = quizz.questions.find(q => q.id === questionData.id);
+        if (!question) {
+          question = new Question();
+          quizz.questions.push(question);
+        }
         question.question = questionData.question;
 
-        const choices = questionData.choice ? questionData.choice.map(choiceData => {
-          const choice = new Choice();
-          choice.choice = choiceData.choice;
-          choice.is_correct = choiceData.is_correct;
-          choice.question = question;
-          return choice;
-        }) : [];
-        question.choices = choices;
+        if (questionData.choices) {
+          for (const choiceData of questionData.choices) {
+            if (choiceData.deleted) {
+              const choiceToDelete = question.choices.find(c => c.id === choiceData.id);
+              if (choiceToDelete) {
+                await this.choiceRepository.remove(choiceToDelete);
+              }
+              continue;
+            }
 
-        if(questionData.media){
-          const media = new Media();
-          media.file_path = questionData.media.file_path;
-          media.filename = questionData.media.filename;
-          media.size = questionData.media.size;
-          media.type = questionData.media.type;
-          media.extension = questionData.media.extension;
-          question.media = media;
+            let choice = question.choices.find(c => c.id === choiceData.id);
+            if (!choice) {
+              choice = new Choice();
+              question.choices.push(choice);
+            }
+            choice.choice = choiceData.choice;
+            choice.is_correct = choiceData.is_correct;
+          }
         }
 
-        if(questionData.image){
-          const image = new Image();
-          image.file_path = questionData.image.file_path;
-          image.filename = questionData.image.filename;
-          image.size = questionData.image.size;
-          image.type = questionData.image.type;
-          image.extension = questionData.image.extension;
-          question.image = image;
+        if (questionData.media && 'deleted' in questionData.media && questionData.media.deleted) {
+          await this.mediaRepository.remove(question.media);
+          question.media = null;
+        } else if (questionData.media) {
+          if (!question.media) {
+            question.media = new Media();
+          }
+          Object.assign(question.media, questionData.media);
         }
 
-        return question;
-      });
-
-      quizz.questions = questions;
+        if (questionData.image && 'deleted' in questionData.image && questionData.image.deleted) {
+          await this.imageRepository.remove(question.image);
+          question.image = null;
+        } else if (questionData.image) {
+          if (!question.image) {
+            question.image = new Image();
+          }
+          Object.assign(question.image, questionData.image);
+        }
+      }
     }
 
     return await this.quizzRepository.save(quizz);
   }
+
+
+
+
 
 
   async remove(id: number, currentUser: User): Promise<void> {
