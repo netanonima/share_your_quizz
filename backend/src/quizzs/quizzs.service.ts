@@ -106,15 +106,64 @@ export class QuizzsService {
   }
 
   async update(id: number, updateQuizzDto: UpdateQuizzDto, currentUser: User): Promise<Quizz> {
-    const quizz = await this.quizzRepository.findOne({ where: { id: id }, relations: ['user'] });
+    const quizz = await this.quizzRepository.findOne({ where: { id: id }, relations: ['user', 'questions', 'questions.choices', 'questions.media', 'questions.image'] });
     if (!quizz) {
       throw new NotFoundException(`Quizz with ID ${id} not found`);
     }
     if (quizz.user.id !== currentUser.id) {
       throw new ForbiddenException('You do not have permission to update this quizz.');
     }
-    // Rest of the update logic...
-    return this.quizzRepository.save(quizz);
+
+    // Mise à jour des champs du quizz
+    quizz.created_on = new Date(updateQuizzDto.created_on);
+    quizz.modified_on = updateQuizzDto.modified_on ? new Date(updateQuizzDto.modified_on) : null;
+    quizz.deleted_on = updateQuizzDto.deleted_on ? new Date(updateQuizzDto.deleted_on) : null;
+
+    if(updateQuizzDto.question){
+      // Suppression des questions existantes
+      await this.questionRepository.remove(quizz.questions);
+
+      // Ajout des nouvelles questions
+      const questions = updateQuizzDto.question.map(questionData => {
+        const question = new Question();
+        question.question = questionData.question;
+
+        const choices = questionData.choice ? questionData.choice.map(choiceData => {
+          const choice = new Choice();
+          choice.choice = choiceData.choice;
+          choice.is_correct = choiceData.is_correct;
+          choice.question = question;
+          return choice;
+        }) : [];
+        question.choices = choices;
+
+        if(questionData.media){
+          const media = new Media();
+          media.file_path = questionData.media.file_path;
+          media.filename = questionData.media.filename;
+          media.size = questionData.media.size;
+          media.type = questionData.media.type;
+          media.extension = questionData.media.extension;
+          question.media = media;
+        }
+
+        if(questionData.image){
+          const image = new Image();
+          image.file_path = questionData.image.file_path;
+          image.filename = questionData.image.filename;
+          image.size = questionData.image.size;
+          image.type = questionData.image.type;
+          image.extension = questionData.image.extension;
+          question.image = image;
+        }
+
+        return question;
+      });
+
+      quizz.questions = questions;
+    }
+
+    return await this.quizzRepository.save(quizz);
   }
 
 
