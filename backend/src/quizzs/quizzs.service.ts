@@ -120,11 +120,15 @@ export class QuizzsService {
       throw new ForbiddenException('You do not have permission to update this quizz.');
     }
 
-    quizz.created_on = updateQuizzDto.created_on ? new Date(updateQuizzDto.created_on) : null;
-    quizz.modified_on = updateQuizzDto.modified_on ? new Date(updateQuizzDto.modified_on) : null;
-    quizz.deleted_on = updateQuizzDto.deleted_on ? new Date(updateQuizzDto.deleted_on) : null;
+    quizz.created_on = updateQuizzDto.created_on ? new Date(updateQuizzDto.created_on) : quizz.created_on;
+    quizz.modified_on = updateQuizzDto.modified_on ? new Date(updateQuizzDto.modified_on) : quizz.modified_on;
+    quizz.deleted_on = updateQuizzDto.deleted_on ? new Date(updateQuizzDto.deleted_on) : quizz.deleted_on;
 
+    console.warn('_-Y-_');
+    console.log(updateQuizzDto); // returns the whole input
+    console.log(updateQuizzDto.question); // returns : undefined
     if(updateQuizzDto.question){
+      console.warn('_-Z-_');
       for (const questionData of updateQuizzDto.question as UpdateQuestionDto[]) {
         if (questionData.deleted) {
           const questionToDelete = quizz.questions.find(q => q.id === questionData.id);
@@ -139,13 +143,20 @@ export class QuizzsService {
           question = new Question();
           quizz.questions.push(question);
         }
-        question.question = questionData.question;
+        question.question = questionData.question || question.question;
 
+        console.warn('_-0-_');
         if (questionData.choice) {
           for (const choiceData of questionData.choice as UpdateChoiceDto[]) {
+            console.log('_-1-_');
             if (choiceData.deleted) {
+              console.log('_-2-_');
               const choiceToDelete = question.choices.find(c => c.id === choiceData.id);
+
               if (choiceToDelete) {
+                console.log('_-3-_');
+                question.choices = question.choices.filter(c => c.id !== choiceData.id);
+
                 await this.choiceRepository.remove(choiceToDelete);
               }
               continue;
@@ -161,15 +172,13 @@ export class QuizzsService {
           }
         }
 
+
         if (questionData.media && 'deleted' in questionData.media) {
           const mediaData = questionData.media as UpdateMediaDto;
           if (mediaData.deleted && question.media) {
-            question.media = null;
-            await this.questionRepository.save(question);
-
             await this.mediaRepository.remove(question.media);
             question.media = null;
-          } else {
+          } else if (!mediaData.deleted) {
             if (!question.media) {
               question.media = new Media();
             }
@@ -179,21 +188,28 @@ export class QuizzsService {
 
         if (questionData.image && 'deleted' in questionData.image) {
           const imageData = questionData.image as UpdateImageDto;
-          if (imageData.deleted) {
-            await this.imageRepository.remove(question.image);
+          if (imageData.deleted && question.image) {
+            const imageToDelete = question.image;
+
             question.image = null;
-          } else {
+            await this.questionRepository.save(question);
+
+            await this.imageRepository.remove(imageToDelete);
+            question.image = null;
+          } else if (!imageData.deleted) {
             if (!question.image) {
               question.image = new Image();
             }
             Object.assign(question.image, imageData);
           }
         }
+
       }
     }
 
     return await this.quizzRepository.save(quizz);
   }
+
 
 
 
