@@ -6,7 +6,7 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
+  UseGuards, UseInterceptors, ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { ChoicesService } from './choices.service';
 import { CreateChoiceDto } from './dto/create-choice.dto';
@@ -14,6 +14,7 @@ import { UpdateChoiceDto } from './dto/update-choice.dto';
 import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
 
 @Controller('choices')
+@UseInterceptors(ClassSerializerInterceptor)
 export class ChoicesController {
   constructor(private readonly choicesService: ChoicesService) {}
 

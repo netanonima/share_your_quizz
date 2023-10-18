@@ -39,41 +39,45 @@ export class QuizzsService {
     }
     quizz.user = user;
 
-    const questions = createQuizzDto.question.map(questionData => {
-      const question = new Question();
-      question.question = questionData.question;
+    if(createQuizzDto.question){
+      const questions = createQuizzDto.question.map(questionData => {
+        const question = new Question();
+        question.question = questionData.question;
 
-      const choices = questionData.choice.map(choiceData => {
-        const choice = new Choice();
-        choice.choice = choiceData.choice;
-        choice.is_correct = choiceData.is_correct;
-        choice.question = question;
-        return choice;
+        const choices = questionData.choice ? questionData.choice.map(choiceData => {
+          const choice = new Choice();
+          choice.choice = choiceData.choice;
+          choice.is_correct = choiceData.is_correct;
+          choice.question = question;
+          return choice;
+        }) : [];
+        question.choices = choices;
+
+        if(questionData.media){
+          const media = new Media();
+          media.file_path = questionData.media.file_path;
+          media.filename = questionData.media.filename;
+          media.size = questionData.media.size;
+          media.type = questionData.media.type;
+          media.extension = questionData.media.extension;
+          question.media = media;
+        }
+
+        if(questionData.image){
+          const image = new Image();
+          image.file_path = questionData.image.file_path;
+          image.filename = questionData.image.filename;
+          image.size = questionData.image.size;
+          image.type = questionData.image.type;
+          image.extension = questionData.image.extension;
+          question.image = image;
+        }
+
+        return question;
       });
-      question.choices = choices;
 
-      const media = new Media();
-      media.file_path = questionData.media.file_path;
-      media.filename = questionData.media.filename;
-      media.size = questionData.media.size;
-      media.type = questionData.media.type;
-      media.extension = questionData.media.extension;
-      question.media = media;
-
-      const image = new Image();
-      image.file_path = questionData.image.file_path;
-      image.filename = questionData.image.filename;
-      image.size = questionData.image.size;
-      image.type = questionData.image.type;
-      image.extension = questionData.image.extension;
-      question.image = image;
-
-
-
-      return question;
-    });
-
-    quizz.questions = questions;
+      quizz.questions = questions;
+    }
 
     let returnQuizz = await this.quizzRepository.save(quizz);
     returnQuizz.questions = null;

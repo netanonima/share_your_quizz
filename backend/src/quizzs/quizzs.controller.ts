@@ -6,7 +6,7 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
+  UseGuards, UseInterceptors, ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { QuizzsService } from './quizzs.service';
 import { CreateQuizzDto } from './dto/create-quizz.dto';
@@ -17,6 +17,7 @@ import {User} from "users/entities/user.entity";
 import {Quizz} from "quizzs/entities/quizz.entity";
 
 @Controller('quizzs')
+@UseInterceptors(ClassSerializerInterceptor)
 export class QuizzsController {
   constructor(private readonly quizzsService: QuizzsService) {}
 
