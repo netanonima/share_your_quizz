@@ -6,7 +6,7 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
+  UseGuards, UseInterceptors, ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { MediasService } from './medias.service';
 import { CreateMediaDto } from './dto/create-media.dto';
@@ -14,6 +14,7 @@ import { UpdateMediaDto } from './dto/update-media.dto';
 import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
 
 @Controller('medias')
+@UseInterceptors(ClassSerializerInterceptor)
 export class MediasController {
   constructor(private readonly mediasService: MediasService) {}
 

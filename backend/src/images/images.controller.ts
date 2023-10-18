@@ -6,7 +6,7 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
+  UseGuards, UseInterceptors, ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { ImagesService } from './images.service';
 import { CreateImageDto } from './dto/create-image.dto';
@@ -14,6 +14,7 @@ import { UpdateImageDto } from './dto/update-image.dto';
 import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
 
 @Controller('images')
+@UseInterceptors(ClassSerializerInterceptor)
 export class ImagesController {
   constructor(private readonly imagesService: ImagesService) {}
 
