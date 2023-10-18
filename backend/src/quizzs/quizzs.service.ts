@@ -87,14 +87,14 @@ export class QuizzsService {
   async findAll(user: User): Promise<Quizz[]> {
     return this.quizzRepository.find({
       where: { user: user },
-      relations: ['questions', 'questions.choices', 'questions.medias', 'questions.images']
+      relations: ['questions', 'questions.choices', 'questions.media', 'questions.image']
     });
   }
 
   async findOne(id: number, currentUser: User): Promise<Quizz> {
     const quizz = await this.quizzRepository.findOne({
       where: { id: id },
-      relations: ['user', 'questions', 'questions.choices', 'questions.medias', 'questions.images']
+      relations: ['user', 'questions', 'questions.choices', 'questions.media', 'questions.image']
     });
     if (!quizz) {
       throw new NotFoundException(`Quizz with ID ${id} not found`);
