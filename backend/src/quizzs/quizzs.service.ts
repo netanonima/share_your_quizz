@@ -45,8 +45,8 @@ export class QuizzsService {
     }
     quizz.user = user;
 
-    if(createQuizzDto.question){
-      const questions = createQuizzDto.question.map(questionData => {
+    if(createQuizzDto.questions){
+      const questions = createQuizzDto.questions.map(questionData => {
         const question = new Question();
         question.question = questionData.question;
 
@@ -126,10 +126,10 @@ export class QuizzsService {
 
     console.warn('_-Y-_');
     console.log(updateQuizzDto); // returns the whole input
-    console.log(updateQuizzDto.question); // returns : undefined
-    if(updateQuizzDto.question){
+    console.log(updateQuizzDto.questions); // returns : undefined
+    if(updateQuizzDto.questions){
       console.warn('_-Z-_');
-      for (const questionData of updateQuizzDto.question as UpdateQuestionDto[]) {
+      for (const questionData of updateQuizzDto.questions as UpdateQuestionDto[]) {
         if (questionData.deleted) {
           const questionToDelete = quizz.questions.find(q => q.id === questionData.id);
           if (questionToDelete) {

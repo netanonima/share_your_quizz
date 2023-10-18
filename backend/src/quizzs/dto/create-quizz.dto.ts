@@ -22,5 +22,5 @@ export class CreateQuizzDto {
   @IsInt()
   readonly userId: number;
 
-  readonly question: CreateQuestionDto[];
+  readonly questions: CreateQuestionDto[];
 }
