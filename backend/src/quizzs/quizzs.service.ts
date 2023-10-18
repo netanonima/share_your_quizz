@@ -75,19 +75,6 @@ export class QuizzsService {
 
     quizz.questions = questions;
 
-    console.log('================================');
-    console.log(quizz);
-    console.log('================================');
-    console.log('== choices ==');
-    console.log(quizz.questions[0].choices[0]);
-    console.log('================================');
-    console.log('== medias ==');
-    console.log(quizz.questions[0].media);
-    console.log('================================');
-    console.log('== images ==');
-    console.log(quizz.questions[0].image);
-    console.log('================================');
-
     let returnQuizz = await this.quizzRepository.save(quizz);
     returnQuizz.questions = null;
     return returnQuizz;
