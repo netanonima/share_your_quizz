@@ -50,7 +50,7 @@ export class QuizzsService {
         const question = new Question();
         question.question = questionData.question;
 
-        const choices = questionData.choice ? questionData.choice.map(choiceData => {
+        const choices = questionData.choices ? questionData.choices.map(choiceData => {
           const choice = new Choice();
           choice.choice = choiceData.choice;
           choice.is_correct = choiceData.is_correct;
@@ -124,11 +124,7 @@ export class QuizzsService {
     quizz.modified_on = updateQuizzDto.modified_on ? new Date(updateQuizzDto.modified_on) : quizz.modified_on;
     quizz.deleted_on = updateQuizzDto.deleted_on ? new Date(updateQuizzDto.deleted_on) : quizz.deleted_on;
 
-    console.warn('_-Y-_');
-    console.log(updateQuizzDto); // returns the whole input
-    console.log(updateQuizzDto.questions); // returns : undefined
     if(updateQuizzDto.questions){
-      console.warn('_-Z-_');
       for (const questionData of updateQuizzDto.questions as UpdateQuestionDto[]) {
         if (questionData.deleted) {
           const questionToDelete = quizz.questions.find(q => q.id === questionData.id);
@@ -145,16 +141,12 @@ export class QuizzsService {
         }
         question.question = questionData.question || question.question;
 
-        console.warn('_-0-_');
-        if (questionData.choice) {
-          for (const choiceData of questionData.choice as UpdateChoiceDto[]) {
-            console.log('_-1-_');
+        if (questionData.choices) {
+          for (const choiceData of questionData.choices as UpdateChoiceDto[]) {
             if (choiceData.deleted) {
-              console.log('_-2-_');
               const choiceToDelete = question.choices.find(c => c.id === choiceData.id);
 
               if (choiceToDelete) {
-                console.log('_-3-_');
                 question.choices = question.choices.filter(c => c.id !== choiceData.id);
 
                 await this.choiceRepository.remove(choiceToDelete);

@@ -8,7 +8,7 @@ export class CreateQuestionDto {
   @IsString()
   readonly question: string;
 
-  readonly choice: CreateChoiceDto[];
+  readonly choices: CreateChoiceDto[];
   readonly media: CreateMediaDto;
   readonly image: CreateImageDto;
 }
