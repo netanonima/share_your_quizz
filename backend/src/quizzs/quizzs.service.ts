@@ -120,8 +120,7 @@ export class QuizzsService {
       throw new ForbiddenException('You do not have permission to update this quizz.');
     }
 
-    // Mise à jour des champs du quizz
-    quizz.created_on = new Date(updateQuizzDto.created_on);
+    quizz.created_on = updateQuizzDto.created_on ? new Date(updateQuizzDto.created_on) : null;
     quizz.modified_on = updateQuizzDto.modified_on ? new Date(updateQuizzDto.modified_on) : null;
     quizz.deleted_on = updateQuizzDto.deleted_on ? new Date(updateQuizzDto.deleted_on) : null;
 
