@@ -125,8 +125,8 @@ export class QuizzsService {
     quizz.modified_on = updateQuizzDto.modified_on ? new Date(updateQuizzDto.modified_on) : null;
     quizz.deleted_on = updateQuizzDto.deleted_on ? new Date(updateQuizzDto.deleted_on) : null;
 
-    if(updateQuizzDto.questions){
-      for (const questionData of updateQuizzDto.questions) {
+    if(updateQuizzDto.question){
+      for (const questionData of updateQuizzDto.question as UpdateQuestionDto[]) {
         if (questionData.deleted) {
           const questionToDelete = quizz.questions.find(q => q.id === questionData.id);
           if (questionToDelete) {
@@ -142,8 +142,8 @@ export class QuizzsService {
         }
         question.question = questionData.question;
 
-        if (questionData.choices) {
-          for (const choiceData of questionData.choices) {
+        if (questionData.choice) {
+          for (const choiceData of questionData.choice as UpdateChoiceDto[]) {
             if (choiceData.deleted) {
               const choiceToDelete = question.choices.find(c => c.id === choiceData.id);
               if (choiceToDelete) {
@@ -162,30 +162,40 @@ export class QuizzsService {
           }
         }
 
-        if (questionData.media && 'deleted' in questionData.media && questionData.media.deleted) {
-          await this.mediaRepository.remove(question.media);
-          question.media = null;
-        } else if (questionData.media) {
-          if (!question.media) {
-            question.media = new Media();
+        if (questionData.media && 'deleted' in questionData.media) {
+          const mediaData = questionData.media as UpdateMediaDto;
+          if (mediaData.deleted && question.media) {
+            question.media = null;
+            await this.questionRepository.save(question);
+
+            await this.mediaRepository.remove(question.media);
+            question.media = null;
+          } else {
+            if (!question.media) {
+              question.media = new Media();
+            }
+            Object.assign(question.media, mediaData);
           }
-          Object.assign(question.media, questionData.media);
         }
 
-        if (questionData.image && 'deleted' in questionData.image && questionData.image.deleted) {
-          await this.imageRepository.remove(question.image);
-          question.image = null;
-        } else if (questionData.image) {
-          if (!question.image) {
-            question.image = new Image();
+        if (questionData.image && 'deleted' in questionData.image) {
+          const imageData = questionData.image as UpdateImageDto;
+          if (imageData.deleted) {
+            await this.imageRepository.remove(question.image);
+            question.image = null;
+          } else {
+            if (!question.image) {
+              question.image = new Image();
+            }
+            Object.assign(question.image, imageData);
           }
-          Object.assign(question.image, questionData.image);
         }
       }
     }
 
     return await this.quizzRepository.save(quizz);
   }
+
 
 
 
