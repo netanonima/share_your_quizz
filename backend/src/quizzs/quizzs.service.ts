@@ -34,60 +34,44 @@ export class QuizzsService {
   ) {}
   async create(createQuizzDto: CreateQuizzDto): Promise<Quizz> {
     const quizz = new Quizz();
-
     quizz.created_on = new Date(createQuizzDto.created_on);
     quizz.modified_on = createQuizzDto.modified_on ? new Date(createQuizzDto.modified_on) : null;
     quizz.deleted_on = createQuizzDto.deleted_on ? new Date(createQuizzDto.deleted_on) : null;
+    quizz.user = await this.userRepository.findOne({ where: { id: createQuizzDto.userId } });
 
-    const user = await this.userRepository.findOne({ where: { id: createQuizzDto.userId }});
-    if (!user) {
-      throw new NotFoundException(`User with id ${createQuizzDto.userId} not found`);
-    }
-    quizz.user = user;
-
-    if(createQuizzDto.questions){
-      const questions = createQuizzDto.questions.map(questionData => {
+    if (createQuizzDto.questions) {
+      quizz.questions = [];
+      for (const questionData of createQuizzDto.questions) {
         const question = new Question();
         question.question = questionData.question;
 
-        const choices = questionData.choices ? questionData.choices.map(choiceData => {
-          const choice = new Choice();
-          choice.choice = choiceData.choice;
-          choice.is_correct = choiceData.is_correct;
-          choice.question = question;
-          return choice;
-        }) : [];
-        question.choices = choices;
+        if (questionData.choices) {
+          question.choices = [];
+          for (const choiceData of questionData.choices) {
+            const choice = new Choice();
+            choice.choice = choiceData.choice;
+            choice.is_correct = choiceData.is_correct;
+            question.choices.push(choice);
+          }
+        }
 
-        if(questionData.media){
+        if (questionData.media) {
           const media = new Media();
-          media.file_path = questionData.media.file_path;
-          media.filename = questionData.media.filename;
-          media.size = questionData.media.size;
-          media.type = questionData.media.type;
-          media.extension = questionData.media.extension;
+          Object.assign(media, questionData.media);
           question.media = media;
         }
 
-        if(questionData.image){
+        if (questionData.image) {
           const image = new Image();
-          image.file_path = questionData.image.file_path;
-          image.filename = questionData.image.filename;
-          image.size = questionData.image.size;
-          image.type = questionData.image.type;
-          image.extension = questionData.image.extension;
+          Object.assign(image, questionData.image);
           question.image = image;
         }
 
-        return question;
-      });
-
-      quizz.questions = questions;
+        quizz.questions.push(question);
+      }
     }
 
-    let returnQuizz = await this.quizzRepository.save(quizz);
-    returnQuizz.questions = null;
-    return returnQuizz;
+    return await this.quizzRepository.save(quizz);
   }
 
   async findAll(user: User): Promise<Quizz[]> {
