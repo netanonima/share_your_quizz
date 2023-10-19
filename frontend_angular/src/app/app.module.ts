@@ -20,6 +20,8 @@ import {MatInputModule} from "@angular/material/input";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatListModule} from "@angular/material/list";
 import { FooterComponent } from './footer/footer.component';
+import { ConfirmAccountComponent } from './confirm-account/confirm-account.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 
 @NgModule({
@@ -31,7 +33,9 @@ import { FooterComponent } from './footer/footer.component';
     LogoutComponent,
     RegisterComponent,
     QuizzComponent,
-    FooterComponent
+    FooterComponent,
+    ConfirmAccountComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,
