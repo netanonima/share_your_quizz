@@ -129,6 +129,11 @@ export class QuizzsService {
         if (questionData.deleted) {
           const questionToDelete = quizz.questions.find(q => q.id === questionData.id);
           if (questionToDelete) {
+            // Supprimez d'abord tous les choix associés à cette question
+            for (const choice of questionToDelete.choices) {
+              await this.choiceRepository.remove(choice);
+            }
+            // Maintenant, supprimez la question elle-même
             await this.questionRepository.remove(questionToDelete);
           }
           continue;
@@ -145,10 +150,8 @@ export class QuizzsService {
           for (const choiceData of questionData.choices as UpdateChoiceDto[]) {
             if (choiceData.deleted) {
               const choiceToDelete = question.choices.find(c => c.id === choiceData.id);
-
               if (choiceToDelete) {
                 question.choices = question.choices.filter(c => c.id !== choiceData.id);
-
                 await this.choiceRepository.remove(choiceToDelete);
               }
               continue;
@@ -163,7 +166,6 @@ export class QuizzsService {
             choice.is_correct = choiceData.is_correct;
           }
         }
-
 
         if (questionData.media && 'deleted' in questionData.media) {
           const mediaData = questionData.media as UpdateMediaDto;
@@ -182,12 +184,9 @@ export class QuizzsService {
           const imageData = questionData.image as UpdateImageDto;
           if (imageData.deleted && question.image) {
             const imageToDelete = question.image;
-
             question.image = null;
             await this.questionRepository.save(question);
-
             await this.imageRepository.remove(imageToDelete);
-            question.image = null;
           } else if (!imageData.deleted) {
             if (!question.image) {
               question.image = new Image();
@@ -195,12 +194,12 @@ export class QuizzsService {
             Object.assign(question.image, imageData);
           }
         }
-
       }
     }
 
     return await this.quizzRepository.save(quizz);
   }
+
 
 
 
