@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators, FormGroup, AbstractControl } from '@angular/forms';
+import {ApiService} from "../api.service";
+import {HttpErrorResponse} from "@angular/common/http";
+import {RegistrationResponse} from "./registration-response";
 
 @Component({
   selector: 'app-register',
@@ -54,11 +57,33 @@ export class RegisterComponent {
   register() {
     if (this.registerForm.valid) {
       console.log(this.registerForm.value);
+      this.onSubmit();
     }
   }
 
   cancel() {
     // empty all fields
     this.registerForm.reset();
+  }
+
+  constructor(private apiService: ApiService) { }
+
+  onSubmit() {
+    if (this.registerForm.valid) {
+      const formData = this.registerForm.value;
+      const requestInput = {
+        username: formData.username,
+        email: formData.email,
+        password: formData.passwords.password
+      };
+      this.apiService.register(requestInput).subscribe(
+        (response: RegistrationResponse) => {  // type spécifié ici
+          console.log('Registration successful', response);
+        },
+        (error: HttpErrorResponse) => {  // type spécifié ici
+          console.error('Registration failed', error);
+        }
+      );
+    }
   }
 }
