@@ -138,7 +138,7 @@ export class QuizzsService {
         }
 
         let question = quizz.questions.find(q => q.id === questionData.id);
-        if (!question) {
+        if (!question && !questionData.deleted) {
           question = new Question();
           quizz.questions.push(question);
         }
