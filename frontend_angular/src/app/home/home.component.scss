@@ -1,4 +1,39 @@
-p{
-  font-size: 20px;
-  padding-bottom: 20px;
+.home-content, .home-buttons {
+  padding: 0 10%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.home-content {
+  h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+
+  p {
+    font-size: 1.2em;
+  }
+}
+
+.home-buttons {
+  justify-content: center;
+  margin-top: 20px;
+
+  button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 420px) {
+  .home-content, .home-buttons {
+    flex-direction: column;
+  }
+
+  .home-buttons button {
+    margin-bottom: 10px;
+  }
 }

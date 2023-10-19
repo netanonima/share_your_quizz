@@ -1,19 +1,22 @@
-<form [formGroup]="registerForm" class="form-fields">
+<h1>Registration</h1>
+<form [formGroup]="registerForm" class="form-fields" @fadeInOut>
   <div>
     <mat-form-field>
       <mat-label>Enter your username</mat-label>
       <input matInput placeholder="yourNickname" formControlName="username" required>
+      <mat-icon matSuffix>person_outline</mat-icon>
       <mat-error *ngIf="(registerForm.get('username')?.invalid)">
         {{getErrorMessage('username')}}
       </mat-error>
-
     </mat-form-field>
+
   </div>
 
   <div>
     <mat-form-field>
       <mat-label>Enter your email</mat-label>
       <input matInput placeholder="your_name@example.com" formControlName="email" required>
+      <mat-icon matSuffix>mail_outline</mat-icon>
       <mat-error *ngIf="(registerForm.get('email')?.invalid)">
         {{getErrorMessage('email')}}
       </mat-error>
@@ -25,6 +28,7 @@
       <mat-form-field>
         <mat-label>Enter your password</mat-label>
         <input type="password" matInput placeholder="********" formControlName="password" required>
+        <mat-icon matSuffix>password_outline</mat-icon>
         <mat-error *ngIf="(registerForm.get('passwords.password')?.invalid)">
           {{getErrorMessage('passwords.password')}}
         </mat-error>
@@ -36,6 +40,7 @@
       <mat-form-field>
         <mat-label>Enter your password again</mat-label>
         <input type="password" matInput placeholder="********" formControlName="confirmPassword" required>
+        <mat-icon matSuffix>password_outline</mat-icon>
         <mat-error *ngIf="(registerForm.get('passwords.confirmPassword')?.invalid) || (registerForm.get('passwords')?.hasError('mismatch'))">
           {{(registerForm.get('passwords')?.hasError('mismatch')) ? 'Passwords do not match' : getErrorMessage('passwords.confirmPassword')}}
         </mat-error>

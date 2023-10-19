@@ -3,11 +3,23 @@ import { FormControl, Validators, FormGroup, AbstractControl } from '@angular/fo
 import {ApiService} from "../api.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {RegistrationResponse} from "./registration-response";
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      state('in', style({opacity: 1})),
+      transition(':enter', [
+        style({opacity: 0}),
+        animate(600 )
+      ]),
+      transition(':leave',
+        animate(600, style({opacity: 0})))
+    ])
+  ]
 })
 export class RegisterComponent {
   registerForm: FormGroup = new FormGroup({
