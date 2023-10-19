@@ -41,3 +41,30 @@ a.current {
 .normal-buttons a:hover {
   background-color: #262675;
 }
+
+mat-toolbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+.mat-sidenav-content {
+  margin-top: 64px;
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+}
+
+.mat-sidenav-content {
+  padding-top: 64px;
+}
+
+footer{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #6a6ae3;
+  color: white;
+  text-align: center;
+  padding: 10px 0px;
+}

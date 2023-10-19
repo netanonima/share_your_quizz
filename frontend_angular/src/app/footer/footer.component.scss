@@ -1,0 +1,30 @@
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icons {
+  display: flex;
+}
+
+.icon-link {
+  transition: fill 0.3s ease;  // Effet de transition pour un changement de couleur doux
+
+  .github-icon path, .buymeacoffee-icon {
+    fill: #D3D3D3;  // Couleur par défaut des icônes (blanc cassé)
+  }
+
+  .github-icon:hover path, .buymeacoffee-icon:hover {
+    fill: #FFFFFF;  // Couleur des icônes au survol (blanc)
+  }
+}
+
+.icons a svg{
+  width: 20px;
+  height: 20px;
+  margin: 0 10px;
+}
