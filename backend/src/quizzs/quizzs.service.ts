@@ -1,20 +1,20 @@
 import {ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateQuizzDto } from './dto/create-quizz.dto';
-import { UpdateQuizzDto } from './dto/update-quizz.dto';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
+import {CreateQuizzDto} from './dto/create-quizz.dto';
+import {UpdateQuizzDto} from './dto/update-quizz.dto';
 
-import { UpdateQuestionDto } from '../questions/dto/update-question.dto';
-import { UpdateChoiceDto } from '../choices/dto/update-choice.dto';
-import { UpdateMediaDto } from '../medias/dto/update-media.dto';
-import { UpdateImageDto } from '../images/dto/update-image.dto';
+import {UpdateQuestionDto} from '../questions/dto/update-question.dto';
+import {UpdateChoiceDto} from '../choices/dto/update-choice.dto';
+import {UpdateMediaDto} from '../medias/dto/update-media.dto';
+import {UpdateImageDto} from '../images/dto/update-image.dto';
 
-import { Quizz } from './entities/quizz.entity';
+import {Quizz} from './entities/quizz.entity';
 import {Question} from "questions/entities/question.entity";
 import {Choice} from "choices/entities/choice.entity";
 import {Media} from "medias/entities/media.entity";
 import {Image} from "images/entities/image.entity";
-import { User } from "users/entities/user.entity";
+import {User} from "users/entities/user.entity";
 
 @Injectable()
 export class QuizzsService {
@@ -120,6 +120,29 @@ export class QuizzsService {
       throw new ForbiddenException('You do not have permission to update this quizz.');
     }
 
+    if (updateQuizzDto.deleted) {
+      // Supprimer les choix, médias, images, etc. associés à chaque question
+      for (const question of quizz.questions) {
+        // Supprimer les choix
+        for (const choice of question.choices) {
+          await this.choiceRepository.remove(choice);
+        }
+        // Supprimer les médias et images si présents
+        if (question.media) {
+          await this.mediaRepository.remove(question.media);
+        }
+        if (question.image) {
+          await this.imageRepository.remove(question.image);
+        }
+        // Supprimer la question elle-même
+        await this.questionRepository.remove(question);
+      }
+      // Supprimer le quizz
+      await this.quizzRepository.remove(quizz);
+
+      return new Quizz();
+    }
+
     quizz.created_on = updateQuizzDto.created_on ? new Date(updateQuizzDto.created_on) : quizz.created_on;
     quizz.modified_on = updateQuizzDto.modified_on ? new Date(updateQuizzDto.modified_on) : quizz.modified_on;
     quizz.deleted_on = updateQuizzDto.deleted_on ? new Date(updateQuizzDto.deleted_on) : quizz.deleted_on;
@@ -139,6 +162,7 @@ export class QuizzsService {
               console.log('1');
             }
             await this.questionRepository.remove(questionToDelete);
+            quizz.questions = quizz.questions.filter(q => q.id !== questionToDelete.id);
             console.log('2');
           }
           continue;
@@ -148,7 +172,7 @@ export class QuizzsService {
         console.log('3');
         console.log(question);
         console.log(questionData.deleted);
-        if (!question && !questionData.deleted) {
+        if (!question) {
           question = new Question();
           console.log('4');
           console.log(question);
