@@ -10,14 +10,25 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {MatButtonModule} from "@angular/material/button";
-import { PageContentComponent } from './page-content/page-content.component';
+import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './login/login.component';
+import { LogoutComponent } from './logout/logout.component';
+import { RegisterComponent } from './register/register.component';
+import { QuizzComponent } from './quizz/quizz.component';
+import {MatInputModule} from "@angular/material/input";
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatListModule} from "@angular/material/list";
 
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    PageContentComponent
+    HomeComponent,
+    LoginComponent,
+    LogoutComponent,
+    RegisterComponent,
+    QuizzComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +38,10 @@ import { PageContentComponent } from './page-content/page-content.component';
     MatIconModule,
     MatSidenavModule,
     FlexLayoutModule,
-    MatButtonModule
+    MatButtonModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]
