@@ -142,6 +142,7 @@ export class QuizzsService {
           question = new Question();
           quizz.questions.push(question);
         }
+
         question.question = questionData.question || question.question;
 
         if (questionData.choices) {
