@@ -124,16 +124,14 @@ export class QuizzsService {
     quizz.modified_on = updateQuizzDto.modified_on ? new Date(updateQuizzDto.modified_on) : quizz.modified_on;
     quizz.deleted_on = updateQuizzDto.deleted_on ? new Date(updateQuizzDto.deleted_on) : quizz.deleted_on;
 
-    if(updateQuizzDto.questions){
+    if (updateQuizzDto.questions) {
       for (const questionData of updateQuizzDto.questions as UpdateQuestionDto[]) {
         if (questionData.deleted) {
           const questionToDelete = quizz.questions.find(q => q.id === questionData.id);
           if (questionToDelete) {
-            // Supprimez d'abord tous les choix associés à cette question
             for (const choice of questionToDelete.choices) {
               await this.choiceRepository.remove(choice);
             }
-            // Maintenant, supprimez la question elle-même
             await this.questionRepository.remove(questionToDelete);
           }
           continue;
