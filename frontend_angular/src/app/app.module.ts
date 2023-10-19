@@ -19,6 +19,7 @@ import { QuizzComponent } from './quizz/quizz.component';
 import {MatInputModule} from "@angular/material/input";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatListModule} from "@angular/material/list";
+import { FooterComponent } from './footer/footer.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import {MatListModule} from "@angular/material/list";
     LoginComponent,
     LogoutComponent,
     RegisterComponent,
-    QuizzComponent
+    QuizzComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
