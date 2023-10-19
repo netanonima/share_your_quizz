@@ -124,22 +124,34 @@ export class QuizzsService {
     quizz.modified_on = updateQuizzDto.modified_on ? new Date(updateQuizzDto.modified_on) : quizz.modified_on;
     quizz.deleted_on = updateQuizzDto.deleted_on ? new Date(updateQuizzDto.deleted_on) : quizz.deleted_on;
 
+    console.log('-3');
     if (updateQuizzDto.questions) {
+      const questionsToUpdate = (updateQuizzDto.questions as UpdateQuestionDto[]).filter(q => !q.deleted);
       for (const questionData of updateQuizzDto.questions as UpdateQuestionDto[]) {
+        console.log('-2');
         if (questionData.deleted) {
           const questionToDelete = quizz.questions.find(q => q.id === questionData.id);
+          console.log('-1');
           if (questionToDelete) {
+            console.log('0');
             for (const choice of questionToDelete.choices) {
               await this.choiceRepository.remove(choice);
+              console.log('1');
             }
             await this.questionRepository.remove(questionToDelete);
+            console.log('2');
           }
           continue;
         }
 
         let question = quizz.questions.find(q => q.id === questionData.id);
+        console.log('3');
+        console.log(question);
+        console.log(questionData.deleted);
         if (!question && !questionData.deleted) {
           question = new Question();
+          console.log('4');
+          console.log(question);
           quizz.questions.push(question);
         }
 
