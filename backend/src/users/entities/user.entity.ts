@@ -28,18 +28,23 @@ export class User {
   created_on: Date;
 
   @Column({ nullable: true })
+  @Exclude()
   confirmation_token: string;
 
   @Column({ nullable: true })
+  @Exclude()
   confirm_before: Date;
 
   @Column({ nullable: true })
+  @Exclude()
   account_confirmed_on: Date;
 
   @Column({ nullable: true })
+  @Exclude()
   deleted_on: Date;
 
   @Column({ default: 0 })
+  @Exclude()
   is_super_admin: boolean;
 
   @OneToMany(() => Quizz, (quizz) => quizz.user)
