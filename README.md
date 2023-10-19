@@ -25,7 +25,7 @@ An app to generate dynamic quizz and share them with your friends, customers, st
   ```bash
     cd backend
     npm install
-    cd ../frontend
+    cd ../frontend_angular
     npm install
   ```
 - Change your JWT secret by a strong one in `backend/src/auth/constants.ts`
@@ -37,8 +37,9 @@ An app to generate dynamic quizz and share them with your friends, customers, st
   ```
 - Launch the frontend
   ```bash
-    cd frontend
-    npm run serve
+    cd frontend_angular
+    npm i
+    ng serve
   ```
 - Open your browser and go to [localhost:8080](http://localhost:8080)
 
