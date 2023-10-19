@@ -1,6 +1,37 @@
-mat-form-field{
-  width: 30%;
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
-.form-buttons button{
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.form-fields, .form-buttons {
+  padding: 0 10%;
+  box-sizing: border-box;
+}
+
+
+mat-form-field {
+  width: 100%;
+}
+
+.form-buttons button {
   margin: 0 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+@media (max-width: 420px) {
+  .form-fields, .form-buttons {
+    flex-direction: column;
+  }
+
+  .form-buttons button {
+    margin-bottom: 10px;
+  }
 }

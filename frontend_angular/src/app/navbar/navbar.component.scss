@@ -8,7 +8,7 @@ div {
 
 a{
   text-decoration: none;
-  font-size: 110%;
+  font-size: 80%;
   white-space: normal;
 }
 
@@ -28,4 +28,16 @@ button{
 .mat-sidenav-content{
   padding-top: 40px;
   text-align: center;
+}
+
+a.current {
+  background-color: #34349d;
+}
+
+.normal-buttons a{
+  margin: 0px 5px;
+}
+
+.normal-buttons a:hover {
+  background-color: #262675;
 }

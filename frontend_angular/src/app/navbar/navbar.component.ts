@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {provideRouter} from "@angular/router";
 
 @Component({
   selector: 'app-navbar',
@@ -7,4 +8,5 @@ import { Component } from '@angular/core';
 })
 export class NavbarComponent {
   name = 'Angular 6';
+    protected readonly provideRouter = provideRouter;
 }
