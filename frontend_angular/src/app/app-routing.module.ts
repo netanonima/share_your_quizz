@@ -6,6 +6,7 @@ import {RegisterComponent} from "./register/register.component";
 import {QuizzComponent} from "./quizz/quizz.component";
 import {ConfirmAccountComponent} from "./confirm-account/confirm-account.component";
 import {ResetPasswordComponent} from "./reset-password/reset-password.component";
+import {ResetPasswordRetrieveComponent} from "./reset-password-retrieve/reset-password-retrieve.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -14,6 +15,7 @@ const routes: Routes = [
   {path: 'quizz', component: QuizzComponent},
   {path: 'confirm-account', component: ConfirmAccountComponent},
   {path: 'reset-password', component: ResetPasswordComponent},
+  {path: 'reset-password-retrieve', component: ResetPasswordRetrieveComponent}
 ];
 
 @NgModule({

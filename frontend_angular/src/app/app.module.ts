@@ -22,6 +22,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { FooterComponent } from './footer/footer.component';
 import { ConfirmAccountComponent } from './confirm-account/confirm-account.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { ResetPasswordRetrieveComponent } from './reset-password-retrieve/reset-password-retrieve.component';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     QuizzComponent,
     FooterComponent,
     ConfirmAccountComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    ResetPasswordRetrieveComponent
   ],
   imports: [
     BrowserModule,
