@@ -5,6 +5,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {RegistrationResponse} from "./registration-response";
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-register',
@@ -81,7 +82,8 @@ export class RegisterComponent {
 
   constructor(
     private apiService: ApiService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) { }
 
   onSubmit() {
@@ -95,6 +97,11 @@ export class RegisterComponent {
       this.apiService.register(requestInput).subscribe(
         (response: RegistrationResponse) => {
           console.log('Registration successful', response);
+          this.snackBar.open('Registration success, please confirm your e-mail before login', 'Close', {
+            panelClass: ['snackbar-success'],
+            duration: 6000
+          });
+          this.router.navigate(['/login']);
         },
         (error: HttpErrorResponse) => {
           console.error('Registration failed', error);
