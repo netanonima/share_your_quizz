@@ -1,0 +1,38 @@
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.form-buttons button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+
+.form-fields, .form-buttons {
+  padding: 2vh 2vw;
+}
+
+@media (min-width: 768px) {
+  .form-fields, .form-buttons {
+    padding: 20px 15%;
+  }
+}
+
+@media (min-width: 992px) {
+  .form-fields, .form-buttons {
+    padding: 20px 20%;
+  }
+}
