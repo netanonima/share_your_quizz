@@ -36,3 +36,13 @@ mat-form-field {
     padding: 20px 20%;
   }
 }
+
+.password-reset-link {
+  margin-top: 10px;
+  text-align: right;
+  a {
+    color: #7D7D7D;
+    font-size: 14px;
+    text-decoration: underline;
+  }
+}

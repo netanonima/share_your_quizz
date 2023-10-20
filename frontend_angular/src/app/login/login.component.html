@@ -26,4 +26,8 @@
     <button type="submit" mat-stroked-button color="primary" [disabled]="loginForm.invalid">Login</button>
     <button mat-stroked-button color="accent" (click)="cancel()">Cancel</button>
   </div>
+
+  <div class="password-reset-link">
+    <a [routerLink]="['/reset-password-retrieve']">Forgot password?</a>
+  </div>
 </form>
