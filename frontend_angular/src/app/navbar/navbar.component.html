@@ -13,10 +13,10 @@
     <div fxShow="true" fxHide.lt-md="true" class="normal-buttons">
       <!-- add a class is the current route is-->
       <a mat-button routerLink="/" routerLinkActive="current" [routerLinkActiveOptions]="{exact:true}">Home</a>
-      <a mat-button routerLink="/login" routerLinkActive="current">Login</a>
-      <a mat-button routerLink="/logout" routerLinkActive="current">Logout</a>
-      <a mat-button routerLink="/register" routerLinkActive="current">Register</a>
-      <a mat-button routerLink="/quizz" routerLinkActive="current">Quizz</a>
+      <a mat-button routerLink="/login" routerLinkActive="current" *ngIf="!authService.isAuthenticated()">Login</a>
+      <a mat-button (click)="logout()" *ngIf="authService.isAuthenticated()">Logout</a>
+      <a mat-button routerLink="/register" routerLinkActive="current" *ngIf="!authService.isAuthenticated()">Register</a>
+      <a mat-button routerLink="/quizz" routerLinkActive="current" *ngIf="authService.isAuthenticated()">Quizz</a>
     </div>
 
   </mat-toolbar>
