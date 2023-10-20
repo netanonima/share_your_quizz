@@ -19,6 +19,7 @@ import { QuizzComponent } from './quizz/quizz.component';
 import {MatInputModule} from "@angular/material/input";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatListModule} from "@angular/material/list";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { FooterComponent } from './footer/footer.component';
 import { ConfirmAccountComponent } from './confirm-account/confirm-account.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
@@ -49,7 +50,8 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     MatButtonModule,
     MatInputModule,
     ReactiveFormsModule,
-    MatListModule
+    MatListModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

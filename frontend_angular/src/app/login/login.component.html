@@ -1,1 +1,30 @@
-<p>login works!</p>
+<h1>Login</h1>
+<form [formGroup]="loginForm" class="form-fields" @fadeInOut>
+  <div>
+    <mat-form-field>
+      <mat-label>Enter your username</mat-label>
+      <input matInput placeholder="yourNickname" formControlName="username" required>
+      <mat-icon matSuffix>person_outline</mat-icon>
+      <mat-error *ngIf="(loginForm.get('username')?.invalid)">
+        {{getErrorMessage('username')}}
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field>
+      <mat-label>Enter your password</mat-label>
+      <input type="password" matInput placeholder="********" formControlName="password" required>
+      <mat-icon matSuffix>password_outline</mat-icon>
+      <mat-error *ngIf="(loginForm.get('passwords.password')?.invalid)">
+        {{getErrorMessage('passwords.password')}}
+      </mat-error>
+
+    </mat-form-field>
+  </div>
+</form>
+
+<div class="form-buttons">
+  <button mat-stroked-button color="primary" (click)="register()" [disabled]="loginForm.invalid">Login</button>
+  <button mat-stroked-button color="accent" (click)="cancel()">Cancel</button>
+</div>

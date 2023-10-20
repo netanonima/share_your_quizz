@@ -63,7 +63,7 @@ export class RegisterComponent {
       return control.hasError('email') ? 'Not a valid email' : '';
     }
 
-    return '';  // Retourne une chaîne vide si le contrôle est null
+    return '';
   }
 
   register() {
@@ -89,10 +89,10 @@ export class RegisterComponent {
         password: formData.passwords.password
       };
       this.apiService.register(requestInput).subscribe(
-        (response: RegistrationResponse) => {  // type spécifié ici
+        (response: RegistrationResponse) => {
           console.log('Registration successful', response);
         },
-        (error: HttpErrorResponse) => {  // type spécifié ici
+        (error: HttpErrorResponse) => {
           console.error('Registration failed', error);
         }
       );

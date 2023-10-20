@@ -16,4 +16,9 @@ export class ApiService {
     const url = `${this.apiUrl}/users`;
     return this.http.post(url, data);
   }
+
+  login(data: any): Observable<any> {
+    const url = `${this.apiUrl}/auth/login`;
+    return this.http.post(url, data);
+  }
 }
