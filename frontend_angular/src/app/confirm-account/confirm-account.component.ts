@@ -28,6 +28,7 @@ export class ConfirmAccountComponent implements OnInit{
     username: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
     confirmationToken: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(255)]),
   });
+
   public username: string | null | undefined;
   public token: string | null | undefined;
 

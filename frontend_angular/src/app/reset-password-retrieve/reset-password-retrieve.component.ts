@@ -4,8 +4,8 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ApiService} from "../api.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
-import {RegistrationResponse} from "../register/registration-response";
 import {HttpErrorResponse} from "@angular/common/http";
+import {ResetPasswordRetrieveResponse} from "./reset-password-retrieve-response";
 
 @Component({
   selector: 'app-reset-password-retrieve',
@@ -71,7 +71,7 @@ export class ResetPasswordRetrieveComponent {
     if (this.resetPasswordRetrieveForm.valid) {
       const formData = this.resetPasswordRetrieveForm.value;
       this.apiService.resetPasswordRetrieve(formData).subscribe(
-        (response: RegistrationResponse) => {
+        (response: ResetPasswordRetrieveResponse) => {
           console.log('Reset password retrieve success', response);
           this.snackBar.open('Reset password retrieve success, please check your e-mails', 'Close', {
             panelClass: ['snackbar-success'],

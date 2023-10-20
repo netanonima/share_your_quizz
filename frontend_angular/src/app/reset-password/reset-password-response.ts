@@ -1,4 +1,4 @@
-export interface ResetPasswordRetrieveResponse {
+export interface ResetPasswordResponse {
   id: number;
   username: string;
   email: string;
