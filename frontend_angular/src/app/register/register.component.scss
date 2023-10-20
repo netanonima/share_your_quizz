@@ -10,12 +10,6 @@
   margin-top: 20px;
 }
 
-.form-fields, .form-buttons {
-  padding: 0 10%;
-  box-sizing: border-box;
-}
-
-
 mat-form-field {
   width: 100%;
 }
@@ -26,12 +20,20 @@ mat-form-field {
   font-size: 16px;
 }
 
-@media (max-width: 420px) {
-  .form-fields, .form-buttons {
-    flex-direction: column;
-  }
 
-  .form-buttons button {
-    margin-bottom: 10px;
+.form-fields, .form-buttons {
+  padding: 2vh 2vw;
+}
+
+@media (min-width: 768px) {
+  .form-fields, .form-buttons {
+    padding: 20px 15%;
   }
 }
+
+@media (min-width: 992px) {
+  .form-fields, .form-buttons {
+    padding: 20px 20%;
+  }
+}
+

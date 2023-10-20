@@ -1,5 +1,5 @@
 .home-content, .home-buttons {
-  padding: 0 10%;
+  padding: 2vh 2vw;  // padding variable basé sur la taille de la fenêtre
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -25,6 +25,18 @@
     margin: 0 10px;
     padding: 10px 20px;
     font-size: 16px;
+  }
+}
+
+@media (min-width: 768px) {
+  .home-content, .home-buttons {
+    padding: 20px 15%;  // augmentez le padding pour les écrans plus larges
+  }
+}
+
+@media (min-width: 992px) {
+  .home-content, .home-buttons {
+    padding: 20px 20%;  // augmentez encore le padding pour les écrans encore plus larges
   }
 }
 
