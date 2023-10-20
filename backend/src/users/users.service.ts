@@ -138,6 +138,12 @@ export class UsersService {
       );
     }
 
+    if(user.account_confirmed_on === null){
+        throw new NotFoundException(
+            `User with username ${forgotPasswordDto.username} is not confirmed.`,
+        );
+    }
+
     user.password = await this.hashPassword(forgotPasswordDto.password);
     if (user.account_confirmed_on === null) {
       user.confirmation_token = Math.random().toString(36).slice(2);
