@@ -49,7 +49,7 @@ export class LoginComponent {
     return '';
   }
 
-  register() {
+  login() {
     if (this.loginForm.valid) {
       console.log(this.loginForm.value);
       this.onSubmit();

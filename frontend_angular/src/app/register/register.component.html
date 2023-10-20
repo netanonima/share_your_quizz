@@ -1,5 +1,5 @@
 <h1>Registration</h1>
-<form [formGroup]="registerForm" class="form-fields" @fadeInOut>
+<form [formGroup]="registerForm" class="form-fields" @fadeInOut (ngSubmit)="register()">
   <div>
     <mat-form-field>
       <mat-label>Enter your username</mat-label>
@@ -50,6 +50,6 @@
 </form>
 
 <div class="form-buttons">
-  <button mat-stroked-button color="primary" (click)="register()" [disabled]="registerForm.invalid">Register</button>
+  <button type="submit" mat-stroked-button color="primary" (click)="register()" [disabled]="registerForm.invalid">Register</button>
   <button mat-stroked-button color="accent" (click)="cancel()">Cancel</button>
 </div>

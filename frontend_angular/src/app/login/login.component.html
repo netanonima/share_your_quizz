@@ -1,5 +1,5 @@
 <h1>Login</h1>
-<form [formGroup]="loginForm" class="form-fields" @fadeInOut>
+<form [formGroup]="loginForm" class="form-fields" @fadeInOut (ngSubmit)="login()">
   <div>
     <mat-form-field>
       <mat-label>Enter your username</mat-label>
@@ -19,12 +19,11 @@
       <mat-error *ngIf="(loginForm.get('passwords.password')?.invalid)">
         {{getErrorMessage('passwords.password')}}
       </mat-error>
-
     </mat-form-field>
   </div>
-</form>
 
-<div class="form-buttons">
-  <button mat-stroked-button color="primary" (click)="register()" [disabled]="loginForm.invalid">Login</button>
-  <button mat-stroked-button color="accent" (click)="cancel()">Cancel</button>
-</div>
+  <div class="form-buttons">
+    <button type="submit" mat-stroked-button color="primary" [disabled]="loginForm.invalid">Login</button>
+    <button mat-stroked-button color="accent" (click)="cancel()">Cancel</button>
+  </div>
+</form>
