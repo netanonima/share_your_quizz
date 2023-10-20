@@ -4,6 +4,7 @@ import {ApiService} from "../api.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {RegistrationResponse} from "./registration-response";
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-register',
@@ -78,7 +79,10 @@ export class RegisterComponent {
     this.registerForm.reset();
   }
 
-  constructor(private apiService: ApiService) { }
+  constructor(
+    private apiService: ApiService,
+    private snackBar: MatSnackBar
+  ) { }
 
   onSubmit() {
     if (this.registerForm.valid) {
@@ -94,6 +98,10 @@ export class RegisterComponent {
         },
         (error: HttpErrorResponse) => {
           console.error('Registration failed', error);
+          this.snackBar.open('An error occurred', 'Close', {
+            panelClass: ['snackbar-warning'],
+            duration: 3000
+          });
         }
       );
     }
