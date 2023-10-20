@@ -89,6 +89,11 @@ export class LoginComponent {
               panelClass: ['snackbar-warning'],
               duration: 3000
             });
+          }else{
+            this.snackBar.open('Login failed', 'Close', {
+              panelClass: ['snackbar-warning'],
+              duration: 3000
+            });
           }
         }
       );
