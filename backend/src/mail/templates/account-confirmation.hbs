@@ -13,7 +13,7 @@
     <p>
         Before accessing your account please confirm your account by clicking on this link :
     </p>
-    <a href="{{account_confirmation_url}}{{token}}">
+    <a href="{{account_confirmation_url}}?username={{name}}&token={{token}}">
         <h2>
             Confirm your account now
         </h2>
@@ -22,7 +22,7 @@
         If you can't click on this link, please copy and paste this url on your browser:
     </p>
     <em>
-        {{account_confirmation_url}}{{token}}
+        {{account_confirmation_url}}?username={{name}}&token={{token}}
     </em>
     <p>
         Please do not reply to this e-mail
