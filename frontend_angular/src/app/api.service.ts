@@ -26,4 +26,14 @@ export class ApiService {
     const url = `${this.apiUrl}/users/confirm-account`;
     return this.http.post(url, data);
   }
+
+  resetPasswordRetrieve(data: any): Observable<any> {
+    const url = `${this.apiUrl}/users/forgot-password-retrieve`;
+    return this.http.post(url, data);
+  }
+
+  resetPassword(data: any): Observable<any> {
+    const url = `${this.apiUrl}/users/forgot-password`;
+    return this.http.post(url, data);
+  }
 }

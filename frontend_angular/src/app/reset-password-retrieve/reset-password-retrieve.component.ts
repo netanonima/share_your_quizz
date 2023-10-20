@@ -70,7 +70,7 @@ export class ResetPasswordRetrieveComponent {
   onSubmit() {
     if (this.resetPasswordRetrieveForm.valid) {
       const formData = this.resetPasswordRetrieveForm.value;
-      this.apiService.register(formData).subscribe(
+      this.apiService.resetPasswordRetrieve(formData).subscribe(
         (response: RegistrationResponse) => {
           console.log('Reset password retrieve success', response);
           this.snackBar.open('Reset password retrieve success, please check your e-mails', 'Close', {
