@@ -74,7 +74,10 @@ export class LoginComponent {
         (response: LoginResponse) => {
           console.log('Registration successful', response);
           localStorage['api_token'] = response.access_token;
-          this.snackBar.open('Login successful', 'Close');
+          this.snackBar.open('Login successful', 'Close', {
+            panelClass: ['snackbar-success'],
+            duration: 3000
+          });
           // redirect to home page
           this.router.navigate(['/']);
         },
@@ -82,7 +85,10 @@ export class LoginComponent {
           console.error('Registration failed', error);
           if(error.error.message=='Account not confirmed'){
             console.log('Account not confirmed');
-            this.snackBar.open('Account not confirmed', 'Close');
+            this.snackBar.open('Account not confirmed', 'Close', {
+              panelClass: ['snackbar-warning'],
+              duration: 3000
+            });
           }
         }
       );
