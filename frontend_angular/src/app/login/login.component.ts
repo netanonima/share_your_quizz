@@ -78,7 +78,6 @@ export class LoginComponent {
             panelClass: ['snackbar-success'],
             duration: 3000
           });
-          // redirect to home page
           this.router.navigate(['/']);
         },
         (error: HttpErrorResponse) => {
