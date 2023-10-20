@@ -1,10 +1,91 @@
 import { Component } from '@angular/core';
+import { FormControl, Validators, FormGroup, AbstractControl } from '@angular/forms';
+import {ApiService} from "../api.service";
+import {HttpErrorResponse} from "@angular/common/http";
+import {LoginResponse} from "./login-response";
+import { trigger, state, style, animate, transition } from '@angular/animations';
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      state('in', style({opacity: 1})),
+      transition(':enter', [
+        style({opacity: 0}),
+        animate(600 )
+      ]),
+      transition(':leave',
+        animate(600, style({opacity: 0})))
+    ])
+  ]
 })
 export class LoginComponent {
+  loginForm: FormGroup = new FormGroup({
+    username: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
+    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+  });
 
+  getErrorMessage(controlName: string): string {
+    const control = this.loginForm.get(controlName);
+    if (control) {
+      if (control.hasError('required')) {
+        return 'You must enter a value';
+      }
+
+      if(control.hasError('minlength')) {
+        return 'Minimum length is ' + control.getError('minlength').requiredLength;
+      }
+
+      if(control.hasError('maxlength')) {
+        return 'Maximum length is ' + control.getError('maxlength').requiredLength;
+      }
+
+    }
+
+    return '';
+  }
+
+  register() {
+    if (this.loginForm.valid) {
+      console.log(this.loginForm.value);
+      this.onSubmit();
+    }
+  }
+
+  cancel() {
+    // empty all fields
+    this.loginForm.reset();
+  }
+
+  constructor(
+    private apiService: ApiService,
+    private snackBar: MatSnackBar,
+    private router: Router
+  ) { }
+
+  onSubmit() {
+    if (this.loginForm.valid) {
+      const formData = this.loginForm.value;
+      this.apiService.login(formData).subscribe(
+        (response: LoginResponse) => {
+          console.log('Registration successful', response);
+          localStorage['api_token'] = response.access_token;
+          this.snackBar.open('Login successful', 'Close');
+          // redirect to home page
+          this.router.navigate(['/']);
+        },
+        (error: HttpErrorResponse) => {
+          console.error('Registration failed', error);
+          if(error.error.message=='Account not confirmed'){
+            console.log('Account not confirmed');
+            this.snackBar.open('Account not confirmed', 'Close');
+          }
+        }
+      );
+    }
+  }
 }
