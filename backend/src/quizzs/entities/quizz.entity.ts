@@ -20,7 +20,7 @@ export class Quizz {
   @ManyToOne(() => User, (user) => user.quizzs)
   user: User;
 
-  @Column({ length: 120 })
+  @Column({ length: 80 })
   quizz: string;
 
   @Column()

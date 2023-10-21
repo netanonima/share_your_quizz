@@ -32,8 +32,9 @@ export class QuizzsService {
       @InjectRepository(User)
       private userRepository: Repository<User>
   ) {}
-  async create(createQuizzDto: CreateQuizzDto): Promise<Quizz> {
+  async create(currentUser: User, createQuizzDto: CreateQuizzDto): Promise<Quizz> {
     const quizz = new Quizz();
+    quizz.user = currentUser;
     quizz.quizz = createQuizzDto.quizz;
     if(!createQuizzDto.created_on) {
       quizz.created_on = new Date();
@@ -42,7 +43,6 @@ export class QuizzsService {
     }
     quizz.modified_on = createQuizzDto.modified_on ? new Date(createQuizzDto.modified_on) : null;
     quizz.deleted_on = createQuizzDto.deleted_on ? new Date(createQuizzDto.deleted_on) : null;
-    quizz.user = await this.userRepository.findOne({ where: { id: createQuizzDto.userId } });
 
     if (createQuizzDto.questions) {
       quizz.questions = [];
@@ -221,17 +221,8 @@ export class QuizzsService {
         }
       }
     }
-
     return await this.quizzRepository.save(quizz);
   }
-
-
-
-
-
-
-
-
 
   async remove(id: number, currentUser: User): Promise<void> {
     const quizz = await this.quizzRepository.findOne({
