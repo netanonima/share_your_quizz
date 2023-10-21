@@ -34,7 +34,11 @@ export class QuizzsService {
   ) {}
   async create(createQuizzDto: CreateQuizzDto): Promise<Quizz> {
     const quizz = new Quizz();
-    quizz.created_on = new Date(createQuizzDto.created_on);
+    if(!createQuizzDto.created_on) {
+      quizz.created_on = new Date();
+    }else{
+        quizz.created_on = new Date(createQuizzDto.created_on);
+    }
     quizz.modified_on = createQuizzDto.modified_on ? new Date(createQuizzDto.modified_on) : null;
     quizz.deleted_on = createQuizzDto.deleted_on ? new Date(createQuizzDto.deleted_on) : null;
     quizz.user = await this.userRepository.findOne({ where: { id: createQuizzDto.userId } });
@@ -128,8 +132,8 @@ export class QuizzsService {
     }
 
     quizz.created_on = updateQuizzDto.created_on ? new Date(updateQuizzDto.created_on) : quizz.created_on;
-    quizz.modified_on = updateQuizzDto.modified_on ? new Date(updateQuizzDto.modified_on) : quizz.modified_on;
-    quizz.deleted_on = updateQuizzDto.deleted_on ? new Date(updateQuizzDto.deleted_on) : quizz.deleted_on;
+    quizz.modified_on = new Date();
+    quizz.deleted_on = quizz.deleted_on;
 
     console.log('-3');
     if (updateQuizzDto.questions) {

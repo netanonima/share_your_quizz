@@ -6,7 +6,7 @@ export class CreateQuizzDto {
   @IsInt()
   readonly id?: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDateString()
   readonly created_on?: Date;
 
