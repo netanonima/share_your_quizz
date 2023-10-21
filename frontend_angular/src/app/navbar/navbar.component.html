@@ -16,7 +16,7 @@
       <a mat-button routerLink="/login" routerLinkActive="current" *ngIf="!authService.isAuthenticated()">Login</a>
       <a mat-button (click)="logout()" *ngIf="authService.isAuthenticated()">Logout</a>
       <a mat-button routerLink="/register" routerLinkActive="current" *ngIf="!authService.isAuthenticated()">Register</a>
-      <a mat-button routerLink="/quizz" routerLinkActive="current" *ngIf="authService.isAuthenticated()">Quizz</a>
+      <a mat-button routerLink="/quizzes" routerLinkActive="current" *ngIf="authService.isAuthenticated()">Quizzes</a>
     </div>
 
   </mat-toolbar>
