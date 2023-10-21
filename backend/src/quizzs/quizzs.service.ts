@@ -82,7 +82,7 @@ export class QuizzsService {
   async findAll(user: User): Promise<Quizz[]> {
     return this.quizzRepository.find({
       where: { user: { id: user.id }, deleted_on: null },
-      relations: ['questions', 'questions.choices', 'questions.media', 'questions.image']
+      select: ['id', 'quizz', 'created_on', 'modified_on']
     });
   }
 
