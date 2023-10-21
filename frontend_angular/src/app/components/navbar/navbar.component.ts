@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {provideRouter} from "@angular/router";
-import {AuthService} from "../auth.service";
+import {AuthService} from "../../services/auth/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators, FormGroup, AbstractControl } from '@angular/forms';
-import {ApiService} from "../api.service";
+import {ApiService} from "../../services/api/api.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {LoginResponse} from "./login-response";
 import { trigger, state, style, animate, transition } from '@angular/animations';
