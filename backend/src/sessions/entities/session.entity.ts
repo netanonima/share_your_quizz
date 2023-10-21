@@ -12,12 +12,12 @@ export class Session {
   @Column()
   started_on: Date;
 
-  @Column()
+  @Column({ nullable: true })
   finished_on: Date;
 
-  @Column({ length: 24 })
+  @Column({ nullable: true, length: 24 })
   winner_username: string;
 
-  @Column()
+  @Column({ nullable: true })
   winner_points: number;
 }

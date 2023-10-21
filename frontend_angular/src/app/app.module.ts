@@ -29,6 +29,7 @@ import { MatSortModule } from "@angular/material/sort";
 import { MatDialogModule } from "@angular/material/dialog";
 import { DeleteConfirmationComponent } from './modal-dialogs/delete-confirmation/delete-confirmation.component';
 import { NewElementComponent } from './modal-dialogs/new-element/new-element.component';
+import { PlayComponent } from './play/play.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { NewElementComponent } from './modal-dialogs/new-element/new-element.com
     QuizzesComponent,
     PageNotFoundComponent,
     DeleteConfirmationComponent,
-    NewElementComponent
+    NewElementComponent,
+    PlayComponent
   ],
   imports: [
     BrowserModule,

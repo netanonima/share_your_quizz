@@ -70,4 +70,22 @@ export class ApiService {
     };
     return this.http.post<any>(url, data, { headers });
   }
+
+  startSession(id: string): Observable<any> {
+    const url = `${this.apiUrl}/sessions`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    return this.http.post<any>(url, {
+      quizzId: parseInt(id)
+    }, { headers });
+  }
+
+  deleteSession(id: string): Observable<any> {
+    const url = `${this.apiUrl}/sessions/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    return this.http.delete<any>(url, { headers });
+  }
 }
