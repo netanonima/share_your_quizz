@@ -3,8 +3,8 @@ import {ApiService} from "../api.service";
 import {Sort} from "@angular/material/sort";
 import * as moment from 'moment';
 import {Router} from "@angular/router";
-import {MatDialog, MatDialogModule } from "@angular/material/dialog";
-import {MatButtonModule} from "@angular/material/button";
+import {MatDialog } from "@angular/material/dialog";
+import {DeleteConfirmationComponent} from "../modal-dialogs/delete-confirmation/delete-confirmation.component";
 // import 'moment/locale/en-US';
 
 export interface Quizz {
@@ -80,7 +80,7 @@ export class QuizzesComponent implements OnInit{
 
   delete(id: number){
     console.log('delete action');
-    const dialogRef = this.dialog.open(DeleteConfirmationDialog);
+    const dialogRef = this.dialog.open(DeleteConfirmationComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
@@ -89,11 +89,3 @@ export class QuizzesComponent implements OnInit{
 
   protected readonly moment = moment;
 }
-
-@Component({
-  selector: 'delete-confirmation',
-  templateUrl: 'modal-dialogs/delete-confirmation.html',
-  standalone: true,
-  imports: [MatDialogModule, MatButtonModule],
-})
-export class DeleteConfirmationDialog {}

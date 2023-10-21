@@ -15,17 +15,21 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { QuizzComponent } from './quizz/quizz.component';
-import {MatInputModule} from "@angular/material/input";
-import {ReactiveFormsModule} from "@angular/forms";
-import {MatListModule} from "@angular/material/list";
-import {MatSnackBarModule} from "@angular/material/snack-bar";
+import { MatInputModule } from "@angular/material/input";
+import { ReactiveFormsModule } from "@angular/forms";
+import { MatListModule } from "@angular/material/list";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { FooterComponent } from './footer/footer.component';
 import { ConfirmAccountComponent } from './confirm-account/confirm-account.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ResetPasswordRetrieveComponent } from './reset-password-retrieve/reset-password-retrieve.component';
 import { QuizzesComponent } from './quizzes/quizzes.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import {MatSortModule} from "@angular/material/sort";
+import { MatSortModule } from "@angular/material/sort";
+import { MatDialogModule } from "@angular/material/dialog";
+import { DeleteConfirmationComponent } from './modal-dialogs/delete-confirmation/delete-confirmation.component';
+import {MatLegacyButtonModule} from "@angular/material/legacy-button";
+import {MatLegacyDialogModule} from "@angular/material/legacy-dialog";
 
 
 @NgModule({
@@ -41,24 +45,28 @@ import {MatSortModule} from "@angular/material/sort";
     ResetPasswordComponent,
     ResetPasswordRetrieveComponent,
     QuizzesComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    DeleteConfirmationComponent
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        HttpClientModule,
-        AppRoutingModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatSidenavModule,
-        FlexLayoutModule,
-        MatButtonModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        MatListModule,
-        MatSnackBarModule,
-        MatSortModule
-    ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    AppRoutingModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatSidenavModule,
+    FlexLayoutModule,
+    MatButtonModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatListModule,
+    MatSnackBarModule,
+    MatSortModule,
+    MatDialogModule,
+    MatLegacyButtonModule,
+    MatLegacyDialogModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
