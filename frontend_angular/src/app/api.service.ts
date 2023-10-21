@@ -51,4 +51,12 @@ export class ApiService {
     });
     return this.http.get<any>(url, { headers });
   }
+
+  deleteQuizz(id: string): Observable<any> {
+    const url = `${this.apiUrl}/quizzs/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    return this.http.delete<any>(url, { headers });
+  }
 }

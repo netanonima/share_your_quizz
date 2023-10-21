@@ -28,8 +28,6 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { MatSortModule } from "@angular/material/sort";
 import { MatDialogModule } from "@angular/material/dialog";
 import { DeleteConfirmationComponent } from './modal-dialogs/delete-confirmation/delete-confirmation.component';
-import {MatLegacyButtonModule} from "@angular/material/legacy-button";
-import {MatLegacyDialogModule} from "@angular/material/legacy-dialog";
 
 
 @NgModule({
@@ -63,9 +61,7 @@ import {MatLegacyDialogModule} from "@angular/material/legacy-dialog";
     MatListModule,
     MatSnackBarModule,
     MatSortModule,
-    MatDialogModule,
-    MatLegacyButtonModule,
-    MatLegacyDialogModule
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

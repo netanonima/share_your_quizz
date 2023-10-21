@@ -234,13 +234,32 @@ export class QuizzsService {
 
 
   async remove(id: number, currentUser: User): Promise<void> {
-    const quizz = await this.quizzRepository.findOne({ where: { id: id }, relations: ['user'] });
+    const quizz = await this.quizzRepository.findOne({
+      where: { id: id },
+      relations: ['user', 'questions', 'questions.choices', 'questions.media', 'questions.image'],
+    });
+
     if (!quizz) {
       throw new NotFoundException(`Quizz with ID ${id} not found`);
     }
+
     if (quizz.user.id !== currentUser.id) {
       throw new ForbiddenException('You do not have permission to delete this quizz.');
     }
+
+    for (const question of quizz.questions) {
+      for (const choice of question.choices) {
+        await this.choiceRepository.remove(choice);
+      }
+      if (question.media) {
+        await this.mediaRepository.remove(question.media);
+      }
+      if (question.image) {
+        await this.imageRepository.remove(question.image);
+      }
+      await this.questionRepository.remove(question);
+    }
+
     await this.quizzRepository.remove(quizz);
   }
 
