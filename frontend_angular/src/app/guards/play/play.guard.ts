@@ -9,8 +9,9 @@ export class PlayGuard implements CanActivate {
   constructor(private router: Router, private queryParamsService: QueryParamsService) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
+    console.log('PlayGuard activated');
     this.queryParamsService.setParams(route.queryParams);
     this.router.navigate([{ outlets: { playOutlet: ['play'] } }]);
-    return false;
+    return true;
   }
 }

@@ -21,8 +21,7 @@ const routes: Routes = [
   {path: 'confirm-account', component: ConfirmAccountComponent},
   {path: 'reset-password', component: ResetPasswordComponent},
   {path: 'reset-password-retrieve', component: ResetPasswordRetrieveComponent},
-  { path: 'play', canActivate: [PlayGuard] },
-  { path: 'play', component: PlayComponent, outlet: 'playOutlet' },
+  { path: 'play', component: PlayComponent, canActivate: [PlayGuard], outlet: 'playOutlet' },
   {path: '**', pathMatch: 'full', component: PageNotFoundComponent}
 ];
 
