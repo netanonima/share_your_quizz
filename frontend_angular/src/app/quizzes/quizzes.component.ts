@@ -2,6 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {ApiService} from "../api.service";
 import {Sort} from "@angular/material/sort";
 import * as moment from 'moment';
+import {Router} from "@angular/router";
+import {MatDialog, MatDialogModule } from "@angular/material/dialog";
+import {MatButtonModule} from "@angular/material/button";
 // import 'moment/locale/en-US';
 
 export interface Quizz {
@@ -20,7 +23,11 @@ export class QuizzesComponent implements OnInit{
   data: Quizz[] = [];
   sortedData : Quizz[] | undefined;
 
-  constructor(private apiService: ApiService) {
+  constructor(
+    private apiService: ApiService,
+    private router: Router,
+    public dialog: MatDialog
+  ) {
   }
 
   ngOnInit(): void {
@@ -68,11 +75,25 @@ export class QuizzesComponent implements OnInit{
 
   edit(id: number){
     console.log('edit action');
+    this.router.navigate(['/quizz'], { queryParams: { id: id } });
   }
 
   delete(id: number){
     console.log('delete action');
+    const dialogRef = this.dialog.open(DeleteConfirmationDialog);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
   protected readonly moment = moment;
 }
+
+@Component({
+  selector: 'delete-confirmation',
+  templateUrl: 'modal-dialogs/delete-confirmation.html',
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule],
+})
+export class DeleteConfirmationDialog {}
