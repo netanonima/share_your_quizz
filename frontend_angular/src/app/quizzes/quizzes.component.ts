@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ApiService} from "../api.service";
 import {Sort} from "@angular/material/sort";
+import * as moment from 'moment';
+// import 'moment/locale/en-US';
 
 export interface Quizz {
   id: number;
@@ -16,10 +18,9 @@ export interface Quizz {
 })
 export class QuizzesComponent implements OnInit{
   data: Quizz[] = [];
-  sortedData : Quizz[];
+  sortedData : Quizz[] | undefined;
 
   constructor(private apiService: ApiService) {
-    this.sortedData = this.data.slice();
   }
 
   ngOnInit(): void {
@@ -27,6 +28,7 @@ export class QuizzesComponent implements OnInit{
       (result) => {
         console.log(result);
         this.data = result;
+        this.sortedData = this.data.slice();
       },
       (error) => {
         console.log(error);
@@ -59,4 +61,18 @@ export class QuizzesComponent implements OnInit{
       return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
     }
   }
+
+  play(id: number){
+    console.log('play action');
+  }
+
+  edit(id: number){
+    console.log('edit action');
+  }
+
+  delete(id: number){
+    console.log('delete action');
+  }
+
+  protected readonly moment = moment;
 }
