@@ -36,8 +36,16 @@ export class ApiService {
     return this.http.post(url, data);
   }
 
-  getQuizzs(): Observable<any> {
+  getQuizzes(): Observable<any> {
     const url = `${this.apiUrl}/quizzs`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    return this.http.get<any>(url, { headers });
+  }
+
+  getQuizz(id: string): Observable<any> {
+    const url = `${this.apiUrl}/quizzs/${id}`;
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('api_token')}`
     });

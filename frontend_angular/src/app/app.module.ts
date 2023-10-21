@@ -23,6 +23,8 @@ import { FooterComponent } from './footer/footer.component';
 import { ConfirmAccountComponent } from './confirm-account/confirm-account.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ResetPasswordRetrieveComponent } from './reset-password-retrieve/reset-password-retrieve.component';
+import { QuizzesComponent } from './quizzes/quizzes.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 
 @NgModule({
@@ -36,7 +38,9 @@ import { ResetPasswordRetrieveComponent } from './reset-password-retrieve/reset-
     FooterComponent,
     ConfirmAccountComponent,
     ResetPasswordComponent,
-    ResetPasswordRetrieveComponent
+    ResetPasswordRetrieveComponent,
+    QuizzesComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,

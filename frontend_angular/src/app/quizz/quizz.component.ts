@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ApiService} from "../api.service";
+import {ActivatedRoute, Router} from "@angular/router";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-quizz',
@@ -7,20 +9,33 @@ import {ApiService} from "../api.service";
   styleUrls: ['./quizz.component.scss']
 })
 export class QuizzComponent implements OnInit{
-  data: any;
+  public data: any;
+  public error: string;
+  public id: string | undefined | null;
 
-  constructor(private apiService: ApiService) {
+  constructor(
+    private apiService: ApiService,
+    private snackBar: MatSnackBar,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    this.error = '';
   }
 
   ngOnInit(): void {
-    this.apiService.getQuizzs().subscribe(
-      (result) => {
-        console.log(result);
-        this.data = result;
-      },
-      (error) => {
-        console.log(error);
-      }
-    )
+    this.id = this.route.snapshot.queryParamMap.get('id');
+    if(this.id){
+      this.apiService.getQuizz(this.id).subscribe(
+        (result) => {
+          console.log(result);
+          this.data = result;
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+    }else{
+      this.error = 'No id provided';
+    }
   }
 }
