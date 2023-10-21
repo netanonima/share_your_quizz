@@ -1,20 +1,22 @@
 <h1>Quizzes</h1>
-<table>
-  <tr *ngFor="let quizz of data">
-    <!--
-    <td>{{quizz.quizz}}</td>
-    <td>{{dessert.calories}}</td>
-    <td>{{dessert.fat}}</td>
-    <td>{{dessert.carbs}}</td>
-    <td>{{dessert.protein}}</td>
-    -->
-    <!--
-      created_on
-      deleted_on
-      id
-      modified_on
-      questions
-      quizz
-    -->
+<table matSort (matSortChange)="sortData($event)">
+  <tr>
+    <th mat-sort-header="name">Name</th>
+    <th mat-sort-header="created_on">Creation</th>
+    <th mat-sort-header="modified_on">Last modification</th>
+    <th>Actions</th>
   </tr>
+
+  <tr *ngFor="let quizz of data">
+    <td>{{quizz.quizz}}</td>
+    <td>{{quizz.created_on}}</td>
+    <td>{{quizz.modified_on}}</td>
+    <td>aa</td>
+  </tr>
+  <!--
+    created_on
+    id
+    modified_on
+    quizz
+  -->
 </table>

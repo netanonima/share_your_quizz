@@ -25,6 +25,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { ResetPasswordRetrieveComponent } from './reset-password-retrieve/reset-password-retrieve.component';
 import { QuizzesComponent } from './quizzes/quizzes.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import {MatSortModule} from "@angular/material/sort";
 
 
 @NgModule({
@@ -42,21 +43,22 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     QuizzesComponent,
     PageNotFoundComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    AppRoutingModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatSidenavModule,
-    FlexLayoutModule,
-    MatButtonModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatListModule,
-    MatSnackBarModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        AppRoutingModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatSidenavModule,
+        FlexLayoutModule,
+        MatButtonModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatListModule,
+        MatSnackBarModule,
+        MatSortModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
