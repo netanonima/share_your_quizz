@@ -5,6 +5,9 @@ import * as moment from 'moment';
 import {Router} from "@angular/router";
 import {MatDialog } from "@angular/material/dialog";
 import {DeleteConfirmationComponent} from "../modal-dialogs/delete-confirmation/delete-confirmation.component";
+import {LoginResponse} from "../login/login-response";
+import {HttpErrorResponse} from "@angular/common/http";
+import {MatSnackBar} from "@angular/material/snack-bar";
 // import 'moment/locale/en-US';
 
 export interface Quizz {
@@ -26,7 +29,8 @@ export class QuizzesComponent implements OnInit{
   constructor(
     private apiService: ApiService,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar,
   ) {
   }
 
@@ -83,7 +87,31 @@ export class QuizzesComponent implements OnInit{
     const dialogRef = this.dialog.open(DeleteConfirmationComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      if (result) {
+        console.log('User confirmed deletion');
+
+        this.apiService.deleteQuizz(id.toString()).subscribe(
+          (response: LoginResponse) => {
+            console.log('Element deleted', response);
+            this.snackBar.open('Element deleted', 'Close', {
+              panelClass: ['snackbar-success'],
+              duration: 3000
+            });
+            // delete element from array
+            this.sortedData = this.sortedData?.filter((item) => item.id !== id);
+          },
+          (error: HttpErrorResponse) => {
+            console.error('Registration failed', error);
+            this.snackBar.open('An error occured', 'Close', {
+              panelClass: ['snackbar-warning'],
+              duration: 3000
+            });
+          }
+        );
+
+      } else {
+        console.log('User cancelled deletion');
+      }
     });
   }
 
