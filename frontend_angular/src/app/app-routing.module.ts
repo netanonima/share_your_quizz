@@ -10,7 +10,6 @@ import { ResetPasswordComponent } from "./components/reset-password/reset-passwo
 import { ResetPasswordRetrieveComponent } from "./components/reset-password-retrieve/reset-password-retrieve.component";
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
 import { PlayComponent} from "./components/play/play.component";
-import { PlayGuard } from "./guards/play/play.guard";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -21,7 +20,7 @@ const routes: Routes = [
   {path: 'confirm-account', component: ConfirmAccountComponent},
   {path: 'reset-password', component: ResetPasswordComponent},
   {path: 'reset-password-retrieve', component: ResetPasswordRetrieveComponent},
-  { path: 'play', component: PlayComponent, canActivate: [PlayGuard], outlet: 'playOutlet' },
+  {path: 'play', component: PlayComponent, outlet: 'playOutlet'},
   {path: '**', pathMatch: 'full', component: PageNotFoundComponent}
 ];
 
