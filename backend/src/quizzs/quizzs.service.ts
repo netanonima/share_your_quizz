@@ -34,6 +34,7 @@ export class QuizzsService {
   ) {}
   async create(createQuizzDto: CreateQuizzDto): Promise<Quizz> {
     const quizz = new Quizz();
+    quizz.quizz = createQuizzDto.quizz;
     if(!createQuizzDto.created_on) {
       quizz.created_on = new Date();
     }else{
@@ -80,14 +81,14 @@ export class QuizzsService {
 
   async findAll(user: User): Promise<Quizz[]> {
     return this.quizzRepository.find({
-      where: { user: { id: user.id } },
+      where: { user: { id: user.id }, deleted_on: null },
       relations: ['questions', 'questions.choices', 'questions.media', 'questions.image']
     });
   }
 
   async findOne(id: number, currentUser: User): Promise<Quizz> {
     const quizz = await this.quizzRepository.findOne({
-      where: { id: id },
+      where: { id: id, deleted_on: null },
       relations: ['user', 'questions', 'questions.choices', 'questions.media', 'questions.image']
     });
     if (!quizz) {
@@ -101,7 +102,7 @@ export class QuizzsService {
 
   async update(id: number, updateQuizzDto: UpdateQuizzDto, currentUser: User): Promise<Quizz> {
     const quizz = await this.quizzRepository.findOne({ where: { id: id }, relations: ['user', 'questions', 'questions.choices', 'questions.media', 'questions.image'] });
-    if (!quizz) {
+    if (!quizz || quizz.deleted_on!=null){
       throw new NotFoundException(`Quizz with ID ${id} not found`);
     }
     if (quizz.user.id !== currentUser.id) {
@@ -131,6 +132,7 @@ export class QuizzsService {
       return new Quizz();
     }
 
+    quizz.quizz = updateQuizzDto.quizz || quizz.quizz;
     quizz.created_on = updateQuizzDto.created_on ? new Date(updateQuizzDto.created_on) : quizz.created_on;
     quizz.modified_on = new Date();
     quizz.deleted_on = quizz.deleted_on;

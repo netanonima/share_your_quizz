@@ -20,6 +20,9 @@ export class Quizz {
   @ManyToOne(() => User, (user) => user.quizzs)
   user: User;
 
+  @Column({ length: 120 })
+  quizz: string;
+
   @Column()
   created_on: Date;
 

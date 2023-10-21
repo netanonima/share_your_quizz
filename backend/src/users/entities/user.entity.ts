@@ -27,7 +27,7 @@ export class User {
   @CreateDateColumn()
   created_on: Date;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 16 })
   @Exclude()
   confirmation_token: string;
 
