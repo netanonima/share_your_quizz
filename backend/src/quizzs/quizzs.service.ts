@@ -247,17 +247,30 @@ export class QuizzsService {
       throw new ForbiddenException('You do not have permission to delete this quizz.');
     }
 
+    const mediaIdsToRemove = [];
+    const imageIdsToRemove = [];
+
     for (const question of quizz.questions) {
-      for (const choice of question.choices) {
-        await this.choiceRepository.remove(choice);
+      if (question.choices && question.choices.length > 0) {
+        await this.choiceRepository.remove(question.choices);
       }
       if (question.media) {
-        await this.mediaRepository.remove(question.media);
+        mediaIdsToRemove.push(question.media.id);
       }
       if (question.image) {
-        await this.imageRepository.remove(question.image);
+        imageIdsToRemove.push(question.image.id);
       }
-      await this.questionRepository.remove(question);
+    }
+
+    if (quizz.questions && quizz.questions.length > 0) {
+      await this.questionRepository.remove(quizz.questions);
+    }
+
+    if (mediaIdsToRemove.length > 0) {
+      await this.mediaRepository.delete(mediaIdsToRemove);
+    }
+    if (imageIdsToRemove.length > 0) {
+      await this.imageRepository.delete(imageIdsToRemove);
     }
 
     await this.quizzRepository.remove(quizz);

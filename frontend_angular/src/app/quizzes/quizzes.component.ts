@@ -8,6 +8,7 @@ import {DeleteConfirmationComponent} from "../modal-dialogs/delete-confirmation/
 import {LoginResponse} from "../login/login-response";
 import {HttpErrorResponse} from "@angular/common/http";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {NewElementComponent} from "../modal-dialogs/new-element/new-element.component";
 // import 'moment/locale/en-US';
 
 export interface Quizz {
@@ -71,6 +72,19 @@ export class QuizzesComponent implements OnInit{
     function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
       return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
     }
+  }
+
+  add(){
+    console.log('add action');
+    const dialogRef = this.dialog.open(NewElementComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('User submitted value', result);
+      }else{
+        console.log('User cancelled element adding');
+      }
+    });
   }
 
   play(id: number){

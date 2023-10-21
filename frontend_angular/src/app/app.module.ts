@@ -16,7 +16,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { QuizzComponent } from './quizz/quizz.component';
 import { MatInputModule } from "@angular/material/input";
-import { ReactiveFormsModule } from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { MatListModule } from "@angular/material/list";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { FooterComponent } from './footer/footer.component';
@@ -28,6 +28,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { MatSortModule } from "@angular/material/sort";
 import { MatDialogModule } from "@angular/material/dialog";
 import { DeleteConfirmationComponent } from './modal-dialogs/delete-confirmation/delete-confirmation.component';
+import { NewElementComponent } from './modal-dialogs/new-element/new-element.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { DeleteConfirmationComponent } from './modal-dialogs/delete-confirmation
     ResetPasswordRetrieveComponent,
     QuizzesComponent,
     PageNotFoundComponent,
-    DeleteConfirmationComponent
+    DeleteConfirmationComponent,
+    NewElementComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +63,8 @@ import { DeleteConfirmationComponent } from './modal-dialogs/delete-confirmation
     MatListModule,
     MatSnackBarModule,
     MatSortModule,
-    MatDialogModule
+    MatDialogModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
