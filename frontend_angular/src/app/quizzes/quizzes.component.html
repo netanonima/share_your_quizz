@@ -1,34 +1,36 @@
 <h1>Quizzes</h1>
-<table matSort (matSortChange)="sortData($event)">
-  <tr>
-    <th mat-sort-header="quizz">Name</th>
-    <th mat-sort-header="created_on">Creation</th>
-    <th mat-sort-header="modified_on">Last modification</th>
-    <th>Actions</th>
-  </tr>
+<div class="quizzes-content">
+  <table matSort (matSortChange)="sortData($event)">
+    <tr>
+      <th mat-sort-header="quizz">Name</th>
+      <th mat-sort-header="created_on">Creation</th>
+      <th mat-sort-header="modified_on">Last modification</th>
+      <th>Actions</th>
+    </tr>
 
-  <tr *ngFor="let quizz of sortedData">
-    <td>{{ quizz.quizz }}</td>
-    <td>
+    <tr *ngFor="let quizz of sortedData">
+      <td>{{ quizz.quizz }}</td>
+      <td>
       <span *ngIf="quizz.created_on">
         {{ moment(quizz.created_on).format('LL LTS') }}
       </span>
-    </td>
-    <td>
+      </td>
+      <td>
       <span *ngIf="quizz.modified_on">
         {{ moment(quizz.modified_on).format('LL LTS') }}
       </span>
-    </td>
-    <td>
-      <button mat-icon-button color="primary" (click)="play(quizz.id)">
-        <mat-icon>play_arrow</mat-icon>
-      </button>
-      <button mat-icon-button color="primary" (click)="edit(quizz.id)">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button color="warn" (click)="delete(quizz.id)">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </td>
-  </tr>
-</table>
+      </td>
+      <td>
+        <button mat-icon-button color="primary" (click)="play(quizz.id)">
+          <mat-icon>play_arrow</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" (click)="edit(quizz.id)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="delete(quizz.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </tr>
+  </table>
+</div>
