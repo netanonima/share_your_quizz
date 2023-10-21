@@ -81,7 +81,31 @@ export class QuizzesComponent implements OnInit{
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('User submitted value', result);
-      }else{
+        this.apiService.addingQuizz(result).subscribe(
+          (response: any) => {
+            console.log('Element added', response);
+            this.snackBar.open('Element added', 'Close', {
+              panelClass: ['snackbar-success'],
+              duration: 3000
+            });
+            // add element to array
+            const newQuizz: Quizz = {
+              id: response.id,
+              quizz: response.quizz,
+              created_on: response.created_on,
+              modified_on: response.modified_on
+            } as Quizz;
+            this.sortedData?.push(newQuizz);
+          },
+          (error: HttpErrorResponse) => {
+            console.error('An error occurred', error);
+            this.snackBar.open('An error occurred', 'Close', {
+              panelClass: ['snackbar-warning'],
+              duration: 3000
+            });
+          }
+        )
+      } else {
         console.log('User cancelled element adding');
       }
     });
@@ -105,18 +129,17 @@ export class QuizzesComponent implements OnInit{
         console.log('User confirmed deletion');
 
         this.apiService.deleteQuizz(id.toString()).subscribe(
-          (response: LoginResponse) => {
+          (response: any) => {
             console.log('Element deleted', response);
             this.snackBar.open('Element deleted', 'Close', {
               panelClass: ['snackbar-success'],
               duration: 3000
             });
-            // delete element from array
             this.sortedData = this.sortedData?.filter((item) => item.id !== id);
           },
           (error: HttpErrorResponse) => {
-            console.error('Registration failed', error);
-            this.snackBar.open('An error occured', 'Close', {
+            console.error('An error occurred', error);
+            this.snackBar.open('An error occurred', 'Close', {
               panelClass: ['snackbar-warning'],
               duration: 3000
             });

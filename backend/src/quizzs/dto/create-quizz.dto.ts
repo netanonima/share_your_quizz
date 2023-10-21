@@ -22,9 +22,5 @@ export class CreateQuizzDto {
   @IsDateString()
   readonly deleted_on?: Date | null;
 
-  @IsNotEmpty()
-  @IsInt()
-  readonly userId: number;
-
   readonly questions: CreateQuestionDto[];
 }

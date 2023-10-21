@@ -9,7 +9,7 @@ export class Choice {
   @ManyToOne(() => Question, (question) => question.choices)
   question: Question;
 
-  @Column({ length: 40 })
+  @Column({ length: 80 })
   choice: string;
 
   @Column()

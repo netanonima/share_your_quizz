@@ -59,4 +59,15 @@ export class ApiService {
     });
     return this.http.delete<any>(url, { headers });
   }
+
+  addingQuizz(quizz: string): Observable<any> {
+    const url = `${this.apiUrl}/quizzs`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    const data = {
+      quizz: quizz
+    };
+    return this.http.post<any>(url, data, { headers });
+  }
 }

@@ -23,8 +23,8 @@ export class QuizzsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createQuizzDto: CreateQuizzDto) {
-    return this.quizzsService.create(createQuizzDto);
+  create(@GetUser() user: User, @Body() createQuizzDto: CreateQuizzDto) {
+    return this.quizzsService.create(user, createQuizzDto);
   }
 
   @UseGuards(JwtAuthGuard)
