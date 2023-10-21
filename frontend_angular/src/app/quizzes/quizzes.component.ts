@@ -113,6 +113,26 @@ export class QuizzesComponent implements OnInit{
 
   play(id: number){
     console.log('play action');
+    this.apiService.startSession(id.toString()).subscribe(
+      (response: any) => {
+        console.log('Game session created');
+        this.snackBar.open('Game session created', 'Close', {
+          panelClass: ['snackbar-success'],
+          duration: 3000
+        });
+        console.log('====');
+        console.log(window.location);
+        const domain = window.location.origin;
+        window.open(domain+`/play?id=${response.id}`, '_blank')
+      },
+(error: HttpErrorResponse) => {
+        console.error('An error occurred', error);
+        this.snackBar.open('An error occurred', 'Close', {
+          panelClass: ['snackbar-warning'],
+          duration: 3000
+        });
+      }
+    );
   }
 
   edit(id: number){
