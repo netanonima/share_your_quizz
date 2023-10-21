@@ -1,24 +1,17 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ApiService} from "../../services/api/api.service";
 import {ActivatedRoute} from "@angular/router";
-import {QueryParamsService} from "../../services/query-params/query-params.service";
 
 @Component({
   selector: 'app-play',
   templateUrl: './play.component.html',
   styleUrls: ['./play.component.scss']
 })
-export class PlayComponent implements OnInit, OnDestroy{
+export class PlayComponent implements OnDestroy{
   constructor(
     private apiService: ApiService,
-    private route: ActivatedRoute,
-    private queryParamsService: QueryParamsService
+    private route: ActivatedRoute
   ) {
-  }
-
-  ngOnInit(): void {
-    const params = this.queryParamsService.getParams();
-    console.log(params);
   }
 
   ngOnDestroy() {
