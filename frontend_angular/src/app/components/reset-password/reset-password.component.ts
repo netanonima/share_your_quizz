@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
-import {ApiService} from "../api.service";
+import {ApiService} from "../../services/api/api.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute, Router} from "@angular/router";
 import {HttpErrorResponse} from "@angular/common/http";

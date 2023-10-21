@@ -1,14 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {ApiService} from "../api.service";
+import {ApiService} from "../../services/api/api.service";
 import {Sort} from "@angular/material/sort";
 import * as moment from 'moment';
 import {Router} from "@angular/router";
 import {MatDialog } from "@angular/material/dialog";
-import {DeleteConfirmationComponent} from "../modal-dialogs/delete-confirmation/delete-confirmation.component";
+import {DeleteConfirmationComponent} from "../../modal-dialogs/delete-confirmation/delete-confirmation.component";
 import {LoginResponse} from "../login/login-response";
 import {HttpErrorResponse} from "@angular/common/http";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {NewElementComponent} from "../modal-dialogs/new-element/new-element.component";
+import {NewElementComponent} from "../../modal-dialogs/new-element/new-element.component";
 // import 'moment/locale/en-US';
 
 export interface Quizz {
