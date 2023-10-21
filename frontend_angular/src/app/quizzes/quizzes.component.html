@@ -1,4 +1,7 @@
 <h1>Quizzes</h1>
+<button mat-icon-button color="primary" (click)="add()">
+  <mat-icon>add</mat-icon>
+</button>
 <div class="quizzes-content">
   <table matSort (matSortChange)="sortData($event)">
     <tr>
