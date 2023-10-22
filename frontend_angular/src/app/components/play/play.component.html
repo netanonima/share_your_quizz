@@ -1,7 +1,13 @@
-<div *ngIf="error">
-  There's not current active session. Please go back to the <a (click)="navigateToQuizzes()" class="link-like">quizzes page</a> and start a new session.
+<div *ngIf="authService.isAuthenticated()">
+  <div *ngIf="error">
+    There's not current active session. Please go back to the <a (click)="navigateToQuizzes()" class="link-like">quizzes page</a> and start a new session.
+  </div>
+
+  <div *ngIf="!error">
+    Welcome to this session.
+  </div>
 </div>
 
-<div *ngIf="!error">
-  Welcome to this session.
+<div *ngIf="!authService.isAuthenticated()">
+
 </div>

@@ -25,10 +25,10 @@
     <mat-sidenav color="primary" #sidenav fxLayout="column" mode="over"  opened="false" fxHide.gt-sm="true">
       <div fxLayout="column">
         <a mat-button routerLink="/">Home</a>
-        <a mat-button routerLink="/login">Login</a>
-        <a mat-button routerLink="/logout">Logout</a>
-        <a mat-button routerLink="/register">Register</a>
-        <a mat-button routerLink="/quizz">Quizz</a>
+        <a mat-button routerLink="/login" *ngIf="!authService.isAuthenticated()">Login</a>
+        <a mat-button routerLink="/logout" *ngIf="authService.isAuthenticated()">Logout</a>
+        <a mat-button routerLink="/register" *ngIf="!authService.isAuthenticated()">Register</a>
+        <a mat-button routerLink="/quizz" *ngIf="authService.isAuthenticated()">Quizzes</a>
       </div>
     </mat-sidenav>
     <mat-sidenav-content fxFlexFill>
