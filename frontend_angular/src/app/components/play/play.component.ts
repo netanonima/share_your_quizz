@@ -7,6 +7,7 @@ import {BACKEND_URL} from "../../constants";
 import {PlayerInterface} from "./interfaces/player.interface";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import { gsap } from 'gsap';
 
 @Component({
   selector: 'app-play',
@@ -17,10 +18,8 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
       state('in', style({opacity: 1})),
       transition(':enter', [
         style({opacity: 0}),
-        animate(600 )
-      ]),
-      transition(':leave',
-        animate(600, style({opacity: 0})))
+        animate(600)
+      ])
     ])
   ]
 })
@@ -31,6 +30,8 @@ export class PlayComponent implements OnInit, OnDestroy{
   public url: string = window.location.href; // host, hostname, href, origin, port, protocol
   public players: PlayerInterface[] = [];
   public myName: string = '';
+  public playerClasses: { [username: string]: string } = {};
+
 
   setUsernameForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(20)])
@@ -96,6 +97,9 @@ export class PlayComponent implements OnInit, OnDestroy{
             // start session for host
             console.log('Start session for host');
             this.connectToSocket();
+            this.socket?.emit('admin-join', {
+              sessionId: sessionId
+            });
           },
           (error) => {
             console.log(error);
@@ -138,7 +142,17 @@ export class PlayComponent implements OnInit, OnDestroy{
   }
 
   private connectToSocket(): void {
-    this.socket = io(this.serverUrl);
+    //if user connected
+    if(this.authService.isAuthenticated()){
+      this.socket = io(this.serverUrl, {
+        extraHeaders:{
+          Authorization: `Bearer ${this.authService.getToken()}`
+        }
+      });
+    }else{
+      this.socket = io(this.serverUrl);
+    }
+
 
     this.socket.on('connect', () => {
       console.log('Websocket connection established');
@@ -154,9 +168,11 @@ export class PlayComponent implements OnInit, OnDestroy{
       this.socket.on('error', (message: string) => {
         console.log('an error occurred : ', message);
       });
+
       this.socket.on('admin-join-response', (message: string) => {
         console.log('admin joined the session');
       });
+
       this.socket.on('new-player', (message: string) => {
         console.log('new player joined the session');
         const newPlayer: PlayerInterface = {
@@ -164,7 +180,13 @@ export class PlayComponent implements OnInit, OnDestroy{
           currentScore: 0
         } as PlayerInterface;
         this.players.push(newPlayer);
+        this.playerClasses[message] = 'new-player';
+
+        setTimeout(() => {
+          this.playerClasses[message] = '';
+        }, 500);
       });
+
       this.socket.on('player-left', (message: string) => {
         console.log('a player left the session');
         const playerIndex = this.players.findIndex(player => player.username === message);
@@ -172,6 +194,7 @@ export class PlayComponent implements OnInit, OnDestroy{
           this.players.splice(playerIndex, 1);
         }
       });
+
     }else{
       // player listeners
 

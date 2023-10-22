@@ -79,6 +79,7 @@ export class PlaySocketsGateway {
         // send message to admin
         const admin = this.sessions.get(sessionId).admin;
         if (admin) {
+            console.log(`Sending new-player event to admin ${admin}`);
             client.to(admin).emit('new-player', user.username);
         }
     }
