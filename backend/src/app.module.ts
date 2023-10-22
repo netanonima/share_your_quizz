@@ -17,6 +17,7 @@ import { ImagesModule } from './images/images.module';
 import { MediasModule } from './medias/medias.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { AuthModule } from './auth/auth.module';
+import { PlaySocketsModule } from './play-sockets/play-sockets.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { AuthModule } from './auth/auth.module';
     MediasModule,
     SessionsModule,
     AuthModule,
+    PlaySocketsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
