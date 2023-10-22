@@ -1,12 +1,44 @@
 // sockets.gateway.ts
 import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
+import {JoinInterface} from "play-sockets/interface/join.interface";
+import {UserInterface} from "play-sockets/interface/user.interface";
+import {SessionInterface} from "play-sockets/interface/session.interface";
 
 @WebSocketGateway({namespace: 'play'})
 export class PlaySocketsGateway {
-    @SubscribeMessage('message')
-    handleMessage(@MessageBody() data: string, @ConnectedSocket() client: Socket): string {
-        console.log(`Message from client: ${data}`);
-        return 'Hello world!';
+    private sessions = new Map<number, SessionInterface>();
+
+    @SubscribeMessage('join')
+    handleJoin(@MessageBody() data: JoinInterface, @ConnectedSocket() client: Socket): void {
+        const { sessionId, username } = data;
+
+        if (!this.sessions.has(sessionId)) {
+            this.sessions.set(sessionId, { admin: '', users: [] });
+        }
+
+        const session = this.sessions.get(sessionId);
+
+        if (session.users.some(user => user.username === username)) {
+            client.emit('joinResponse', `Username "${username}" already exists in this session.`);
+            return;
+        }
+        if (session.users.some(user => user.id === client.id)) {
+            client.emit('joinResponse', `Client id "${client.id}" already exists in this session.`);
+            return;
+        }
+
+        const user: UserInterface = { id: client.id, username };
+        session.users.push(user);
+
+        console.log(`User ${username} joined session ${sessionId}`);
+        console.log('Session state:', this.sessions);
+        console.log('Session users:', session.users);
+        client.emit('joinResponse', `Welcome ${username}!`);
     }
+
+    // todo: créer guard qui contrôle le token pour attribuer l'accès aux subscribes admin
+    // todo: Créer subscribe pour stocker le client.id de l'admin dans la session
+    // todo: Envoyer un message à l'admin quand un nouveau joueur rejoint la session
+    // todo: Envoyer un message à l'admin quand un joueur quitte la session + supprimer le joueur de la session
 }
