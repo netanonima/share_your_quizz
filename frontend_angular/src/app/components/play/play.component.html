@@ -19,12 +19,14 @@
       <h3>
         Current players
       </h3>
-      <div *ngIf="players.length > 0" @listAnimation>
-        <div cdkDropList (cdkDropListDropped)="drop($event)">
-          <div *ngFor="let item of items" cdkDrag>{{item}}</div>
+      <div *ngIf="players.length > 0">
+        <div cdkDropList (cdkDropListDropped)="drop($event)" class="player-grid">
+          <div *ngFor="let player of players" [ngClass]="playerClasses[player.username]" cdkDrag class="player-item">
+            {{ player.username }}
+          </div>
         </div>
-
       </div>
+
 
       <div *ngIf="players.length==0">
         No players yet.

@@ -56,17 +56,24 @@ button[mat-stroked-button] {
 }
 
 .player-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
-  margin: 20px 0;
 }
 
 .player-item {
-  background-color: grey;
   padding: 10px;
   border-radius: 5px;
+  background-color: grey;
   text-align: center;
+}
+
+.new-player {
+  animation: popIn 0.5s;
+}
+
+.left-player {
+  animation: popIn 0.5s reverse;
 }
 
 @keyframes fadeIn {
