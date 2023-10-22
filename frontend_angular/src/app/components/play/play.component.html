@@ -12,17 +12,19 @@
       <h2>
         Join the game scanning this QR code
       </h2>
-      <div style="background-color: #fff; padding: 20px; border-radius: 8px;">
-        <qrcode [qrdata]="url" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
+      <div class="qr-code-container">
+        <qrcode [qrdata]="url" [width]="200" [errorCorrectionLevel]="'M'" style="padding: 0px !important;"></qrcode>
       </div>
 
-      <h3>
-        Current players
-      </h3>
-      <div *ngIf="players.length > 0">
-        <div cdkDropList (cdkDropListDropped)="drop($event)" class="player-grid">
-          <div *ngFor="let player of players" [ngClass]="playerClasses[player.username]" cdkDrag class="player-item">
-            {{ player.username }}
+      <div class="current-players">
+        <h3>
+          Current players
+        </h3>
+        <div *ngIf="players.length > 0">
+          <div cdkDropList (cdkDropListDropped)="drop($event)" class="player-grid">
+            <div *ngFor="let player of players" [ngClass]="playerClasses[player.username]" cdkDrag class="player-item">
+              {{ player.username }}
+            </div>
           </div>
         </div>
       </div>

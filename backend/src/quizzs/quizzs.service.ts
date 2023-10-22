@@ -15,6 +15,7 @@ import {Choice} from "choices/entities/choice.entity";
 import {Media} from "medias/entities/media.entity";
 import {Image} from "images/entities/image.entity";
 import {User} from "users/entities/user.entity";
+import moment from "moment";
 
 @Injectable()
 export class QuizzsService {
@@ -37,12 +38,12 @@ export class QuizzsService {
     quizz.user = currentUser;
     quizz.quizz = createQuizzDto.quizz;
     if(!createQuizzDto.created_on) {
-      quizz.created_on = new Date();
+      quizz.created_on = new Date(moment().toISOString());
     }else{
-        quizz.created_on = new Date(createQuizzDto.created_on);
+        quizz.created_on = new Date(moment(createQuizzDto.created_on).toISOString());
     }
-    quizz.modified_on = createQuizzDto.modified_on ? new Date(createQuizzDto.modified_on) : null;
-    quizz.deleted_on = createQuizzDto.deleted_on ? new Date(createQuizzDto.deleted_on) : null;
+    quizz.modified_on = createQuizzDto.modified_on ? new Date(moment(createQuizzDto.modified_on).toISOString()) : null;
+    quizz.deleted_on = createQuizzDto.deleted_on ? new Date(moment(createQuizzDto.deleted_on).toISOString()) : null;
 
     if (createQuizzDto.questions) {
       quizz.questions = [];
@@ -134,7 +135,7 @@ export class QuizzsService {
 
     quizz.quizz = updateQuizzDto.quizz || quizz.quizz;
     quizz.created_on = updateQuizzDto.created_on ? new Date(updateQuizzDto.created_on) : quizz.created_on;
-    quizz.modified_on = new Date();
+    quizz.modified_on = new Date(moment().toISOString());
     quizz.deleted_on = quizz.deleted_on;
 
     if (updateQuizzDto.questions) {
