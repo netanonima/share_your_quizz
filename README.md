@@ -35,6 +35,7 @@ An app to generate dynamic quizz and share them with your friends, customers, st
     cd backend
     npm run start:dev
   ```
+- Set your frontend constants in `frontend_angular/src/app/constants.ts`
 - Launch the frontend
   ```bash
     cd frontend_angular

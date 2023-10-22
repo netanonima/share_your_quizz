@@ -36,7 +36,7 @@ export class UsersService {
       .add(this.config.get('HOURS_FOR_ACCOUNT_CONFIRMATION'), 'hours')
       .toDate();
 
-    if(this.config.get('EMAIL_HOST')=='' || this.config.get('EMAIL_USER')=='' || this.config.get('EMAIL_PASSWORD')=='' || this.config.get('ACCOUNT_CONFIRMATION_URL')==''){
+    if(this.config.get('EMAIL_HOST')=='' || this.config.get('EMAIL_USER')=='' || this.config.get('EMAIL_PASSWORD')=='' || this.config.get('FRONTEND_URL')==''){
       try{
         return await this.userRepository.save(user);
       } catch (error) {
