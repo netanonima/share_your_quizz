@@ -15,12 +15,12 @@
       <td>{{ quizz.quizz }}</td>
       <td>
       <span *ngIf="quizz.created_on">
-        {{ moment(quizz.created_on).format('LL LTS') }}
+        {{ moment(quizz.created_on, "DD/MM/YYYY HH:mm").format('LL LTS') }}
       </span>
       </td>
       <td>
       <span *ngIf="quizz.modified_on">
-        {{ moment(quizz.modified_on).format('LL LTS') }}
+        {{ moment(quizz.modified_on, "DD/MM/YYYY HH:mm").format('LL LTS') }}
       </span>
       </td>
       <td>

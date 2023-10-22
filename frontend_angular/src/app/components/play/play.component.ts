@@ -32,6 +32,9 @@ export class PlayComponent implements OnInit, OnDestroy{
   public myName: string = '';
   public playerClasses: { [username: string]: string } = {};
 
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.players, event.previousIndex, event.currentIndex);
+  }
 
   setUsernameForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(20)])
@@ -191,7 +194,10 @@ export class PlayComponent implements OnInit, OnDestroy{
         console.log('a player left the session');
         const playerIndex = this.players.findIndex(player => player.username === message);
         if (playerIndex !== -1) {
-          this.players.splice(playerIndex, 1);
+          this.playerClasses[message] = 'left-player';
+          setTimeout(() => {
+            this.players.splice(playerIndex, 1);
+          }, 500);
         }
       });
 

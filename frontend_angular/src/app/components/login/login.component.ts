@@ -75,8 +75,8 @@ export class LoginComponent {
         (response: LoginResponse) => {
           console.log('Registration successful', response);
           localStorage['api_token'] = response.access_token;
-          const now = moment();
-          const expiresAt = moment().add(3, 'hours');
+          const now = moment().toISOString();
+          const expiresAt = moment().add(3, 'hours').toISOString();
           localStorage['expires_at'] = expiresAt;
           this.snackBar.open('Login successful', 'Close', {
             panelClass: ['snackbar-success'],
