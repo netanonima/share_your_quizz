@@ -41,8 +41,14 @@ export class SessionsService {
     return `This action returns all sessions`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} session`;
+  async findOne(id: number) {
+    const thisSession = await this.sessionRepository.findOne({
+        where: { id: id }
+    });
+    if(!thisSession) {
+      throw new Error('Session not found');
+    }
+    return thisSession;
   }
 
   async update(id: number, updateSessionDto: UpdateSessionDto) {
