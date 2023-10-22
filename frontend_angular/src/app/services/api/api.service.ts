@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
+  config = new ConfigService();
 
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = this.config.get('BACKEND_URL');
 
   constructor(private http: HttpClient) { }
 

@@ -31,7 +31,6 @@ import { DeleteConfirmationComponent } from './modal-dialogs/delete-confirmation
 import { NewElementComponent } from './modal-dialogs/new-element/new-element.component';
 import { PlayComponent } from './components/play/play.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
