@@ -6,6 +6,7 @@ import {LoginResponse} from "./login-response";
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
+import * as moment from "moment";
 
 @Component({
   selector: 'app-login',
@@ -74,6 +75,9 @@ export class LoginComponent {
         (response: LoginResponse) => {
           console.log('Registration successful', response);
           localStorage['api_token'] = response.access_token;
+          const now = moment();
+          const expiresAt = moment().add(3, 'hours');
+          localStorage['expires_at'] = expiresAt;
           this.snackBar.open('Login successful', 'Close', {
             panelClass: ['snackbar-success'],
             duration: 3000
