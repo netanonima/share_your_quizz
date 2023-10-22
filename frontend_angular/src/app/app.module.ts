@@ -30,6 +30,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { DeleteConfirmationComponent } from './modal-dialogs/delete-confirmation/delete-confirmation.component';
 import { NewElementComponent } from './modal-dialogs/new-element/new-element.component';
 import { PlayComponent } from './components/play/play.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { PlayComponent } from './components/play/play.component';
     MatSnackBarModule,
     MatSortModule,
     MatDialogModule,
-    FormsModule
+    FormsModule,
+    QRCodeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

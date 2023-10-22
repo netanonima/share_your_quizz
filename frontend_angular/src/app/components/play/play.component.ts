@@ -3,18 +3,79 @@ import {ApiService} from "../../services/api/api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "../../services/auth/auth.service";
 import { io, Socket } from 'socket.io-client';
-import {ConfigService} from "@nestjs/config";
+import {BACKEND_URL} from "../../constants";
+import {PlayerInterface} from "./interfaces/player.interface";
+import {animate, state, style, transition, trigger} from "@angular/animations";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-play',
   templateUrl: './play.component.html',
-  styleUrls: ['./play.component.scss']
+  styleUrls: ['./play.component.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      state('in', style({opacity: 1})),
+      transition(':enter', [
+        style({opacity: 0}),
+        animate(600 )
+      ]),
+      transition(':leave',
+        animate(600, style({opacity: 0})))
+    ])
+  ]
 })
 export class PlayComponent implements OnInit, OnDestroy{
-  config = new ConfigService();
   private socket?: Socket;
-  private serverUrl = this.config.get('BACKEND_URL')+'/play';
+  private serverUrl = BACKEND_URL+'/play';
   error: boolean = false;
+  public url: string = window.location.href; // host, hostname, href, origin, port, protocol
+  public players: PlayerInterface[] = [];
+  public myName: string = '';
+
+  setUsernameForm: FormGroup = new FormGroup({
+    username: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(20)])
+  });
+
+  getErrorMessage(controlName: string): string {
+    const control = this.setUsernameForm.get(controlName);
+    if (control) {
+      if (control.hasError('required')) {
+        return 'You must enter a value';
+      }
+
+      if(control.hasError('minlength')) {
+        return 'Minimum length is ' + control.getError('minlength').requiredLength;
+      }
+
+      if(control.hasError('maxlength')) {
+        return 'Maximum length is ' + control.getError('maxlength').requiredLength;
+      }
+    }
+    return '';
+  }
+
+  setUsername(){
+    if (this.setUsernameForm.valid) {
+      console.log(this.setUsernameForm.value);
+      this.onSubmit();
+    }
+  }
+
+  setUsernameCancel(){
+    this.setUsernameForm.reset();
+  }
+
+  onSubmit() {
+    if (this.setUsernameForm.valid) {
+      console.log('onSubmit');
+      this.myName = this.setUsernameForm.value.username;
+      this.socket?.emit('join', {
+        sessionId: this.route.snapshot.queryParamMap.get('id'),
+        username: this.myName
+      });
+    }
+  }
+
   constructor(
     private apiService: ApiService,
     private route: ActivatedRoute,
@@ -88,6 +149,33 @@ export class PlayComponent implements OnInit, OnDestroy{
     });
 
     // Ajoutez d'autres gestionnaires d'événements ici selon vos besoins
+    if(this.authService.isAuthenticated()) {
+      // admin listeners
+      this.socket.on('error', (message: string) => {
+        console.log('an error occurred : ', message);
+      });
+      this.socket.on('admin-join-response', (message: string) => {
+        console.log('admin joined the session');
+      });
+      this.socket.on('new-player', (message: string) => {
+        console.log('new player joined the session');
+        const newPlayer: PlayerInterface = {
+          username: message,
+          currentScore: 0
+        } as PlayerInterface;
+        this.players.push(newPlayer);
+      });
+      this.socket.on('player-left', (message: string) => {
+        console.log('a player left the session');
+        const playerIndex = this.players.findIndex(player => player.username === message);
+        if (playerIndex !== -1) {
+          this.players.splice(playerIndex, 1);
+        }
+      });
+    }else{
+      // player listeners
+
+    }
   }
 
   private disconnectFromSocket(): void {

@@ -4,14 +4,33 @@ import { Socket } from 'socket.io';
 import {JoinInterface} from "play-sockets/interfaces/join.interface";
 import {UserInterface} from "play-sockets/interfaces/user.interface";
 import {SessionInterface} from "play-sockets/interfaces/session.interface";
-import {UnauthorizedException, UseFilters, UseGuards} from "@nestjs/common";
+import {UseFilters, UseGuards} from "@nestjs/common";
 import {WsJwtGuard} from "play-sockets/guards/ws-jwt.guard";
 import {WsExceptionFilter} from "play-sockets/filters/ws-exception.filter";
 import {AdminJoinInterface} from "play-sockets/interfaces/admin-join.interface";
+import { ConfigService } from '@nestjs/config'
 
 @UseFilters(new WsExceptionFilter())
-@WebSocketGateway({namespace: 'play'})
+@WebSocketGateway({
+    namespace: 'play',
+    cors: {
+        origin: (origin, callback) => {
+            const configService = new ConfigService();
+            const allowedOrigin = configService.get('FRONTEND_URL');
+            if (!allowedOrigin || origin === allowedOrigin) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        credentials: true,
+    },
+})
 export class PlaySocketsGateway {
+    constructor(
+        private config: ConfigService,
+    ) {}
     private sessions = new Map<number, SessionInterface>();
 
     @UseGuards(WsJwtGuard)
