@@ -64,5 +64,30 @@ export class PlaySocketsGateway {
         }
     }
 
-    // todo: Envoyer un message à l'admin quand un joueur quitte la session + supprimer le joueur de la session
+    @SubscribeMessage('disconnect')
+    handleDisconnect(@ConnectedSocket() client: Socket): void {
+        console.log(`Client disconnected: ${client.id}`);
+
+        this.sessions.forEach((session, sessionId) => {
+            const userIndex = session.users.findIndex(user => user.id === client.id);
+            if (userIndex !== -1) {
+                const username = session.users[userIndex].username;
+                console.log(`User ${username} left session ${sessionId}`);
+                session.users.splice(userIndex, 1);
+                if (session.admin) {
+                    client.to(session.admin).emit('player-left', username);
+                }
+            }
+
+            if (session.admin === client.id) {
+                console.log(`Admin of session ${sessionId} disconnected`);
+                session.admin = '';
+                session.users.forEach(user => {
+                    client.to(user.id).emit('error', `Admin just left the session`);
+                });
+            }
+        });
+
+        console.log('Session state after disconnect:', this.sessions);
+    }
 }

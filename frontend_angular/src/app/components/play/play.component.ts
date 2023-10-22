@@ -2,6 +2,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ApiService} from "../../services/api/api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "../../services/auth/auth.service";
+import { io, Socket } from 'socket.io-client';
+import {ConfigService} from "@nestjs/config";
 
 @Component({
   selector: 'app-play',
@@ -9,6 +11,9 @@ import {AuthService} from "../../services/auth/auth.service";
   styleUrls: ['./play.component.scss']
 })
 export class PlayComponent implements OnInit, OnDestroy{
+  config = new ConfigService();
+  private socket?: Socket;
+  private serverUrl = this.config.get('BACKEND_URL')+'/play';
   error: boolean = false;
   constructor(
     private apiService: ApiService,
@@ -29,6 +34,7 @@ export class PlayComponent implements OnInit, OnDestroy{
             this.error = false;
             // start session for host
             console.log('Start session for host');
+            this.connectToSocket();
           },
           (error) => {
             console.log(error);
@@ -42,6 +48,7 @@ export class PlayComponent implements OnInit, OnDestroy{
     }else{
       // start session for players
       console.log('Start session for players');
+      this.connectToSocket();
     }
 
   }
@@ -67,5 +74,26 @@ export class PlayComponent implements OnInit, OnDestroy{
       // Étape 2: Naviguez vers la nouvelle route
       this.router.navigate(['/quizzes']);
     });
+  }
+
+  private connectToSocket(): void {
+    this.socket = io(this.serverUrl);
+
+    this.socket.on('connect', () => {
+      console.log('Websocket connection established');
+    });
+
+    this.socket.on('admin-left', (message: string) => {
+      console.log('admin-left:', message);
+    });
+
+    // Ajoutez d'autres gestionnaires d'événements ici selon vos besoins
+  }
+
+  private disconnectFromSocket(): void {
+    if (this.socket) {
+      this.socket.disconnect();
+      console.log('Disconnected from socket');
+    }
   }
 }
