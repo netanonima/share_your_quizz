@@ -1,13 +1,21 @@
 // sockets.gateway.ts
 import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import {JoinInterface} from "play-sockets/interface/join.interface";
-import {UserInterface} from "play-sockets/interface/user.interface";
-import {SessionInterface} from "play-sockets/interface/session.interface";
+import {JoinInterface} from "play-sockets/interfaces/join.interface";
+import {UserInterface} from "play-sockets/interfaces/user.interface";
+import {SessionInterface} from "play-sockets/interfaces/session.interface";
+import {UseGuards} from "@nestjs/common";
+import {WsJwtGuard} from "play-sockets/guards/ws-jwt.guard";
 
 @WebSocketGateway({namespace: 'play'})
 export class PlaySocketsGateway {
     private sessions = new Map<number, SessionInterface>();
+
+    @UseGuards(WsJwtGuard)
+    @SubscribeMessage('admin-join')
+    maMethode() {
+        console.log('admin-join');
+    }
 
     @SubscribeMessage('join')
     handleJoin(@MessageBody() data: JoinInterface, @ConnectedSocket() client: Socket): void {
