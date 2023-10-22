@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -31,6 +30,7 @@ import { DeleteConfirmationComponent } from './modal-dialogs/delete-confirmation
 import { NewElementComponent } from './modal-dialogs/new-element/new-element.component';
 import { PlayComponent } from './components/play/play.component';
 import { QRCodeModule } from 'angularx-qrcode';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -53,6 +53,7 @@ import { QRCodeModule } from 'angularx-qrcode';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    DragDropModule,
     HttpClientModule,
     AppRoutingModule,
     MatToolbarModule,

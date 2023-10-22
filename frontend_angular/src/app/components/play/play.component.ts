@@ -5,9 +5,9 @@ import {AuthService} from "../../services/auth/auth.service";
 import { io, Socket } from 'socket.io-client';
 import {BACKEND_URL} from "../../constants";
 import {PlayerInterface} from "./interfaces/player.interface";
-import {animate, state, style, transition, trigger} from "@angular/animations";
+import {animate, animateChild, query, stagger, state, style, transition, trigger} from "@angular/animations";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import { gsap } from 'gsap';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-play',
