@@ -38,12 +38,12 @@ export class QuizzsService {
     quizz.user = currentUser;
     quizz.quizz = createQuizzDto.quizz;
     if(!createQuizzDto.created_on) {
-      quizz.created_on = new Date(moment().toISOString());
+      quizz.created_on = new Date();
     }else{
-        quizz.created_on = new Date(moment(createQuizzDto.created_on).toISOString());
+        quizz.created_on = new Date(createQuizzDto.created_on);
     }
-    quizz.modified_on = createQuizzDto.modified_on ? new Date(moment(createQuizzDto.modified_on).toISOString()) : null;
-    quizz.deleted_on = createQuizzDto.deleted_on ? new Date(moment(createQuizzDto.deleted_on).toISOString()) : null;
+    quizz.modified_on = createQuizzDto.modified_on ? new Date(createQuizzDto.modified_on) : null;
+    quizz.deleted_on = createQuizzDto.deleted_on ? new Date(createQuizzDto.deleted_on) : null;
 
     if (createQuizzDto.questions) {
       quizz.questions = [];
