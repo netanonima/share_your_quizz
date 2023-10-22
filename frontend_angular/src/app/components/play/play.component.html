@@ -1,51 +1,57 @@
-<div *ngIf="authService.isAuthenticated()">
-  <div *ngIf="error">
-    There's not current active session. Please go back to the <a (click)="navigateToQuizzes()" class="link-like">quizzes page</a> and start a new session.
-  </div>
-
-  <div *ngIf="!error">
-    <h1>
-      Welcome to this session.
-    </h1>
-
-    <h2>
-      Join the gaming scanning this QR code
-    </h2>
-    <div>
-      <qrcode [qrdata]="url" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
+<div class="play">
+  <div *ngIf="authService.isAuthenticated()">
+    <div *ngIf="error">
+      There's not current active session. Please go back to the <a (click)="navigateToQuizzes()" class="link-like">quizzes page</a> and start a new session.
     </div>
 
-    <h3>
-      Current players
-    </h3>
-    <mat-nav-list *ngIf="players.length>0">
-      <mat-list-item *ngFor="let player of players">{{ player.username }}</mat-list-item>
-    </mat-nav-list>
-    <div *ngIf="players.length==0">
-      No players yet.
+    <div *ngIf="!error">
+      <h1>
+        Welcome to this session.
+      </h1>
+
+      <h2>
+        Join the game scanning this QR code
+      </h2>
+      <div style="background-color: #fff; padding: 20px; border-radius: 8px;">
+        <qrcode [qrdata]="url" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
+      </div>
+
+      <h3>
+        Current players
+      </h3>
+      <div *ngIf="players.length>0">
+        <div *ngFor="let player of players">
+          {{ player.username }}
+        </div>
+      </div>
+
+
+      <div *ngIf="players.length==0">
+        No players yet.
+      </div>
+
     </div>
-
-
   </div>
-</div>
 
-<div *ngIf="!authService.isAuthenticated()">
-  <div *ngIf="myName==''">
-    <form [formGroup]="setUsernameForm" class="form-fields" @fadeInOut (ngSubmit)="setUsername()">
-      <div>
-        <mat-form-field>
-          <mat-label>Enter your username</mat-label>
-          <input matInput placeholder="yourNickname" formControlName="username" required>
-          <mat-icon matSuffix>person_outline</mat-icon>
-          <mat-error *ngIf="(setUsernameForm.get('username')?.invalid)">
-            {{getErrorMessage('username')}}
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <div class="form-buttons">
-        <button type="submit" mat-stroked-button color="primary" [disabled]="setUsernameForm.invalid">Play</button>
-        <button mat-stroked-button color="accent" (click)="setUsernameCancel()">Cancel</button>
-      </div>
-    </form>
+  <div *ngIf="!authService.isAuthenticated()">
+    <div *ngIf="myName==''">
+      <form [formGroup]="setUsernameForm" class="form-fields" @fadeInOut (ngSubmit)="setUsername()">
+        <div>
+          <mat-form-field appearance="outline">
+            <mat-label>Enter your username</mat-label>
+            <input matInput placeholder="yourNickname" formControlName="username" required>
+            <mat-icon matSuffix>person_outline</mat-icon>
+            <mat-error *ngIf="(setUsernameForm.get('username')?.invalid)">
+              {{getErrorMessage('username')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-buttons">
+          <button type="submit" mat-stroked-button color="primary" [disabled]="setUsernameForm.invalid">Play</button>
+          <button mat-stroked-button color="accent" (click)="setUsernameCancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
   </div>
+
 </div>
