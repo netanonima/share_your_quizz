@@ -16,7 +16,7 @@ export class AppComponent implements OnInit{
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
-      this.showNavbar = this.router.url !== '/play';
+      this.showNavbar = !this.router.url.includes('(playOutlet:play)');
     });
   }
 }

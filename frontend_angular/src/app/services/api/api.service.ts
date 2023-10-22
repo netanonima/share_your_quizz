@@ -88,4 +88,12 @@ export class ApiService {
     });
     return this.http.delete<any>(url, { headers });
   }
+
+  getSession(id: string): Observable<any> {
+    const url = `${this.apiUrl}/sessions/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    return this.http.get<any>(url, { headers });
+  }
 }
