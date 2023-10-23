@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Rename an element</h2>
+<mat-dialog-content class="mat-typography">
+  <h3>You're going to rename an element.</h3>
+  <p>Please choose a new name for this element. </p>
+  <form [formGroup]="renameElementForm" class="form-fields" @fadeInOut (ngSubmit)="submitValue()">
+    <div>
+      <mat-form-field>
+        <mat-label>Enter your title</mat-label>
+        <input matInput placeholder="your title" formControlName="value" required>
+        <mat-icon matSuffix>match_case</mat-icon>
+        <mat-error *ngIf="(renameElementForm.get('value')?.invalid)">
+          {{getErrorMessage('value')}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="true" color="primary" (click)="submitValue()" [disabled]="renameElementForm.invalid" cdkFocusInitial>Rename</button>
+</mat-dialog-actions>
+<p>rename-element works!</p>

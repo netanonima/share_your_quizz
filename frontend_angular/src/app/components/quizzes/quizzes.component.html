@@ -14,18 +14,27 @@
     <tr *ngFor="let quizz of sortedData">
       <td>{{ quizz.quizz }}</td>
       <td>
-      <span *ngIf="quizz.created_on">
-        {{ moment(quizz.created_on).format('LL LTS') }}
-      </span>
+        <span *ngIf="quizz.created_on">
+          {{ moment(quizz.created_on).format('LL LTS') }}
+        </span>
+        <span *ngIf="!quizz.created_on">
+          -
+        </span>
       </td>
       <td>
-      <span *ngIf="quizz.modified_on">
-        {{ moment(quizz.modified_on).format('LL LTS') }}
-      </span>
+        <span *ngIf="quizz.modified_on">
+          {{ moment(quizz.modified_on).format('LL LTS') }}
+        </span>
+        <span *ngIf="!quizz.modified_on">
+          -
+        </span>
       </td>
       <td>
         <button mat-icon-button color="primary" (click)="play(quizz.id)">
           <mat-icon>play_arrow</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" (click)="rename(quizz.id)">
+          <mat-icon>abc</mat-icon>
         </button>
         <button mat-icon-button color="primary" (click)="edit(quizz.id)">
           <mat-icon>edit</mat-icon>
