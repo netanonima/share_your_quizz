@@ -10,6 +10,7 @@ import { ResetPasswordComponent } from "./components/reset-password/reset-passwo
 import { ResetPasswordRetrieveComponent } from "./components/reset-password-retrieve/reset-password-retrieve.component";
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
 import { PlayComponent} from "./components/play/play.component";
+import {ChoicesComponent} from "./components/choices/choices.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -17,6 +18,7 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'quizzes', component: QuizzesComponent},
   {path: 'questions', component: QuestionsComponent},
+  {path: 'choices', component: ChoicesComponent},
   {path: 'confirm-account', component: ConfirmAccountComponent},
   {path: 'reset-password', component: ResetPasswordComponent},
   {path: 'reset-password-retrieve', component: ResetPasswordRetrieveComponent},

@@ -8,8 +8,4 @@ export class CreateChoiceDto {
   @IsNotEmpty()
   @IsBoolean()
   readonly is_correct: boolean;
-
-  @IsNotEmpty()
-  @IsInt()
-  readonly fk_question_id: number;
 }

@@ -3,7 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
+  Put,
   Param,
   Delete,
   UseGuards, UseInterceptors, ClassSerializerInterceptor,
@@ -12,6 +12,8 @@ import { ChoicesService } from './choices.service';
 import { CreateChoiceDto } from './dto/create-choice.dto';
 import { UpdateChoiceDto } from './dto/update-choice.dto';
 import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
+import {GetUser} from "decorators/user.decorator";
+import {User} from "users/entities/user.entity";
 
 @Controller('choices')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -19,32 +21,41 @@ export class ChoicesController {
   constructor(private readonly choicesService: ChoicesService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Post()
-  create(@Body() createChoiceDto: CreateChoiceDto) {
-    return this.choicesService.create(createChoiceDto);
+  @Post(':questionId')
+  create(
+      @Param('questionId') questionId: number,
+      @Body() createChoiceDto: CreateChoiceDto,
+      @GetUser() user: User
+  ) {
+    return this.choicesService.create(questionId, createChoiceDto, user);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
-  findAll() {
-    return this.choicesService.findAll();
+  @Get('question/:questionId')
+  findAllByQuestion(
+      @Param('questionId') questionId: number,
+      @GetUser() user: User
+  ) {
+    return this.choicesService.findAllByQuestion(questionId, user);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.choicesService.findOne(+id);
-  }
 
   @UseGuards(JwtAuthGuard)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateChoiceDto: UpdateChoiceDto) {
-    return this.choicesService.update(+id, updateChoiceDto);
+  @Put(':id')
+  update(
+      @Param('id') id: string,
+      @Body() updateChoiceDto: UpdateChoiceDto,
+      @GetUser() user: User
+  ) {
+    return this.choicesService.update(+id, updateChoiceDto, user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.choicesService.remove(+id);
+  remove(
+      @Param('id') id: string,
+        @GetUser() user: User
+  ) {
+    return this.choicesService.remove(+id, user);
   }
 }

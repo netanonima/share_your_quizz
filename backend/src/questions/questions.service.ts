@@ -23,7 +23,7 @@ export class QuestionsService {
         }
     });
     if(!quizz) {
-        throw new Error('Quizz not found or you do not have permission');
+        throw new NotFoundException('Quizz not found');
     }
     const question = new Question();
     question.question = createQuestionDto.question;
