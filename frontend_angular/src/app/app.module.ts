@@ -34,6 +34,7 @@ import { QuestionsComponent } from './components/questions/questions.component';
 import { RenameElementComponent } from './modal-dialogs/rename-element/rename-element.component';
 import { ChoicesComponent } from './components/choices/choices.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
+import { ManageMediaComponent } from './modal-dialogs/manage-media/manage-media.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     PlayComponent,
     QuestionsComponent,
     RenameElementComponent,
-    ChoicesComponent
+    ChoicesComponent,
+    ManageMediaComponent
   ],
   imports: [
     BrowserModule,
