@@ -51,6 +51,9 @@ export class QuestionsService {
       throw new NotFoundException('Question not found');
     }
 
+    quizz.modified_on = new Date();
+    await this.quizzRepository.save(quizz);
+
     return question;
   }
 
@@ -68,6 +71,7 @@ export class QuestionsService {
         throw new ForbiddenException('You do not have permission');
     }
     question.question = updateQuestionDto.question;
+    question.quizz.modified_on = new Date();
     return await this.questionRepository.save(question);
   }
 
@@ -84,6 +88,10 @@ export class QuestionsService {
     if(question.quizz.user.id !== user.id) {
       throw new ForbiddenException('You do not have permission');
     }
+
+    question.quizz.modified_on = new Date();
+    await this.quizzRepository.save(question.quizz);
+
     await this.questionRepository.remove(question);
   }
 }
