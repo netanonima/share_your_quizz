@@ -39,6 +39,7 @@ export class ChoicesService { // NotFoundException ForbiddenException
   }
 
   async findAllByQuestion(questionId:number, user:User) {
+      console.log('1');
     const question = await this.questionRepository.findOne({
       where: {
         id: questionId,
@@ -47,20 +48,26 @@ export class ChoicesService { // NotFoundException ForbiddenException
       relations: ['quizz', 'quizz.user']
     });
 
+      console.log('2');
     if(!question) {
       throw new NotFoundException('Question not found');
     }
 
+      console.log('3');
+    console.log(question);
     const choices = await this.choiceRepository.find({
         where: {
-            question: question
+            question: { id: question.id }
         }
     });
 
+      console.log('4');
     if(!choices) {
         throw new NotFoundException('Choices not found');
     }
 
+      console.log('5');
+    console.log(choices);
     return choices;
   }
 
