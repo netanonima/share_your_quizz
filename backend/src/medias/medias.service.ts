@@ -123,8 +123,13 @@ export class MediasService {
     });
   }
 
-  async getQuestionMediaBase64File(filePath: string) {
-
+  async getQuestionMediaBase64File(filePath: string): Promise<string> {
+    try {
+      const fileBuffer = await fs.readFile(filePath);
+      return fileBuffer.toString('base64');
+    } catch (err) {
+      throw new Error(`Impossible de lire le fichier : ${err}`);
+    }
   }
 
 }
