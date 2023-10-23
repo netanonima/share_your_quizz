@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {provideRouter} from "@angular/router";
+import {provideRouter, Router} from "@angular/router";
 import {AuthService} from "../../services/auth/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import * as moment from "moment";
@@ -13,6 +13,7 @@ export class NavbarComponent implements OnInit{
   constructor(
     public authService: AuthService,
     private snackBar: MatSnackBar,
+    private router: Router
   ) {
   }
 
@@ -24,6 +25,7 @@ export class NavbarComponent implements OnInit{
       const expiresAt = moment(localStorage.getItem('expires_at'));
       if(now.isAfter(expiresAt)){
         this.logout();
+        this.router.navigate(['/login']);
       }
     }
 
