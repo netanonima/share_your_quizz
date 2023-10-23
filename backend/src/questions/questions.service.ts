@@ -16,10 +16,19 @@ export class QuestionsService {
       private readonly quizzRepository: Repository<Quizz>,
   ) {}
 
-  create(createQuestionDto: CreateQuestionDto, user: User) {
+  async create(quizzId, createQuestionDto: CreateQuestionDto, user: User) {
+    const quizz = await this.quizzRepository.findOne({
+        where: {
+            id: quizzId, user: user
+        }
+    });
+    if(!quizz) {
+        throw new Error('Quizz not found or you do not have permission');
+    }
     const question = new Question();
     question.question = createQuestionDto.question;
-    return this.questionRepository.save(question);
+    question.quizz = quizz;
+    return await this.questionRepository.save(question);
   }
 
   async findAllByQuizz(quizzId, UpdateQuestionDto:UpdateQuestionDto, user:User): Promise<Question[]> {
@@ -46,11 +55,35 @@ export class QuestionsService {
   }
 
   async update(id: number, updateQuestionDto: UpdateQuestionDto, user:User) {
-
-    return `This action updates a #${id} question`;
+    const question = await this.questionRepository.findOne({
+        where: {
+            id: id
+        },
+        relations: ['quizz']
+    });
+    if(!question) {
+        throw new Error('Question not found');
+    }
+    if(question.quizz.user !== user) {
+        throw new Error('You do not have permission');
+    }
+    question.question = updateQuestionDto.question;
+    return await this.questionRepository.save(question);
   }
 
   async remove(id: number, user:User) {
-    return `This action removes a #${id} question`;
+    const question = await this.questionRepository.findOne({
+      where: {
+        id: id
+      },
+      relations: ['quizz']
+    });
+    if(!question) {
+      throw new Error('Question not found');
+    }
+    if(question.quizz.user !== user) {
+      throw new Error('You do not have permission');
+    }
+    await this.questionRepository.remove(question);
   }
 }

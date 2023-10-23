@@ -21,12 +21,13 @@ export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Post()
+  @Post(':quizzId')
   create(
+      @Param('quizzId') quizzId: number,
       @Body() createQuestionDto: CreateQuestionDto,
       @GetUser() user: User
   ) {
-    return this.questionsService.create(createQuestionDto, user);
+    return this.questionsService.create(quizzId, createQuestionDto, user);
   }
 
   @UseGuards(JwtAuthGuard)
