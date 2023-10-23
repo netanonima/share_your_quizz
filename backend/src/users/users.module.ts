@@ -4,7 +4,7 @@ import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'users/entities/user.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { MailService } from 'mail/mail.service';
@@ -13,7 +13,6 @@ import { MailService } from 'mail/mail.service';
   imports: [
     TypeOrmModule.forFeature([User]),
     MailerModule.forRootAsync({
-      imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
         transport: {
           host: config.get('EMAIL_HOST'),
@@ -35,8 +34,7 @@ import { MailService } from 'mail/mail.service';
         },
       }),
       inject: [ConfigService],
-    }),
-    ConfigModule.forRoot(),
+    })
   ],
   controllers: [UsersController],
   providers: [UsersService, MailService],
