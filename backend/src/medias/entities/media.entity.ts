@@ -23,4 +23,7 @@ export class Media {
 
   @Column({ length: 6 })
   extension: string;
+
+  @Column({ nullable: true })
+  duration: string;
 }

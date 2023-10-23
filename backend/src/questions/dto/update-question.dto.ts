@@ -6,4 +6,8 @@ export class UpdateQuestionDto extends PartialType(CreateQuestionDto) {
     @IsOptional()
     @IsString()
     readonly media: string;
+
+    @IsOptional()
+    @IsString()
+    readonly mediaName: string;
 }

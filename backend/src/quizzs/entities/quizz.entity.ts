@@ -4,7 +4,6 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Question } from '../../questions/entities/question.entity';
@@ -26,9 +25,6 @@ export class Quizz {
 
   @Column({nullable: true})
   modified_on: Date;
-
-  @Column({nullable: true})
-  deleted_on: Date;
 
   @OneToMany(() => Question, (question) => question.quizz, { cascade: true })
   questions: Question[];
