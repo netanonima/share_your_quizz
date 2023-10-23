@@ -1,1 +1,28 @@
-<p>choices works!</p>
+<h1>Choices</h1>
+<button mat-fab color="primary" (click)="add()" class="add-button">
+  <mat-icon>add</mat-icon>
+</button>
+<div class="choices-content">
+  <table matSort (matSortChange)="sortData($event)" class="choices">
+    <tr>
+      <th mat-sort-header="choice">Name</th>
+      <th>Actions</th>
+    </tr>
+
+    <tr *ngFor="let choice of sortedData">
+      <td>{{ choice.choice }}</td>
+      <td>
+        <button mat-icon-button color="primary" (click)="rename(choice.id)">
+          <mat-icon>abc</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" (click)="isCorrectToggle(choice.id)">
+          <mat-icon *ngIf="choice.is_correct">add</mat-icon>
+          <mat-icon *ngIf="!choice.is_correct">remove</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="delete(choice.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </tr>
+  </table>
+</div>
