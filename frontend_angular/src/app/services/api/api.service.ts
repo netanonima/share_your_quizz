@@ -114,6 +114,28 @@ export class ApiService {
     return this.http.put<any>(url, data, { headers });
   }
 
+  updatingQuestionMedia(id: string, question: string, media: string, mediaName: string): Observable<any> {
+    const url = `${this.apiUrl}/questions/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    const data = {
+      question: question,
+      media: media,
+      mediaName: mediaName
+    };
+    return this.http.put<any>(url, data, { headers });
+  }
+
+  // page medias
+  removingMedia(id: string): Observable<any> {
+    const url = `${this.apiUrl}/medias/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    return this.http.delete<any>(url, { headers });
+  }
+
   // page choices
   getChoices(id: string): Observable<any> {
     const url = `${this.apiUrl}/choices/question/${id}`;
