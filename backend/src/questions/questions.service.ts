@@ -76,7 +76,7 @@ export class QuestionsService {
     question.question = updateQuestionDto.question;
     question.quizz.modified_on = new Date();
 
-    if(updateQuestionDto.media) {
+    if(updateQuestionDto.media && updateQuestionDto.mediaName) {
       if(question.media) {
         await this.mediaService.eraseFile(question.media.file_path);
         await this.mediaRepository.remove(question.media);
