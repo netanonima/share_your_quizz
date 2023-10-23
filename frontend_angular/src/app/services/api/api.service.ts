@@ -36,16 +36,9 @@ export class ApiService {
     return this.http.post(url, data);
   }
 
+  // page quizzes
   getQuizzes(): Observable<any> {
     const url = `${this.apiUrl}/quizzs`;
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('api_token')}`
-    });
-    return this.http.get<any>(url, { headers });
-  }
-
-  getQuizz(id: string): Observable<any> {
-    const url = `${this.apiUrl}/quizzs/${id}`;
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('api_token')}`
     });
@@ -70,6 +63,48 @@ export class ApiService {
     };
     return this.http.post<any>(url, data, { headers });
   }
+
+  renamingQuizz(id: string, quizz: string): Observable<any> {
+    const url = `${this.apiUrl}/quizzs/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    const data = {
+      quizz: quizz
+    };
+    return this.http.put<any>(url, data, { headers });
+  }
+
+  // page questions
+  getQuestions(id: string): Observable<any> {
+    const url = `${this.apiUrl}/questions/quizz/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    return this.http.get<any>(url, { headers });
+  }
+
+  deleteQuestions(id: string): Observable<any> {
+    const url = `${this.apiUrl}/questions/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    return this.http.delete<any>(url, { headers });
+  }
+
+  addingQuestions(question: string): Observable<any> {
+    const url = `${this.apiUrl}/questions`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    const data = {
+      question: question
+    };
+    return this.http.post<any>(url, data, { headers });
+  }
+
+  // page choices
+
 
   startSession(id: string): Observable<any> {
     const url = `${this.apiUrl}/sessions`;

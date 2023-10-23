@@ -3,10 +3,9 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
-  UseGuards, UseInterceptors, ClassSerializerInterceptor,
+  UseGuards, UseInterceptors, ClassSerializerInterceptor, Put,
 } from '@nestjs/common';
 import { QuizzsService } from './quizzs.service';
 import { CreateQuizzDto } from './dto/create-quizz.dto';
@@ -34,13 +33,7 @@ export class QuizzsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  findOne(@Param('id') id: number, @GetUser() user: User): Promise<Quizz> {
-    return this.quizzsService.findOne(id, user);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Patch(':id')
+  @Put(':id')
   async update(@Param('id') id: number, @Body() updateQuizzDto: UpdateQuizzDto, @GetUser() user: User): Promise<Quizz> {
     return this.quizzsService.update(id, updateQuizzDto, user);
   }

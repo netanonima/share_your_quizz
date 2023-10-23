@@ -4,6 +4,7 @@ import { HomeComponent } from "./components/home/home.component";
 import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from "./components/register/register.component";
 import { QuizzesComponent } from "./components/quizzes/quizzes.component";
+import { QuestionsComponent } from "./components/questions/questions.component";
 import { ConfirmAccountComponent } from "./components/confirm-account/confirm-account.component";
 import { ResetPasswordComponent } from "./components/reset-password/reset-password.component";
 import { ResetPasswordRetrieveComponent } from "./components/reset-password-retrieve/reset-password-retrieve.component";
@@ -15,6 +16,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'quizzes', component: QuizzesComponent},
+  {path: 'questions', component: QuestionsComponent},
   {path: 'confirm-account', component: ConfirmAccountComponent},
   {path: 'reset-password', component: ResetPasswordComponent},
   {path: 'reset-password-retrieve', component: ResetPasswordRetrieveComponent},

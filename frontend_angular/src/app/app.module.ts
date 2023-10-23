@@ -30,6 +30,8 @@ import { NewElementComponent } from './modal-dialogs/new-element/new-element.com
 import { PlayComponent } from './components/play/play.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { QuestionsComponent } from './components/questions/questions.component';
+import { RenameElementComponent } from './modal-dialogs/rename-element/rename-element.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     PageNotFoundComponent,
     DeleteConfirmationComponent,
     NewElementComponent,
-    PlayComponent
+    PlayComponent,
+    QuestionsComponent,
+    RenameElementComponent
   ],
   imports: [
     BrowserModule,

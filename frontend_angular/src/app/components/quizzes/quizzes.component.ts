@@ -9,14 +9,9 @@ import {LoginResponse} from "../login/login-response";
 import {HttpErrorResponse} from "@angular/common/http";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {NewElementComponent} from "../../modal-dialogs/new-element/new-element.component";
+import { Quizz } from "./quizz.interface";
+import {RenameElementComponent} from "../../modal-dialogs/rename-element/rename-element.component";
 // import 'moment/locale/en-US';
-
-export interface Quizz {
-  id: number;
-  quizz: string;
-  created_on: Date;
-  modified_on: Date;
-}
 
 @Component({
   selector: 'app-quizzes',
@@ -44,6 +39,10 @@ export class QuizzesComponent implements OnInit{
       },
       (error) => {
         console.log(error);
+        this.snackBar.open('An error occurred', 'Close', {
+          panelClass: ['snackbar-error'],
+          duration: 3000
+        });
       }
     )
   }
@@ -137,9 +136,47 @@ export class QuizzesComponent implements OnInit{
     );
   }
 
+  rename(id: number){
+    console.log('rename action');
+    const dialogRef = this.dialog.open(RenameElementComponent, {
+      data: { name: this.sortedData?.find((item) => item.id === id)?.quizz }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){
+        console.log('User submitted value', result);
+
+        this.apiService.renamingQuizz(id.toString(), result).subscribe(
+          (response: any) => {
+            console.log('Element renamed', response);
+            this.snackBar.open('Element renamed', 'Close', {
+              panelClass: ['snackbar-success'],
+              duration: 3000
+            });
+            // update element in array
+            this.sortedData = this.sortedData?.map((item) => {
+              if(item.id === id){
+                item.quizz = response.quizz;
+                item.modified_on = response.modified_on;
+              }
+              return item;
+            });
+          },
+          (error: HttpErrorResponse) => {
+            console.log('An error occurred', error);
+            this.snackBar.open('An error occurred', 'Close', {
+              panelClass: ['snackbar-warning'],
+              duration: 3000
+            });
+          }
+        );
+      }
+    });
+  }
+
   edit(id: number){
     console.log('edit action');
-    this.router.navigate(['/quizz'], { queryParams: { id: id } });
+    this.router.navigate(['/questions'], { queryParams: { id: id } });
   }
 
   delete(id: number){
