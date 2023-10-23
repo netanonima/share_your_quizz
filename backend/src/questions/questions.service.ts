@@ -53,9 +53,6 @@ export class QuestionsService {
       throw new NotFoundException('Question not found');
     }
 
-    quizz.modified_on = new Date();
-    await this.quizzRepository.save(quizz);
-
     return question;
   }
 

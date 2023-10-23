@@ -61,9 +61,6 @@ export class ChoicesService { // NotFoundException ForbiddenException
         throw new NotFoundException('Choices not found');
     }
 
-    question.quizz.modified_on = new Date();
-    await this.questionRepository.save(question);
-
     return choices;
   }
 
