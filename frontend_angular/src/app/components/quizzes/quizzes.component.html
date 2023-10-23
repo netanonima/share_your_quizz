@@ -3,7 +3,7 @@
   <mat-icon>add</mat-icon>
 </button>
 <div class="quizzes-content">
-  <table matSort (matSortChange)="sortData($event)">
+  <table matSort (matSortChange)="sortData($event)" class="quizzes">
     <tr>
       <th mat-sort-header="quizz">Name</th>
       <th mat-sort-header="created_on">Creation</th>
@@ -15,12 +15,12 @@
       <td>{{ quizz.quizz }}</td>
       <td>
       <span *ngIf="quizz.created_on">
-        {{ moment(quizz.created_on, "DD/MM/YYYY HH:mm").format('LL LTS') }}
+        {{ moment(quizz.created_on).format('LL LTS') }}
       </span>
       </td>
       <td>
       <span *ngIf="quizz.modified_on">
-        {{ moment(quizz.modified_on, "DD/MM/YYYY HH:mm").format('LL LTS') }}
+        {{ moment(quizz.modified_on).format('LL LTS') }}
       </span>
       </td>
       <td>
