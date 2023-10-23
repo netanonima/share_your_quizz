@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {ApiService} from "../services/api/api.service";
+import {ApiService} from "../../services/api/api.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute, Router} from "@angular/router";
-import {LoginResponse} from "../components/login/login-response";
+import {LoginResponse} from "../login/login-response";
 import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
