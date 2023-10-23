@@ -6,6 +6,7 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {Quizz} from "quizzs/entities/quizz.entity";
 import {User} from "users/entities/user.entity";
+import {Media} from "medias/entities/media.entity";
 
 @Injectable()
 export class QuestionsService {
@@ -45,7 +46,8 @@ export class QuestionsService {
       where: {
         quizz: quizz
       },
-      select: ['id', 'question']
+      select: ['id', 'question', 'media'],
+      relations: ['media']
     });
     if (!question) {
       throw new NotFoundException('Question not found');
@@ -72,6 +74,18 @@ export class QuestionsService {
     }
     question.question = updateQuestionDto.question;
     question.quizz.modified_on = new Date();
+    if(updateQuestionDto.media) {
+      let media = new Media();
+      // extract mime type from base64 string(media)
+      const mimeType = updateQuestionDto.media.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)[0];
+      // extract extension from mime type
+
+      // todo: convert audio to mp3, video to mp4 and image to png
+      // todo: generate the file on the right folder
+      // todo: set file_path, filename, size, type and extension
+      // todo: add a duration attribute and set it
+
+    }
     return await this.questionRepository.save(question);
   }
 
