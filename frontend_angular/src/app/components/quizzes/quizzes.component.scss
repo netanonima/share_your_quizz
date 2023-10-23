@@ -1,9 +1,14 @@
+.quizzes {
+  margin: auto;
+}
+
 .quizzes-content {
   position: relative;
   padding: 2vh 2vw;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 20px;
 }
 
@@ -40,6 +45,7 @@
 @media (max-width: 420px) {
   .quizzes-content {
     flex-direction: column;
+    align-items: flex-start;
   }
   .add-button {
     position: static;
