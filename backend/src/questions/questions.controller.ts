@@ -3,7 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
+  Put,
   Param,
   Delete,
   UseGuards, UseInterceptors, ClassSerializerInterceptor,
@@ -22,34 +22,39 @@ export class QuestionsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createQuestionDto: CreateQuestionDto) {
-    return this.questionsService.create(createQuestionDto);
+  create(
+      @Body() createQuestionDto: CreateQuestionDto,
+      @GetUser() user: User
+  ) {
+    return this.questionsService.create(createQuestionDto, user);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
-  findAll(@Param('quizzId') quizzId: number, @GetUser() user: User) {
-    return this.questionsService.findAll(quizzId, user);
+  @Get('quizz/:quizzId')
+  findAllByQuizz(
+      @Param('quizzId') quizzId: number,
+      @Body() updateQuestionDto: UpdateQuestionDto,
+      @GetUser() user: User
+  ) {
+    return this.questionsService.findAllByQuizz(quizzId, updateQuestionDto, user);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.questionsService.findOne(+id);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Patch(':id')
+  @Put(':id')
   update(
     @Param('id') id: string,
     @Body() updateQuestionDto: UpdateQuestionDto,
+    @GetUser() user: User
   ) {
-    return this.questionsService.update(+id, updateQuestionDto);
+    return this.questionsService.update(+id, updateQuestionDto, user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.questionsService.remove(+id);
+  remove(
+      @Param('id') id: string,
+      @GetUser() user: User
+  ) {
+    return this.questionsService.remove(+id, user);
   }
 }
