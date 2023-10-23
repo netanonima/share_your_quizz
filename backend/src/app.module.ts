@@ -16,6 +16,7 @@ import { MediasModule } from './medias/medias.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { AuthModule } from './auth/auth.module';
 import { PlaySocketsModule } from './play-sockets/play-sockets.module';
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { PlaySocketsModule } from './play-sockets/play-sockets.module';
       autoLoadEntities: true,
       logging: true,
     }),
+    ConfigModule.forRoot({ isGlobal: true }),
     UsersModule,
     QuizzsModule,
     QuestionsModule,
