@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import {Question} from "questions/entities/question.entity";
@@ -19,7 +19,7 @@ export class QuestionsService {
   async create(quizzId, createQuestionDto: CreateQuestionDto, user: User) {
     const quizz = await this.quizzRepository.findOne({
         where: {
-            id: quizzId, user: user
+            id: quizzId, user: { id: user.id }
         }
     });
     if(!quizz) {
@@ -31,14 +31,14 @@ export class QuestionsService {
     return await this.questionRepository.save(question);
   }
 
-  async findAllByQuizz(quizzId, UpdateQuestionDto:UpdateQuestionDto, user:User): Promise<Question[]> {
+  async findAllByQuizz(quizzId, user:User): Promise<Question[]> {
     const quizz = await this.quizzRepository.findOne({
       where: {
-        id: quizzId, user: user
+        id: quizzId, user: { id: user.id }
       }
     });
     if (!quizz) {
-      throw new Error('Quizz not found or you do not have permission');
+      throw new NotFoundException('Quizz not found');
     }
 
     const question = await this.questionRepository.find({
@@ -48,7 +48,7 @@ export class QuestionsService {
       select: ['id', 'question']
     });
     if (!question) {
-      throw new Error('Question not found');
+      throw new NotFoundException('Question not found');
     }
 
     return question;
@@ -59,13 +59,13 @@ export class QuestionsService {
         where: {
             id: id
         },
-        relations: ['quizz']
+        relations: ['quizz', 'quizz.user']
     });
     if(!question) {
-        throw new Error('Question not found');
+        throw new NotFoundException('Question not found');
     }
-    if(question.quizz.user !== user) {
-        throw new Error('You do not have permission');
+    if(question.quizz.user.id !== user.id) {
+        throw new ForbiddenException('You do not have permission');
     }
     question.question = updateQuestionDto.question;
     return await this.questionRepository.save(question);
@@ -76,13 +76,13 @@ export class QuestionsService {
       where: {
         id: id
       },
-      relations: ['quizz']
+      relations: ['quizz', 'quizz.user']
     });
     if(!question) {
-      throw new Error('Question not found');
+      throw new NotFoundException('Question not found');
     }
-    if(question.quizz.user !== user) {
-      throw new Error('You do not have permission');
+    if(question.quizz.user.id !== user.id) {
+      throw new ForbiddenException('You do not have permission');
     }
     await this.questionRepository.remove(question);
   }
