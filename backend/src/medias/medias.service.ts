@@ -1,4 +1,4 @@
-import {Injectable, UseFilters} from '@nestjs/common';
+import {ForbiddenException, Injectable, NotFoundException, UseFilters} from '@nestjs/common';
 import sharp from "sharp";
 import { promises as fs } from 'fs';
 import ffmpeg from 'fluent-ffmpeg';
@@ -6,11 +6,19 @@ import ffmpegStatic from 'ffmpeg-static';
 import { Readable } from 'stream';
 import {ConfigService} from "@nestjs/config";
 import {MediasExceptionsFilter} from "medias/medias-exceptions.filter";
+import {User} from "users/entities/user.entity";
+import {InjectRepository} from "@nestjs/typeorm";
+import {Question} from "questions/entities/question.entity";
+import {Repository} from "typeorm";
+import {Quizz} from "quizzs/entities/quizz.entity";
+import {Media} from "medias/entities/media.entity";
 
 @Injectable()
 export class MediasService {
   constructor(
-      private config: ConfigService
+      private config: ConfigService,
+      @InjectRepository(Media)
+      private readonly mediaRepository: Repository<Media>
   ) {}
 
   @UseFilters(new MediasExceptionsFilter())
@@ -130,6 +138,23 @@ export class MediasService {
     } catch (err) {
       throw new Error(`Impossible de lire le fichier : ${err}`);
     }
+  }
+
+  async remove(id: number, user:User) {
+    const media = await this.mediaRepository.findOne({
+      where: {
+        id: id
+      },
+      relations: ['question', 'question.quizz', 'question.quizz.user']
+    });
+    if(!media) {
+      throw new NotFoundException('Media not found');
+    }
+    if(media.question.quizz.user.id !== user.id) {
+      throw new ForbiddenException('You do not have permission');
+    }
+    await this.eraseFile(media.file_path);
+    await this.mediaRepository.remove(media);
   }
 
 }
