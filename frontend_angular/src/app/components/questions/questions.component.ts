@@ -9,6 +9,7 @@ import {NewElementComponent} from "../../modal-dialogs/new-element/new-element.c
 import {HttpErrorResponse} from "@angular/common/http";
 import {RenameElementComponent} from "../../modal-dialogs/rename-element/rename-element.component";
 import {DeleteConfirmationComponent} from "../../modal-dialogs/delete-confirmation/delete-confirmation.component";
+import {ManageMediaComponent} from "../../modal-dialogs/manage-media/manage-media.component";
 
 @Component({
   selector: 'app-questions',
@@ -91,6 +92,7 @@ export class QuestionsComponent implements OnInit{
               const newQuestion: Question = {
                 id: response.id,
                 question: response.question,
+                media: response.media
               } as Question;
               this.sortedData?.push(newQuestion);
             },
@@ -153,6 +155,76 @@ export class QuestionsComponent implements OnInit{
 
   manageMedia(id: number){
     console.log('manage media action');
+    const dialogRef = this.dialog.open(ManageMediaComponent, {
+      data: this.sortedData?.find((item) => item.id === id)?.media
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed!');
+      if(result!==''){
+        const modalResult = result;
+        console.log('modalResult', modalResult);
+        if(modalResult.erase){
+          console.log('start erasing media');
+          // erase media
+          this.apiService.removingMedia(this.sortedData?.find((item) => item.id === id)?.media.id.toString()).subscribe(
+            (response: any) => {
+              console.log('Media removed', response);
+              this.snackBar.open('Media removed', 'Close', {
+                panelClass: ['snackbar-success'],
+                duration: 3000
+              });
+              this.sortedData = this.sortedData?.map((item) => {
+                if(item.id === id){
+                  item.media = {};
+                }
+                return item;
+              });
+            },
+            (error: HttpErrorResponse) => {
+              console.log('an error occurred', error);
+              this.snackBar.open('An error occurred', 'Close', {
+                panelClass: ['snackbar-warning'],
+                duration: 3000
+              });
+            }
+          );
+        }else{
+          console.log('start updating media');
+          if(modalResult.base64 && modalResult.fileName && modalResult.base64!=='' && modalResult.fileName!==''){
+            // update media
+            // updatingQuestionMedia(id: string, question: string, media: string, mediaName: string)
+            const thisQuestion = this.sortedData?.find((item) => item.id === id)?.question;
+            console.log('thisQuestion', thisQuestion);
+            if(thisQuestion){
+              this.apiService.updatingQuestionMedia(id.toString(), thisQuestion, modalResult.base64, modalResult.fileName).subscribe(
+                (response: any) => {
+                  console.log('Media updated', response);
+                  this.snackBar.open('Media updated', 'Close', {
+                    panelClass: ['snackbar-success'],
+                    duration: 3000
+                  });
+                  this.sortedData = this.sortedData?.map((item) => {
+                    if(item.id === id){
+                      item.media = response.media;
+                    }
+                    return item;
+                  });
+                },
+                (error: HttpErrorResponse) => {
+                  console.log('an error occurred', error);
+                  this.snackBar.open('An error occurred', 'Close', {
+                    panelClass: ['snackbar-warning'],
+                    duration: 3000
+                  });
+                }
+              );
+            }
+          }
+        }
+      }else{
+        console.log('User cancelled media management');
+      }
+    });
   }
 
   delete(id: number){
