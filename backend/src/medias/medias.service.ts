@@ -123,4 +123,8 @@ export class MediasService {
     });
   }
 
+  async getQuestionMediaBase64File(filePath: string) {
+
+  }
+
 }
