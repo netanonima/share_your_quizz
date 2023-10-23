@@ -32,6 +32,7 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { QuestionsComponent } from './components/questions/questions.component';
 import { RenameElementComponent } from './modal-dialogs/rename-element/rename-element.component';
+import { ChoicesComponent } from './components/choices/choices.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { RenameElementComponent } from './modal-dialogs/rename-element/rename-el
     NewElementComponent,
     PlayComponent,
     QuestionsComponent,
-    RenameElementComponent
+    RenameElementComponent,
+    ChoicesComponent
   ],
   imports: [
     BrowserModule,

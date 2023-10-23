@@ -151,6 +151,10 @@ export class QuestionsComponent implements OnInit{
     this.router.navigate(['/choices'], { queryParams: { id: id } });
   }
 
+  manageMedia(id: number){
+    console.log('manage media action');
+  }
+
   delete(id: number){
     console.log('delete action');
     const dialogRef = this.dialog.open(DeleteConfirmationComponent);
