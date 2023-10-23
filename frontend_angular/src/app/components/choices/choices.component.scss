@@ -1,0 +1,48 @@
+.choices-content {
+  position: relative;
+  padding: 2vh 2vw;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.choices th, .choices td {
+  padding: 10px;
+  text-align: left;
+}
+
+.add-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 2vh 2vw;
+}
+
+@media (min-width: 768px) {
+  .choices-content {
+    padding: 20px 15%;
+  }
+  .add-button {
+    margin: 20px 15%;
+  }
+}
+
+@media (min-width: 992px) {
+  .choices-content {
+    padding: 20px 20%;
+  }
+  .add-button {
+    margin: 20px 20%;
+  }
+}
+
+@media (max-width: 420px) {
+  .choices-content {
+    flex-direction: column;
+  }
+  .add-button {
+    position: static;
+    margin: 10px 0;
+  }
+}

@@ -115,7 +115,57 @@ export class ApiService {
   }
 
   // page choices
+  getChoices(id: string): Observable<any> {
+    const url = `${this.apiUrl}/choices/question/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    return this.http.get<any>(url, { headers });
+  }
 
+  deleteChoice(id: string): Observable<any> {
+    const url = `${this.apiUrl}/choices/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    return this.http.delete<any>(url, { headers });
+  }
+
+  addingChoice(id: string, choice: string): Observable<any> {
+    const url = `${this.apiUrl}/choices/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    const data = {
+      choice: choice,
+      is_correct: false
+    };
+    return this.http.post<any>(url, data, { headers });
+  }
+
+  renamingChoice(id: string, choice: string, is_correct: boolean): Observable<any> {
+    const url = `${this.apiUrl}/choices/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    const data = {
+      choice: choice,
+      is_correct: is_correct
+    };
+    return this.http.put<any>(url, data, { headers });
+  }
+
+  isCorrectToggleChoice(id: string, choice: string, is_correct: boolean): Observable<any> {
+    const url = `${this.apiUrl}/choices/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    const data = {
+      choice: choice,
+      is_correct: !is_correct
+    };
+    return this.http.put<any>(url, data, { headers });
+  }
 
   startSession(id: string): Observable<any> {
     const url = `${this.apiUrl}/sessions`;
