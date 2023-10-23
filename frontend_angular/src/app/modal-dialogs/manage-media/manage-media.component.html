@@ -1,1 +1,30 @@
-<p>manage-media works!</p>
+<h2 mat-dialog-title>Media management</h2>
+<mat-dialog-content class="mat-typography">
+  <div *ngIf="data">
+    <h3>Media deleting</h3>
+    <p>Do you want to delete your file : {{ data.filename }}?</p>
+  </div>
+  <div *ngIf="!data">
+    <h3>Adding media</h3>
+    <p>Use this form if you want to add a media on your question. </p>
+    <p>Every audio, video and image files are allowed. </p>
+  </div>
+  <form *ngIf="!data" [formGroup]="manageMediaForm" class="form-fields" @fadeInOut (ngSubmit)="submitValue()">
+    <div>
+      <input type="file" id="fileInput" #fileInputRef (change)="fileChanged($event)" style="display: none" />
+      <mat-form-field appearance="outline" class="custom-file-input">
+        <input matInput [value]="fileName" readonly placeholder="No file chosen" disabled/>
+        <mat-icon matSuffix (click)="triggerFileInput()">attach_file</mat-icon>
+        <mat-error *ngIf="(manageMediaForm.get('file')?.invalid)">
+          {{getErrorMessage('file')}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button *ngIf="!data" mat-button color="accent" (click)="resetForm()">Reset form</button>
+  <button *ngIf="!data" mat-button [mat-dialog-close]="true" color="primary" (click)="submitValue()" [disabled]="manageMediaForm.invalid" cdkFocusInitial>Send file</button>
+  <button *ngIf="data" mat-button [mat-dialog-close]="true" color="warn" (click)="submitErasing()" cdkFocusInitial>Delete file</button>
+</mat-dialog-actions>

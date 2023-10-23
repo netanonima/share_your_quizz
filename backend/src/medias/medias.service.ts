@@ -1,16 +1,14 @@
 import {ForbiddenException, Injectable, NotFoundException, UseFilters} from '@nestjs/common';
-import sharp from "sharp";
+import * as sharp from 'sharp';
 import { promises as fs } from 'fs';
-import ffmpeg from 'fluent-ffmpeg';
+import * as ffmpeg from 'fluent-ffmpeg';
 import ffmpegStatic from 'ffmpeg-static';
 import { Readable } from 'stream';
 import {ConfigService} from "@nestjs/config";
 import {MediasExceptionsFilter} from "medias/medias-exceptions.filter";
 import {User} from "users/entities/user.entity";
 import {InjectRepository} from "@nestjs/typeorm";
-import {Question} from "questions/entities/question.entity";
 import {Repository} from "typeorm";
-import {Quizz} from "quizzs/entities/quizz.entity";
 import {Media} from "medias/entities/media.entity";
 
 @Injectable()
@@ -24,15 +22,30 @@ export class MediasService {
   @UseFilters(new MediasExceptionsFilter())
   async convertAndResizeImage(base64Image: string): Promise<Buffer> {
     const imageBuffer = Buffer.from(base64Image, 'base64');
-    const resizedImageBuffer = await sharp(imageBuffer)
-        .resize({
-          width: this.config.get('MAX_WIDTH'),
-          height: this.config.get('MAX_HEIGHT'),
-          fit: sharp.fit.inside,
-        })
-        .png()
-        .toBuffer();
-    return resizedImageBuffer;
+    const inputPath = 'temp-input-image.png';  // Choisir un emplacement temporaire pour l'image d'entrée
+    const outputPath = 'temp-output-image.png';  // Choisir un emplacement temporaire pour l'image de sortie
+
+    await fs.writeFile(inputPath, imageBuffer);
+
+    return new Promise((resolve, reject) => {
+      ffmpeg.setFfmpegPath(ffmpegStatic);
+      ffmpeg(inputPath)
+          .outputOptions([
+            `-vf scale=${this.config.get('MAX_WIDTH')}:${this.config.get('MAX_HEIGHT')}`,
+            `-y`,  // Écraser le fichier de sortie s'il existe déjà
+          ])
+          .output(outputPath)
+          .on('end', async () => {
+            const resizedImageBuffer = await fs.readFile(outputPath);
+            await fs.unlink(inputPath);  // Supprimer l'image d'entrée temporaire
+            await fs.unlink(outputPath);  // Supprimer l'image de sortie temporaire
+            resolve(resizedImageBuffer);
+          })
+          .on('error', (err) => {
+            reject(new Error(`FFmpeg error: ${err.message}`));
+          })
+          .run();
+    });
   }
 
   @UseFilters(new MediasExceptionsFilter())
