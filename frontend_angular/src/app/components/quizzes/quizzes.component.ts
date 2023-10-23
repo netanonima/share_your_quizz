@@ -19,8 +19,8 @@ import {RenameElementComponent} from "../../modal-dialogs/rename-element/rename-
   styleUrls: ['./quizzes.component.scss'],
 })
 export class QuizzesComponent implements OnInit{
-  data: Quizz[] = [];
-  sortedData : Quizz[] | undefined;
+  public data: Quizz[] = [];
+  public sortedData : Quizz[] | undefined;
 
   constructor(
     private apiService: ApiService,

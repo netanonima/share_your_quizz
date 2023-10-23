@@ -34,10 +34,9 @@ export class QuestionsController {
   @Get('quizz/:quizzId')
   findAllByQuizz(
       @Param('quizzId') quizzId: number,
-      @Body() updateQuestionDto: UpdateQuestionDto,
       @GetUser() user: User
   ) {
-    return this.questionsService.findAllByQuizz(quizzId, updateQuestionDto, user);
+    return this.questionsService.findAllByQuizz(quizzId, user);
   }
 
   @UseGuards(JwtAuthGuard)

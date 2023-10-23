@@ -84,7 +84,7 @@ export class ApiService {
     return this.http.get<any>(url, { headers });
   }
 
-  deleteQuestions(id: string): Observable<any> {
+  deleteQuestion(id: string): Observable<any> {
     const url = `${this.apiUrl}/questions/${id}`;
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('api_token')}`
@@ -92,8 +92,8 @@ export class ApiService {
     return this.http.delete<any>(url, { headers });
   }
 
-  addingQuestions(question: string): Observable<any> {
-    const url = `${this.apiUrl}/questions`;
+  addingQuestion(id: string, question: string): Observable<any> {
+    const url = `${this.apiUrl}/questions/${id}`;
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('api_token')}`
     });
@@ -101,6 +101,17 @@ export class ApiService {
       question: question
     };
     return this.http.post<any>(url, data, { headers });
+  }
+
+  renamingQuestion(id: string, question: string): Observable<any> {
+    const url = `${this.apiUrl}/questions/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    const data = {
+      question: question
+    };
+    return this.http.put<any>(url, data, { headers });
   }
 
   // page choices
