@@ -8,7 +8,6 @@ import {Quizz} from './entities/quizz.entity';
 import {Question} from "questions/entities/question.entity";
 import {Choice} from "choices/entities/choice.entity";
 import {Media} from "medias/entities/media.entity";
-import {Image} from "images/entities/image.entity";
 import {User} from "users/entities/user.entity";
 import moment from "moment";
 
@@ -22,9 +21,7 @@ export class QuizzsService {
       @InjectRepository(Choice)
       private choiceRepository: Repository<Choice>,
       @InjectRepository(Media)
-      private mediaRepository: Repository<Media>,
-      @InjectRepository(Image)
-      private imageRepository: Repository<Image>
+      private mediaRepository: Repository<Media>
   ) {}
   async create(currentUser: User, createQuizzDto: CreateQuizzDto): Promise<Quizz> {
     const quizz = new Quizz();
@@ -57,7 +54,7 @@ export class QuizzsService {
   async remove(id: number, currentUser: User): Promise<void> {
     const quizz = await this.quizzRepository.findOne({
       where: { id: id },
-      relations: ['user', 'questions', 'questions.choices', 'questions.media', 'questions.image'],
+      relations: ['user', 'questions', 'questions.choices', 'questions.media'],
     });
 
     if (!quizz) {
@@ -69,7 +66,6 @@ export class QuizzsService {
     }
 
     const mediaIdsToRemove = [];
-    const imageIdsToRemove = [];
 
     for (const question of quizz.questions) {
       if (question.choices && question.choices.length > 0) {
@@ -77,9 +73,6 @@ export class QuizzsService {
       }
       if (question.media) {
         mediaIdsToRemove.push(question.media.id);
-      }
-      if (question.image) {
-        imageIdsToRemove.push(question.image.id);
       }
     }
 
@@ -89,9 +82,6 @@ export class QuizzsService {
 
     if (mediaIdsToRemove.length > 0) {
       await this.mediaRepository.delete(mediaIdsToRemove);
-    }
-    if (imageIdsToRemove.length > 0) {
-      await this.imageRepository.delete(imageIdsToRemove);
     }
 
     await this.quizzRepository.remove(quizz);

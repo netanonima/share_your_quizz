@@ -6,7 +6,6 @@ import {Quizz} from "quizzs/entities/quizz.entity";
 import {Question} from "questions/entities/question.entity";
 import {Choice} from "choices/entities/choice.entity";
 import {Media} from "medias/entities/media.entity";
-import {Image} from "images/entities/image.entity";
 import {User} from "users/entities/user.entity";
 
 @Module({
@@ -15,7 +14,6 @@ import {User} from "users/entities/user.entity";
       Question,
       Choice,
       Media,
-      Image,
       User
   ])],
   controllers: [QuizzsController],

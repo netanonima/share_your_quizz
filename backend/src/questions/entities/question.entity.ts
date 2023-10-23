@@ -8,7 +8,6 @@ import {
 import { Quizz } from '../../quizzs/entities/quizz.entity';
 import { Choice } from '../../choices/entities/choice.entity';
 import { Media } from '../../medias/entities/media.entity';
-import { Image } from '../../images/entities/image.entity';
 
 @Entity()
 export class Question {
@@ -27,9 +26,4 @@ export class Question {
   @OneToOne(() => Media, (media) => media.question, { cascade: true })
   @JoinColumn()
   media: Media;
-
-  @OneToOne(() => Image, (image) => image.question, { cascade: true })
-  @JoinColumn()
-  image: Image;
-
 }
