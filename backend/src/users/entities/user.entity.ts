@@ -39,10 +39,6 @@ export class User {
   @Exclude()
   account_confirmed_on: Date;
 
-  @Column({ nullable: true })
-  @Exclude()
-  deleted_on: Date;
-
   @Column({ default: 0 })
   @Exclude()
   is_super_admin: boolean;
