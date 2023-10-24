@@ -28,6 +28,24 @@ An app to generate dynamic quizz and share them with your friends, customers, st
     cd ../frontend_angular
     npm install
   ```
+- Install ffmpeg (backend side)
+  - On linux
+    ```bash
+      sudo apt install ffmpeg
+    ```
+  - On windows
+    - Download ffmpeg from [here](https://ffmpeg.zeranoe.com/builds/)
+    - Extract the zip file
+    - Add the bin folder to your PATH
+- get the ffmpeg path
+  - On linux
+    ```bash
+      which ffmpeg
+    ```
+  - On windows
+    ```bash
+      where ffmpeg
+    ```
 - Change your JWT secret by a strong one in `backend/src/auth/constants.ts`
 - Copy 'backend/.env-lock' to 'backend/.env' and set your values
 - Launch the backend

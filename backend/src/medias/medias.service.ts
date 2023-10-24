@@ -10,6 +10,7 @@ import {User} from "users/entities/user.entity";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {Media} from "medias/entities/media.entity";
+import { dirname, join } from 'path';
 
 @Injectable()
 export class MediasService {
@@ -21,46 +22,52 @@ export class MediasService {
 
   @UseFilters(new MediasExceptionsFilter())
   async convertAndResizeImage(base64Image: string): Promise<Buffer> {
-    const imageBuffer = Buffer.from(base64Image, 'base64');
-    const inputPath = 'temp-input-image.png';  // Choisir un emplacement temporaire pour l'image d'entrée
-    const outputPath = 'temp-output-image.png';  // Choisir un emplacement temporaire pour l'image de sortie
+    const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+    const imageBuffer = Buffer.from(base64Data, 'base64');
 
-    await fs.writeFile(inputPath, imageBuffer);
-
-    return new Promise((resolve, reject) => {
-      ffmpeg.setFfmpegPath(ffmpegStatic);
-      ffmpeg(inputPath)
-          .outputOptions([
-            `-vf scale=${this.config.get('MAX_WIDTH')}:${this.config.get('MAX_HEIGHT')}`,
-            `-y`,  // Écraser le fichier de sortie s'il existe déjà
-          ])
-          .output(outputPath)
-          .on('end', async () => {
-            const resizedImageBuffer = await fs.readFile(outputPath);
-            await fs.unlink(inputPath);  // Supprimer l'image d'entrée temporaire
-            await fs.unlink(outputPath);  // Supprimer l'image de sortie temporaire
-            resolve(resizedImageBuffer);
+    try {
+      const resizedImageBuffer = await sharp(imageBuffer)
+          .resize({
+            width: this.config.get('MAX_WIDTH'),
+            height: this.config.get('MAX_HEIGHT'),
+            fit: sharp.fit.inside,
+            withoutEnlargement: true
           })
-          .on('error', (err) => {
-            reject(new Error(`FFmpeg error: ${err.message}`));
-          })
-          .run();
-    });
+          .toBuffer();
+      return resizedImageBuffer;
+    } catch (error) {
+      throw new Error(`An error occurred: ${error.message}`);
+    }
   }
 
   @UseFilters(new MediasExceptionsFilter())
-  async eraseFile(filePath: string): Promise<void> {
+  async eraseFile(filePath: string, filename: string, extesion: string): Promise<void> {
     try {
-      await fs.unlink(filePath);
+      await fs.unlink(filePath+filename+'.'+extesion);
+      let currentDir = dirname(filePath);
+
+      while (currentDir && currentDir !== this.config.get('MEDIA_PATH')) {
+        const files = await fs.readdir(currentDir);
+
+        if (files.length === 0) {
+          await fs.rmdir(currentDir);
+        } else {
+          break;
+        }
+        currentDir = dirname(currentDir);
+      }
     } catch (err) {
       throw new Error(err);
     }
   }
 
   @UseFilters(new MediasExceptionsFilter())
-  async writeBufferToFile(buffer: Buffer, filePath: string): Promise<void> {
+  async writeBufferToFile(buffer: Buffer, filePath: string, filenameAndExtension: string): Promise<void> {
+    const fullPath = filePath + filenameAndExtension;
+    console.log('writeBufferToFile');
     try {
-      await fs.writeFile(filePath, buffer);
+      await fs.mkdir(filePath, { recursive: true });
+      await fs.writeFile(fullPath, buffer);
     } catch (err) {
       throw new Error(err);
     }
@@ -74,7 +81,7 @@ export class MediasService {
     audioStream.push(null);  // Signale la fin du stream
 
     return new Promise((resolve, reject) => {
-      ffmpeg.setFfmpegPath(ffmpegStatic);
+      ffmpeg.setFfmpegPath(this.config.get('FFMPEG_PATH'));
       const compressionRate = this.config.get('AUDIO_CONVERTED_QUALITY');
       const ffmpegCommand = ffmpeg(audioStream)
           .outputOptions(`-b:a ${compressionRate}k`)
@@ -102,7 +109,7 @@ export class MediasService {
     videoStream.push(null);  // Signale la fin du stream
 
     return new Promise((resolve, reject) => {
-      ffmpeg.setFfmpegPath(ffmpegStatic);
+      ffmpeg.setFfmpegPath(this.config.get('FFMPEG_PATH'));
       const ffmpegCommand = ffmpeg(videoStream)
           .format('mp4')
           .outputOptions('-movflags frag_keyframe+empty_moov');  // Pour créer un fichier MP4 qui peut être lu avant que l'encodage ne soit terminé
@@ -128,7 +135,7 @@ export class MediasService {
     videoStream.push(null);
 
     return new Promise((resolve, reject) => {
-      ffmpeg.setFfmpegPath(ffmpegStatic);
+      ffmpeg.setFfmpegPath(this.config.get('FFMPEG_PATH'));
       ffmpeg(videoStream)
           .ffprobe((err, data) => {
             if (err) {
@@ -166,8 +173,9 @@ export class MediasService {
     if(media.question.quizz.user.id !== user.id) {
       throw new ForbiddenException('You do not have permission');
     }
-    await this.eraseFile(media.file_path);
     await this.mediaRepository.remove(media);
+    await this.eraseFile(media.file_path, media.filename, media.extension);
+
   }
 
 }

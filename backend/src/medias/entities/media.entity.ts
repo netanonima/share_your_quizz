@@ -15,7 +15,7 @@ export class Media {
   @Column({ length: 40 })
   filename: string;
 
-  @Column('bigint')
+  @Column('float')
   size: number;
 
   @Column({ length: 70 })
