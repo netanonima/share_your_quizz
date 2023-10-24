@@ -86,12 +86,12 @@ export class QuestionsService {
       }
 
       let media = new Media();
-      // extract mime type from base64 string(media)
       const mimeType = updateQuestionDto.media.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)[0];
       const type = mimeType.split('/')[0];
       const mediaName = updateQuestionDto.mediaName;
+      console.log('mediaName', mediaName);
       const filename = mediaName.split('.').slice(0, -1).join('.');
-      const extension = mediaName.split('.').slice(-1).join('.');
+      const oldExtension = mediaName.split('.').slice(-1).join('.');
       let duration = "";
       let newExtension = '';
       if(type === 'image') newExtension = 'png';
@@ -99,28 +99,30 @@ export class QuestionsService {
       if(type === 'video') newExtension = 'mp4';
       const newMediaName = filename+'.'+newExtension;
       const filePath = this.config.get('MEDIA_PATH')+'/quizzesMedias/'+question.quizz.id+'/questions/'+question.id+'/';
-      // file conversion
       let newBuffer = null;
+      let size = 0;
+      let thisExtension = '';
       if(type === 'image'){
         newBuffer = await this.mediaService.convertAndResizeImage(updateQuestionDto.media);
+        await this.mediaService.writeBufferToFile(newBuffer, filePath, newMediaName);
+        size = Math.round(newBuffer.length / 1024 / 1024 * 100) / 100;
+        thisExtension = newExtension;
       }
       if(type === 'audio'){
-        newBuffer = await this.mediaService.convertAudio(updateQuestionDto.media);
+        duration = await this.mediaService.saveFile(updateQuestionDto.media, filePath + filename+ '.' + oldExtension);
+        size = Math.round(updateQuestionDto.media.length / 1024 / 1024 * 100) / 100;
+        thisExtension = oldExtension;
       }
-      if(type === 'video'){
-        newBuffer = await this.mediaService.convertVideo(updateQuestionDto.media);
-        duration = await this.mediaService.getVideoDuration(newBuffer);
+      if(type === 'video' && oldExtension !== 'ogg'){
+        duration = await this.mediaService.saveFile(updateQuestionDto.media, filePath + filename+ '.' + oldExtension);
+        size = Math.round(updateQuestionDto.media.length / 1024 / 1024 * 100) / 100;
+        thisExtension = oldExtension;
       }
-      // get buffer size in Mo
-      console.log(Buffer.isBuffer(newBuffer));
-      const size = Math.round(newBuffer.length / 1024 / 1024 * 100) / 100;
-      await this.mediaService.writeBufferToFile(newBuffer, filePath, newMediaName);
-
         media.file_path = filePath;
         media.filename = filename;
         media.size = size;
         media.type = type;
-        media.extension = newExtension;
+        media.extension = thisExtension;
         media.duration = duration;
         question.media = await this.mediaRepository.save(media);
     }
