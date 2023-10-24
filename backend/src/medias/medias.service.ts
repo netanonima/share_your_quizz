@@ -6,12 +6,10 @@ import ffmpegStatic from 'ffmpeg-static';
 import { Readable } from 'stream';
 import {ConfigService} from "@nestjs/config";
 import {MediasExceptionsFilter} from "medias/medias-exceptions.filter";
-import {User} from "users/entities/user.entity";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {Media} from "medias/entities/media.entity";
 import { dirname, join } from 'path';
-import {Question} from "questions/entities/question.entity";
 
 @Injectable()
 export class MediasService {
@@ -82,7 +80,7 @@ export class MediasService {
     const audioBuffer = Buffer.from(base64Data, 'base64');
     const audioStream = new Readable();
     audioStream.push(audioBuffer);
-    audioStream.push(null);  // Signale la fin du stream
+    audioStream.push(null);
 
     return new Promise((resolve, reject) => {
       ffmpeg.setFfmpegPath(this.config.get('FFMPEG_PATH'));
@@ -98,6 +96,13 @@ export class MediasService {
       ffmpegCommand.on('error', (error) => {
         reject(error);
       });
+      ffmpegCommand.on('stderr', (stderrLine) => {
+        // console.log('Stderr output: ');
+        // console.log(stderrLine);
+      });
+      ffmpegCommand.on('progress', (progress) => {
+        // console.log(progress);
+      });
       const output = ffmpegCommand.pipe();
       output.on('data', (chunk) => {
         chunks.push(chunk);
@@ -108,38 +113,44 @@ export class MediasService {
     });
   }
 
-  @UseFilters(new MediasExceptionsFilter())
-  async convertVideo(base64Video: string): Promise<Buffer> {
-    console.log('convertVideo');
-    const base64Data = base64Video.split(',')[1];
-    const videoBuffer = Buffer.from(base64Data, 'base64');
-    const videoStream = new Readable();
-    videoStream.push(videoBuffer);
-    videoStream.push(null);  // Signale la fin du stream
-    console.log('convertVideo2');
-
-    return new Promise((resolve, reject) => {
-      console.log('convertVideo3');
-      ffmpeg.setFfmpegPath(this.config.get('FFMPEG_PATH'));
-      console.log('convertVideo4');
-      const ffmpegCommand = ffmpeg(videoStream)
-          .format('mp4')
-          .outputOptions('-movflags frag_keyframe+empty_moov');  // Pour créer un fichier MP4 qui peut être lu avant que l'encodage ne soit terminé
-
-      console.log('convertVideo5');
-      const chunks = [];
-      ffmpegCommand.on('end', () => {
-        resolve(Buffer.concat(chunks));
-      });
-      ffmpegCommand.on('error', (error) => {
-        reject(error);
-      });
-      const output = ffmpegCommand.pipe();
-      output.on('data', (chunk) => {
-        chunks.push(chunk);
-      });
-    });
+  formatDuration(durationInSeconds: number): string {
+    const hours = Math.floor(durationInSeconds / 3600).toString().padStart(2, '0');
+    const minutes = Math.floor((durationInSeconds % 3600) / 60).toString().padStart(2, '0');
+    const seconds = Math.floor(durationInSeconds % 60).toString().padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
   }
+
+  @UseFilters(new MediasExceptionsFilter())
+  async saveFile(base64Video: string, outputPath: string): Promise<string> {
+    const videoData = base64Video.split(',')[1];
+
+    const buffer = Buffer.from(videoData, 'base64');
+
+    const dir = dirname(outputPath);
+
+    try {
+      await fs.access(dir).catch(() => fs.mkdir(dir, { recursive: true }));
+
+      await fs.writeFile(outputPath, buffer);
+
+      const duration = await new Promise<number>((resolve, reject) => {
+        ffmpeg.ffprobe(outputPath, (err, metadata) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(metadata.format.duration);
+          }
+        });
+      });
+
+      return this.formatDuration(duration);
+    } catch (error) {
+      console.error('An error occurred:', error);
+      throw error;
+    }
+  }
+
+
 
   @UseFilters(new MediasExceptionsFilter())
   async getVideoDuration(videoBuffer: Buffer): Promise<string> {
