@@ -11,13 +11,16 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {Media} from "medias/entities/media.entity";
 import { dirname, join } from 'path';
+import {Question} from "questions/entities/question.entity";
 
 @Injectable()
 export class MediasService {
   constructor(
       private config: ConfigService,
       @InjectRepository(Media)
-      private readonly mediaRepository: Repository<Media>
+      private readonly mediaRepository: Repository<Media>,
+      @InjectRepository(Question)
+      private readonly questionRepository: Repository<Question>
   ) {}
 
   @UseFilters(new MediasExceptionsFilter())
@@ -172,6 +175,10 @@ export class MediasService {
     }
     if(media.question.quizz.user.id !== user.id) {
       throw new ForbiddenException('You do not have permission');
+    }
+    if (media.question) {
+      media.question.media = null;
+      await this.questionRepository.save(media.question);
     }
     await this.mediaRepository.remove(media);
     await this.eraseFile(media.file_path, media.filename, media.extension);
