@@ -12,13 +12,4 @@ import {User} from "users/entities/user.entity";
 @UseInterceptors(ClassSerializerInterceptor)
 export class MediasController {
   constructor(private readonly mediasService: MediasService) {}
-
-  @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  remove(
-      @Param('id') id: string,
-      @GetUser() user: User
-  ) {
-    return this.mediasService.remove(+id, user);
-  }
 }

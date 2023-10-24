@@ -18,9 +18,7 @@ export class MediasService {
   constructor(
       private config: ConfigService,
       @InjectRepository(Media)
-      private readonly mediaRepository: Repository<Media>,
-      @InjectRepository(Question)
-      private readonly questionRepository: Repository<Question>
+      private readonly mediaRepository: Repository<Media>
   ) {}
 
   @UseFilters(new MediasExceptionsFilter())
@@ -44,23 +42,25 @@ export class MediasService {
   }
 
   @UseFilters(new MediasExceptionsFilter())
-  async eraseFile(filePath: string, filename: string, extesion: string): Promise<void> {
+  async eraseFile(filePath: string, filename: string, extension: string): Promise<void> {
     try {
-      await fs.unlink(filePath+filename+'.'+extesion);
-      let currentDir = dirname(filePath);
+      const fullPath = `${filePath}${filename}.${extension}`;
+      await fs.unlink(fullPath);
+      let currentDir = dirname(fullPath);
 
       while (currentDir && currentDir !== this.config.get('MEDIA_PATH')) {
         const files = await fs.readdir(currentDir);
 
         if (files.length === 0) {
           await fs.rmdir(currentDir);
+          currentDir = dirname(currentDir);
         } else {
           break;
         }
-        currentDir = dirname(currentDir);
       }
     } catch (err) {
-      throw new Error(err);
+      console.error('Error during file/folder deletion', err);
+      throw new Error('Error during file/folder deletion');
     }
   }
 
@@ -161,28 +161,6 @@ export class MediasService {
     } catch (err) {
       throw new Error(`Impossible de lire le fichier : ${err}`);
     }
-  }
-
-  async remove(id: number, user:User) {
-    const media = await this.mediaRepository.findOne({
-      where: {
-        id: id
-      },
-      relations: ['question', 'question.quizz', 'question.quizz.user']
-    });
-    if(!media) {
-      throw new NotFoundException('Media not found');
-    }
-    if(media.question.quizz.user.id !== user.id) {
-      throw new ForbiddenException('You do not have permission');
-    }
-    if (media.question) {
-      media.question.media = null;
-      await this.questionRepository.save(media.question);
-    }
-    await this.mediaRepository.remove(media);
-    await this.eraseFile(media.file_path, media.filename, media.extension);
-
   }
 
 }

@@ -51,7 +51,11 @@ export class ManageMediaComponent {
   constructor(
     public dialogRef: MatDialogRef<ManageMediaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) {
+      console.log('data');
+      console.log(data);
+  }
+
 
   submitValue(){
     if (this.manageMediaForm.valid) {

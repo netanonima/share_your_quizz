@@ -1,4 +1,4 @@
-import {forwardRef, Module} from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { QuestionsController } from './questions.controller';
 import {TypeOrmModule} from "@nestjs/typeorm";
@@ -12,7 +12,7 @@ import {MediasModule} from "medias/medias.module";
         Question,
         Quizz
       ]),
-      forwardRef(() => MediasModule),
+    MediasModule
   ],
   controllers: [QuestionsController],
   providers: [QuestionsService],
