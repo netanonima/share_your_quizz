@@ -163,7 +163,7 @@ export class QuestionsComponent implements OnInit{
       if(result!==''){
         const modalResult = result;
         console.log('modalResult', modalResult);
-        if(modalResult.erase){
+        if(modalResult && modalResult.erase){
           console.log('start erasing media');
           // erase media
           this.apiService.removingMedia(this.sortedData?.find((item) => item.id === id)?.media.id.toString()).subscribe(
@@ -190,7 +190,7 @@ export class QuestionsComponent implements OnInit{
           );
         }else{
           console.log('start updating media');
-          if(modalResult.base64 && modalResult.fileName && modalResult.base64!=='' && modalResult.fileName!==''){
+          if(modalResult && modalResult.base64 && modalResult.fileName && modalResult.base64!=='' && modalResult.fileName!==''){
             // update media
             // updatingQuestionMedia(id: string, question: string, media: string, mediaName: string)
             const thisQuestion = this.sortedData?.find((item) => item.id === id)?.question;
