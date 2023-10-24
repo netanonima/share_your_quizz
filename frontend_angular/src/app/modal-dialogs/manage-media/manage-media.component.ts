@@ -78,7 +78,7 @@ export class ManageMediaComponent {
       fileName: '',
       erase: true
     };
-    this.dialogRef.close('erase');
+    this.dialogRef.close(result);
   }
 
   @ViewChild('fileInputRef', { static: false }) fileInputRef!: ElementRef;

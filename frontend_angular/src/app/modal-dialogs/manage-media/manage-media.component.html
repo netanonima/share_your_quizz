@@ -2,7 +2,8 @@
 <mat-dialog-content class="mat-typography">
   <div *ngIf="data">
     <h3>Media deleting</h3>
-    <p>Do you want to delete your file : {{ data.filename }}?</p>
+    <p>You are going to delete the file :</p>
+    <p><strong>{{ data.filename }}.{{ data.extension }}</strong></p>
   </div>
   <div *ngIf="!data">
     <h3>Adding media</h3>

@@ -1,6 +1,6 @@
 import {ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
-import { CreateQuestionDto } from './dto/create-question.dto';
-import { UpdateQuestionDto } from './dto/update-question.dto';
+import {CreateQuestionDto} from './dto/create-question.dto';
+import {UpdateQuestionDto} from './dto/update-question.dto';
 import {Question} from "questions/entities/question.entity";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
@@ -8,6 +8,8 @@ import {Quizz} from "quizzs/entities/quizz.entity";
 import {User} from "users/entities/user.entity";
 import {Media} from "medias/entities/media.entity";
 import {MediasService} from "medias/medias.service";
+import {ConfigService} from "@nestjs/config";
+
 
 @Injectable()
 export class QuestionsService {
@@ -19,6 +21,7 @@ export class QuestionsService {
       private readonly mediaService: MediasService,
       @InjectRepository(Media)
       private readonly mediaRepository: Repository<Media>,
+      private config: ConfigService
   ) {}
 
   async create(quizzId, createQuestionDto: CreateQuestionDto, user: User) {
@@ -78,9 +81,10 @@ export class QuestionsService {
 
     if(updateQuestionDto.media && updateQuestionDto.mediaName) {
       if(question.media) {
-        await this.mediaService.eraseFile(question.media.file_path);
+        await this.mediaService.eraseFile(question.media.file_path, question.media.filename, question.media.extension);
         await this.mediaRepository.remove(question.media);
       }
+
       let media = new Media();
       // extract mime type from base64 string(media)
       const mimeType = updateQuestionDto.media.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)[0];
@@ -93,7 +97,8 @@ export class QuestionsService {
       if(type === 'image') newExtension = 'png';
       if(type === 'audio') newExtension = 'mp3';
       if(type === 'video') newExtension = 'mp4';
-      const filePath = 'quizzesMedias/'+question.quizz.id+'/questions/'+question.id+'/'+filename+'.'+newExtension;
+      const newMediaName = filename+'.'+newExtension;
+      const filePath = this.config.get('MEDIA_PATH')+'/quizzesMedias/'+question.quizz.id+'/questions/'+question.id+'/';
       // file conversion
       let newBuffer = null;
       if(type === 'image'){
@@ -107,8 +112,9 @@ export class QuestionsService {
         duration = await this.mediaService.getVideoDuration(newBuffer);
       }
       // get buffer size in Mo
+      console.log(Buffer.isBuffer(newBuffer));
       const size = newBuffer.length / 1024 / 1024;
-      await this.mediaService.writeBufferToFile(newBuffer, filePath);
+      await this.mediaService.writeBufferToFile(newBuffer, filePath, newMediaName);
 
         media.file_path = filePath;
         media.filename = filename;
@@ -116,7 +122,7 @@ export class QuestionsService {
         media.type = type;
         media.extension = newExtension;
         media.duration = duration;
-        await this.mediaRepository.save(media);
+        question.media = await this.mediaRepository.save(media);
     }
     return await this.questionRepository.save(question);
   }
@@ -139,8 +145,8 @@ export class QuestionsService {
     await this.quizzRepository.save(question.quizz);
 
     if(question.media) {
-      await this.mediaService.eraseFile(question.media.file_path);
       await this.mediaRepository.remove(question.media);
+      await this.mediaService.eraseFile(question.media.file_path, question.media.filename, question.media.extension);
     }
 
     await this.questionRepository.remove(question);
