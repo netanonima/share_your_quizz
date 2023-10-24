@@ -57,4 +57,13 @@ export class QuestionsController {
   ) {
     return this.questionsService.remove(+id, user);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('media/:id')
+  removeMedia(
+      @Param('id') id: string,
+      @GetUser() user: User
+  ) {
+    return this.questionsService.removeMedia(+id, user);
+  }
 }

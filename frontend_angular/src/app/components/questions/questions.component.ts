@@ -175,7 +175,7 @@ export class QuestionsComponent implements OnInit{
               });
               this.sortedData = this.sortedData?.map((item) => {
                 if(item.id === id){
-                  item.media = {};
+                  item.media = null;
                 }
                 return item;
               });

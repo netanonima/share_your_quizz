@@ -129,7 +129,7 @@ export class ApiService {
 
   // page medias
   removingMedia(id: string): Observable<any> {
-    const url = `${this.apiUrl}/medias/${id}`;
+    const url = `${this.apiUrl}/questions/media/${id}`;
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('api_token')}`
     });

@@ -151,4 +151,36 @@ export class QuestionsService {
 
     await this.questionRepository.remove(question);
   }
+
+  async removeMedia(id: number, user:User) {
+    const media = await this.mediaRepository.findOne({
+      where: {
+        id: id
+      },
+      relations: ['question', 'question.quizz', 'question.quizz.user']
+    });
+    if(!media) {
+      throw new NotFoundException('Media not found');
+    }
+    if(media.question.quizz.user.id !== user.id) {
+      throw new ForbiddenException('You do not have permission');
+    }
+
+    const question = await this.questionRepository.findOne({
+        where: {
+            media: { id: media.id }
+        },
+        relations: ['quizz', 'quizz.user', 'media']
+    });
+    if(!question) {
+        throw new NotFoundException('Question not found');
+    }
+    if(question.quizz.user.id !== user.id) {
+        throw new ForbiddenException('You do not have permission');
+    }
+    question.media = null;
+    await this.questionRepository.save(question);
+    await this.mediaRepository.remove(media);
+    await this.mediaService.eraseFile(media.file_path, media.filename, media.extension);
+  }
 }
