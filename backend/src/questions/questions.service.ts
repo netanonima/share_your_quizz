@@ -113,7 +113,7 @@ export class QuestionsService {
       }
       // get buffer size in Mo
       console.log(Buffer.isBuffer(newBuffer));
-      const size = newBuffer.length / 1024 / 1024;
+      const size = Math.round(newBuffer.length / 1024 / 1024 * 100) / 100;
       await this.mediaService.writeBufferToFile(newBuffer, filePath, newMediaName);
 
         media.file_path = filePath;

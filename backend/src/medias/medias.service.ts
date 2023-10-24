@@ -78,7 +78,8 @@ export class MediasService {
 
   @UseFilters(new MediasExceptionsFilter())
   async convertAudio(base64Audio: string): Promise<Buffer> {
-    const audioBuffer = Buffer.from(base64Audio, 'base64');
+    const base64Data = base64Audio.split(',')[1];
+    const audioBuffer = Buffer.from(base64Data, 'base64');
     const audioStream = new Readable();
     audioStream.push(audioBuffer);
     audioStream.push(null);  // Signale la fin du stream
@@ -101,22 +102,31 @@ export class MediasService {
       output.on('data', (chunk) => {
         chunks.push(chunk);
       });
+      output.on('error', (error) => {
+        reject(error);
+      });
     });
   }
 
   @UseFilters(new MediasExceptionsFilter())
   async convertVideo(base64Video: string): Promise<Buffer> {
-    const videoBuffer = Buffer.from(base64Video, 'base64');
+    console.log('convertVideo');
+    const base64Data = base64Video.split(',')[1];
+    const videoBuffer = Buffer.from(base64Data, 'base64');
     const videoStream = new Readable();
     videoStream.push(videoBuffer);
     videoStream.push(null);  // Signale la fin du stream
+    console.log('convertVideo2');
 
     return new Promise((resolve, reject) => {
+      console.log('convertVideo3');
       ffmpeg.setFfmpegPath(this.config.get('FFMPEG_PATH'));
+      console.log('convertVideo4');
       const ffmpegCommand = ffmpeg(videoStream)
           .format('mp4')
           .outputOptions('-movflags frag_keyframe+empty_moov');  // Pour créer un fichier MP4 qui peut être lu avant que l'encodage ne soit terminé
 
+      console.log('convertVideo5');
       const chunks = [];
       ffmpegCommand.on('end', () => {
         resolve(Buffer.concat(chunks));

@@ -9,10 +9,10 @@ export class Media {
   @OneToOne(() => Question, (question) => question.media)
   question: Question;
 
-  @Column({ length: 60 })
+  @Column({ length: 140 })
   file_path: string;
 
-  @Column({ length: 40 })
+  @Column({ length: 60 })
   filename: string;
 
   @Column('float')

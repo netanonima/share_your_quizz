@@ -34,9 +34,9 @@ An app to generate dynamic quizz and share them with your friends, customers, st
       sudo apt install ffmpeg
     ```
   - On windows
-    - Download ffmpeg from [here](https://ffmpeg.zeranoe.com/builds/)
-    - Extract the zip file
-    - Add the bin folder to your PATH
+    ```batch
+      choco install ffmpeg
+    ```
 - get the ffmpeg path
   - On linux
     ```bash
@@ -46,6 +46,7 @@ An app to generate dynamic quizz and share them with your friends, customers, st
     ```bash
       where ffmpeg
     ```
+    It's usually `C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin`
 - Change your JWT secret by a strong one in `backend/src/auth/constants.ts`
 - Copy 'backend/.env-lock' to 'backend/.env' and set your values
 - Launch the backend
