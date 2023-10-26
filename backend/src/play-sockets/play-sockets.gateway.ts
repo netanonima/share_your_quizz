@@ -14,7 +14,9 @@ import {WsJwtGuard} from "play-sockets/guards/ws-jwt.guard";
 import {WsExceptionFilter} from "play-sockets/filters/ws-exception.filter";
 import {AdminJoinInterface} from "play-sockets/interfaces/admin-join.interface";
 import { ConfigService } from '@nestjs/config'
-import {QuestionsService} from "questions/questions.service";
+import { SessionsService } from '../sessions/sessions.service';
+import {QuizzsService} from "quizzs/quizzs.service";
+import axios from 'axios';
 
 @UseFilters(new WsExceptionFilter())
 @WebSocketGateway({
@@ -35,6 +37,8 @@ import {QuestionsService} from "questions/questions.service";
 })
 export class PlaySocketsGateway {
     constructor(
+        private sessionsService: SessionsService,
+        private quizzsService: QuizzsService,
         private config: ConfigService,
     ) {}
     private sessions = new Map<number, SessionInterface>();
@@ -123,18 +127,32 @@ export class PlaySocketsGateway {
 
     @UseGuards(WsJwtGuard)
     @SubscribeMessage('game-launch')
-    handleGameLaunch(@MessageBody() data: GameLaunchInterface, @ConnectedSocket() client: Socket): void {
+    async handleGameLaunch(@MessageBody() data: GameLaunchInterface, @ConnectedSocket() client: Socket): Promise<void> {
         // set opened to false, get the questions (including choices and medias) and send is-ready-response to players
         const { sessionId } = data;
         const session = this.sessions.get(sessionId);
         session.opened = false;
-        // todo : get questions from backend
-        // call questionsService.findAllByQuizz(quizzId, user:User)
-        session.questions = [];
-        // foreach question create a questionsRanking
+
+        const thisSession = await this.sessionsService.findOne(sessionId);
+        const thisQuizz = await this.quizzsService.findOne(thisSession.quizz.id);
+        session.questions = thisQuizz.questions;
+        for(let i=0;i<session.questions.length;i++){
+            if(session.questions[i].media){
+                const mediaURL = session.questions[i].media.file_path + session.questions[i].media.filename + '.' + session.questions[i].media.extension;
+                try{
+                    const response = await axios.get(mediaURL, { responseType: 'arraybuffer' });
+                    const mediaBase64 = Buffer.from(response.data).toString('base64');
+                    session.questions[i].media = mediaBase64;
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }
+        console.log(session.questions);
         for(let i=0;i<session.questions.length;i++){
             session.questionsRanking.push([]);
         }
+        console.log(session.questionsRanking);
         session.users.forEach(user => {
             client.to(user.id).emit('game-is-ready', ``);
         });

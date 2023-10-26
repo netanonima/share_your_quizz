@@ -43,7 +43,8 @@ export class SessionsService {
 
   async findOne(id: number) {
     const thisSession = await this.sessionRepository.findOne({
-        where: { id: id }
+        where: { id: id },
+        relations: ['quizz']
     });
     if(!thisSession) {
       throw new Error('Session not found');

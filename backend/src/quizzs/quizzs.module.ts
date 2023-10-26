@@ -18,5 +18,6 @@ import {User} from "users/entities/user.entity";
   ])],
   controllers: [QuizzsController],
   providers: [QuizzsService],
+  exports: [QuizzsService]
 })
 export class QuizzsModule {}
