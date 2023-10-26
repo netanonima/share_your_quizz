@@ -168,10 +168,6 @@ export class PlayComponent implements OnInit, OnDestroy{
     // Ajoutez d'autres gestionnaires d'événements ici selon vos besoins
     if(this.authService.isAuthenticated()) {
       // admin listeners
-      this.socket.on('error', (message: string) => {
-        console.log('an error occurred : ', message);
-      });
-
       this.socket.on('admin-join-response', (message: string) => {
         console.log('admin joined the session');
       });
@@ -201,9 +197,56 @@ export class PlayComponent implements OnInit, OnDestroy{
         }
       });
 
+      this.socket.on('question', (message: string) => {
+        // show the question then the available answers
+      });
+
+      this.socket.on('question-answers', (message: string) => {
+        // show the question results then global results
+      });
+
+      this.socket.on('quizz-results', (message: string) => {
+        // show the global results and thank the people for playing
+      });
+
     }else{
       // player listeners
+      this.socket.on('is-ready-response', (message: string) => {
+        if(message === 'true'){
+          // you can choose a username
+        }else{
+          // you can't join this game
+        }
+      });
 
+      this.socket.on('join-response', (message: string) => {
+        if(message === 'true'){
+          // please wait before game launch
+        }else{
+          // Username already exists
+          // Client already exists
+        }
+      });
+
+      this.socket.on('game-is-ready', (message: string) => {
+        // if you joined the game, a screen tell you that the game is ready to start. If not, you can't join the game anymore
+      });
+
+      this.socket.on('question', (message: string) => {
+        // show the question then the available answers
+      });
+
+      this.socket.on('question-ended', (message: string) => {
+        // hide the question and show a message
+      });
+
+      this.socket.on('quizz-ended', (message: string) => {
+        // please see the result from main screen. Thanks for playing
+      });
+
+      this.socket.on('error', (message: string) => {
+        console.log('an error occurred : ', message);
+      });
     }
   }
 
