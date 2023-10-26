@@ -4,11 +4,17 @@ import { Socket } from 'socket.io';
 import {JoinInterface} from "play-sockets/interfaces/join.interface";
 import {UserInterface} from "play-sockets/interfaces/user.interface";
 import {SessionInterface} from "play-sockets/interfaces/session.interface";
+import {IsReadyInterface} from "play-sockets/interfaces/is-ready.interface";
+import {GameLaunchInterface} from "play-sockets/interfaces/game-launch.interface";
+import {NextQuestionInterface} from "play-sockets/interfaces/next-question.interface";
+import {StopQuestionInterface} from "play-sockets/interfaces/stop-question.interface";
+import {AnswerInterface} from "play-sockets/interfaces/answer.interface";
 import {UseFilters, UseGuards} from "@nestjs/common";
 import {WsJwtGuard} from "play-sockets/guards/ws-jwt.guard";
 import {WsExceptionFilter} from "play-sockets/filters/ws-exception.filter";
 import {AdminJoinInterface} from "play-sockets/interfaces/admin-join.interface";
 import { ConfigService } from '@nestjs/config'
+import {QuestionsService} from "questions/questions.service";
 
 @UseFilters(new WsExceptionFilter())
 @WebSocketGateway({
@@ -40,13 +46,39 @@ export class PlaySocketsGateway {
         const { sessionId } = data;
         // add client id to session
         if (!this.sessions.has(sessionId)) {
-            this.sessions.set(sessionId, { admin: '', users: [] });
+            this.sessions.set(sessionId, { admin: '', opened: false, users: [], current: -1, questions: [], ranking: [], questionsRanking: [] });
         }
         const session = this.sessions.get(sessionId);
         session.admin = client.id;
+        session.opened= true;
         console.log('Session state:', this.sessions);
 
-        client.emit('admin-join-response', 'Welcome admin!');
+        if(session.admin && session.admin != ''){
+            client.to(session.admin).emit('admin-join-response', 'Welcome admin!');
+        }
+        session.users.forEach(user => {
+            client.to(user.id).emit('is-ready-response', `true`);
+        });
+    }
+
+    @SubscribeMessage('is-ready')
+    handleIsReady(@MessageBody() data: IsReadyInterface, @ConnectedSocket() client: Socket): void {
+        // check if admin is here and if opened is true then send is-ready-response to players
+        const { sessionId } = data;
+        if(this.sessions.has(sessionId)) {
+            const session = this.sessions.get(sessionId);
+            if (session.admin && session.admin != '') {
+                if(session.opened){
+                    client.emit('is-ready-response', 'true');
+                }else{
+                    client.emit('is-ready-response', 'false');
+                }
+            } else {
+                client.emit('is-ready-response', 'false');
+            }
+        } else {
+            client.emit('is-ready-response', 'false');
+        }
     }
 
     @SubscribeMessage('join')
@@ -54,17 +86,22 @@ export class PlaySocketsGateway {
         const { sessionId, username } = data;
 
         if (!this.sessions.has(sessionId)) {
-            this.sessions.set(sessionId, { admin: '', users: [] });
+            this.sessions.set(sessionId, { admin: '', opened: false, users: [], current: -1, questions: [], ranking: [], questionsRanking: [] });
         }
 
         const session = this.sessions.get(sessionId);
 
+        if(session.admin=='' || !session.opened){
+            client.emit('join-response', `You can't join this game session.`);
+            return;
+        }
+
         if (session.users.some(user => user.username === username)) {
-            client.emit('join-response', `Username "${username}" already exists in this session.`);
+            client.emit('join-response', `Username already exists`);
             return;
         }
         if (session.users.some(user => user.id === client.id)) {
-            client.emit('join-response', `Client id "${client.id}" already exists in this session.`);
+            client.emit('join-response', `Client already exists`);
             return;
         }
 
@@ -74,13 +111,110 @@ export class PlaySocketsGateway {
         console.log(`User ${username} joined session ${sessionId}`);
         console.log('Session state:', this.sessions);
         console.log('Session users:', session.users);
-        client.emit('join-response', `Welcome ${username}!`);
+        client.emit('join-response', `true`);
 
         // send message to admin
         const admin = this.sessions.get(sessionId).admin;
         if (admin) {
             console.log(`Sending new-player event to admin ${admin}`);
             client.to(admin).emit('new-player', user.username);
+        }
+    }
+
+    @UseGuards(WsJwtGuard)
+    @SubscribeMessage('game-launch')
+    handleGameLaunch(@MessageBody() data: GameLaunchInterface, @ConnectedSocket() client: Socket): void {
+        // set opened to false, get the questions (including choices and medias) and send is-ready-response to players
+        const { sessionId } = data;
+        const session = this.sessions.get(sessionId);
+        session.opened = false;
+        // todo : get questions from backend
+        // call questionsService.findAllByQuizz(quizzId, user:User)
+        session.questions = [];
+        // foreach question create a questionsRanking
+        for(let i=0;i<session.questions.length;i++){
+            session.questionsRanking.push([]);
+        }
+        session.users.forEach(user => {
+            client.to(user.id).emit('game-is-ready', ``);
+        });
+
+    }
+
+    @UseGuards(WsJwtGuard)
+    @SubscribeMessage('next-question')
+    handleNextQuestion(@MessageBody() data: NextQuestionInterface, @ConnectedSocket() client: Socket): void {
+        // current++ and send question (after++) to players
+        const { sessionId } = data;
+        const session = this.sessions.get(sessionId);
+        session.current++;
+        const currentQuestion = session.questions[session.current];
+        session.questions[session.current].askingDatetime = new Date();
+        delete currentQuestion.choice.is_correct;
+        session.users.forEach(user => {
+            client.to(user.id).emit('question', currentQuestion);
+        });
+        if(session.admin && session.admin != ''){
+            client.to(session.admin).emit('question', currentQuestion);
+        }
+    }
+
+    @SubscribeMessage('answer')
+    handleAnswer(@MessageBody() data: AnswerInterface, @ConnectedSocket() client: Socket): void {
+        // check if response was true, calculate score, store it then send question-answers to admin
+        const currentDatetime = new Date();
+        const { sessionId, choiceId } = data;
+        const session = this.sessions.get(sessionId);
+        const currentQuestion = session.questions[session.current];
+        const choice = currentQuestion.choices.find(choice => choice.id === choiceId);
+        const isCorrect = choice.is_correct;
+        const username = session.users.find(user => user.id === client.id).username;
+        if(isCorrect){
+            const thisQuestionScore = Math.round(1000 - (currentDatetime.getTime() - currentQuestion.askingDatetime.getTime())/100);
+            // adding to question ranking (session.questionsRanking[session.current])
+            const questionsRankinguserIndex = session.questionsRanking[session.current].findIndex(user => user.userId === client.id);
+            if(questionsRankinguserIndex !== -1){
+                session.questionsRanking[session.current][questionsRankinguserIndex].score += thisQuestionScore;
+            }else{
+                session.questionsRanking[session.current].push({userId: client.id, username: username, score: thisQuestionScore});
+            }
+            // adding to global ranking (session.ranking)
+            const rankingUserIndex = session.ranking.findIndex(user => user.userId === client.id);
+            if(rankingUserIndex !== -1){
+                session.ranking[rankingUserIndex].score += thisQuestionScore;
+            }else{
+                session.ranking.push({userId: client.id, username: username, score: thisQuestionScore});
+            }
+        }
+    }
+
+    @SubscribeMessage('stop-question')
+    handleStopQuestion(@MessageBody() data: StopQuestionInterface, @ConnectedSocket() client: Socket): void {
+        const { sessionId } = data;
+        const session = this.sessions.get(sessionId);
+        const isLastQuestion = session.current === session.questions.length-1;
+        if(!isLastQuestion){
+            session.users.forEach(user => {
+                client.to(user.id).emit('question-ended', ``);
+            });
+        }
+        const questionRanking = session.questionsRanking[session.current];
+        const ranking = session.ranking;
+        const results = {
+            questionRanking: questionRanking,
+            ranking: ranking
+        };
+        if(isLastQuestion){
+            if(session.admin && session.admin != ''){
+                client.to(session.admin).emit('quizz-results', results);
+            }
+            session.users.forEach(user => {
+                client.to(user.id).emit('question-ended', ``);
+            });
+        }else{
+            if(session.admin && session.admin != ''){
+                client.to(session.admin).emit('question-answers', results);
+            }
         }
     }
 
@@ -94,7 +228,7 @@ export class PlaySocketsGateway {
                 const username = session.users[userIndex].username;
                 console.log(`User ${username} left session ${sessionId}`);
                 session.users.splice(userIndex, 1);
-                if (session.admin) {
+                if(session.admin && session.admin != ''){
                     client.to(session.admin).emit('player-left', username);
                 }
             }
