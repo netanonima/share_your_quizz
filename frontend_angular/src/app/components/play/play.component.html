@@ -4,7 +4,7 @@
       There's not current active session. Please go back to the <a (click)="navigateToQuizzes()" class="link-like">quizzes page</a> and start a new session.
     </div>
 
-    <div *ngIf="!error">
+    <div *ngIf="!error && isReady && !gameLaunched">
       <h1>
         Welcome to this session.
       </h1>
@@ -28,17 +28,14 @@
           </div>
         </div>
       </div>
-
-
       <div *ngIf="players.length==0">
         No players yet.
       </div>
-
     </div>
   </div>
 
-  <div *ngIf="!authService.isAuthenticated()">
-    <div *ngIf="myName==''">
+  <div *ngIf="!authService.isAuthenticated() && !joined">
+    <div *ngIf="isReady && myName==''">
       <form [formGroup]="setUsernameForm" class="form-fields" @fadeInOut (ngSubmit)="setUsername()">
         <div>
           <mat-form-field appearance="outline">
@@ -55,6 +52,59 @@
           <button mat-stroked-button color="accent" (click)="setUsernameCancel()">Cancel</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <div *ngIf="joined && !gameLaunched">
+    <p>You joined the game with success. </p>
+    <p>Please wait for the host to start the game.</p>
+  </div>
+
+  <div *ngIf="joined && gameLaunched && !currentQuestion.question">
+    <p>The game is about to start. </p>
+    <p>Get ready!</p>
+    <div *ngIf="authService.isAuthenticated()">
+      <button (click)="nextQuestion()">Next question</button>
+    </div>
+  </div>
+
+  <div *ngIf="joined && gameLaunched && currentQuestion.question && currentAnswer<=0">
+    <div class="question">
+      <h1>
+        {{ currentQuestion.question }}
+      </h1>
+      <div class="answers">
+        <div *ngIf="!authService.isAuthenticated()">
+          <div *ngFor="let choice of currentQuestion.choices" class="answer" (click)="answerQuestion(choice.choiceId)">
+            {{ choice.choice }}
+          </div>
+        </div>
+        <div *ngIf="authService.isAuthenticated()">
+          <div *ngFor="let choice of currentQuestion.choices" class="answer">
+            {{ choice.choice }}
+          </div>
+        </div>
+      </div>
+      <div *ngIf="authService.isAuthenticated">
+        <button (click)="showResults()">Show results</button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="joined && gameLaunched && currentQuestion.question && currentAnswer>0 && !gameIsOver">
+    <div *ngIf="!authService.isAuthenticated()">
+      <p>Please wait for the results and the next question</p>
+    </div>
+  </div>
+  <div *ngIf="joined && gameLaunched && currentQuestion.question && currentAnswer>0 && gameIsOver">
+    <div *ngIf="!authService.isAuthenticated()">
+      <p>Checks results on the main screen. </p>
+      <p>Thanks for playing! </p>
+    </div>
+  </div>
+  <div *ngIf="authService.isAuthenticated() && joined && gameLaunched && currentQuestion.question && !gameIsOver && currentResult!={players: []}">
+    results are...
+    <div *ngFor="let player of currentResult.players">
+      {{ player.username }}: {{ player.currentScore }}
     </div>
   </div>
 
