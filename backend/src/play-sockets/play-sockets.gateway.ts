@@ -140,7 +140,20 @@ export class PlaySocketsGateway {
 
         const thisSession = await this.sessionsService.findOne(sessionId);
         const thisQuizz = await this.quizzsService.findOne(thisSession.quizz.id);
-        session.questions = thisQuizz.questions;
+
+        function shuffle(array) {
+            let currentIndex = array.length, temporaryValue, randomIndex;
+            while (0 !== currentIndex) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
+            }
+            return array;
+        }
+
+        session.questions = shuffle(thisQuizz.questions);
         for(let i=0;i<session.questions.length;i++){
             if(session.questions[i].media){
                 const mediaURL = session.questions[i].media.file_path + session.questions[i].media.filename + '.' + session.questions[i].media.extension;
