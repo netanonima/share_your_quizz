@@ -73,15 +73,15 @@ export class PlaySocketsGateway {
             const session = this.sessions.get(sessionId);
             if (session.admin && session.admin != '') {
                 if(session.opened){
-                    client.emit('is-ready-response', 'true');
+                    client.emit('is-ready-response', true);
                 }else{
-                    client.emit('is-ready-response', 'false');
+                    client.emit('is-ready-response', false);
                 }
             } else {
-                client.emit('is-ready-response', 'false');
+                client.emit('is-ready-response', false);
             }
         } else {
-            client.emit('is-ready-response', 'false');
+            client.emit('is-ready-response', false);
         }
     }
 
@@ -95,6 +95,11 @@ export class PlaySocketsGateway {
 
         const session = this.sessions.get(sessionId);
 
+        console.log(this.sessions);
+        console.log(session);
+        console.log('session.opened');
+        console.log(session.opened);
+        console.log(typeof session.opened);
         if(session.admin=='' || !session.opened){
             client.emit('join-response', `You can't join this game session.`);
             return;
@@ -166,14 +171,31 @@ export class PlaySocketsGateway {
         const { sessionId } = data;
         const session = this.sessions.get(sessionId);
         session.current++;
-        const currentQuestion = session.questions[session.current];
         session.questions[session.current].askingDatetime = new Date();
-        delete currentQuestion.choice.is_correct;
+
+        let currentQuestion = {
+            question: session.questions[session.current].question,
+            choices: [],
+        }
+        let currentAdminQuestion = currentQuestion;
+        session.questions[session.current].choices.forEach(choice => {
+            currentQuestion.choices.push({
+                choiceId: choice.id,
+                choice: choice.choice,
+            });
+            currentAdminQuestion.choices.push({
+                choiceId: choice.id,
+                choice: choice.choice,
+                isCorrect: choice.is_correct,
+            });
+        });
+
         session.users.forEach(user => {
             client.to(user.id).emit('question', currentQuestion);
         });
+
         if(session.admin && session.admin != ''){
-            client.to(session.admin).emit('question', currentQuestion);
+            client.to(session.admin).emit('question', currentAdminQuestion);
         }
     }
 
@@ -192,16 +214,16 @@ export class PlaySocketsGateway {
             // adding to question ranking (session.questionsRanking[session.current])
             const questionsRankinguserIndex = session.questionsRanking[session.current].findIndex(user => user.userId === client.id);
             if(questionsRankinguserIndex !== -1){
-                session.questionsRanking[session.current][questionsRankinguserIndex].score += thisQuestionScore;
+                session.questionsRanking[session.current][questionsRankinguserIndex].currentScore += thisQuestionScore;
             }else{
-                session.questionsRanking[session.current].push({userId: client.id, username: username, score: thisQuestionScore});
+                session.questionsRanking[session.current].push({username: username, currentScore: thisQuestionScore});
             }
             // adding to global ranking (session.ranking)
             const rankingUserIndex = session.ranking.findIndex(user => user.userId === client.id);
             if(rankingUserIndex !== -1){
-                session.ranking[rankingUserIndex].score += thisQuestionScore;
+                session.ranking[rankingUserIndex].currentScore += thisQuestionScore;
             }else{
-                session.ranking.push({userId: client.id, username: username, score: thisQuestionScore});
+                session.ranking.push({username: username, currentScore: thisQuestionScore});
             }
         }
     }

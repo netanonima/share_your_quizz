@@ -119,8 +119,6 @@ export class QuizzesComponent implements OnInit{
           panelClass: ['snackbar-success'],
           duration: 3000
         });
-        console.log('====');
-        console.log(window.location);
         const domain = window.location.origin;
         // window.open(domain+`/play?id=${response.id}`, '_blank');
         this.router.navigate([{ outlets: { playOutlet: ['play'] } }], { queryParams: { id: response.id } });
