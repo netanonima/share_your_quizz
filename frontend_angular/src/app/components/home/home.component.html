@@ -6,5 +6,5 @@
 
 <div class="home-buttons">
   <button mat-stroked-button color="primary" routerLink="/login" *ngIf="!authService.isAuthenticated()">Login</button>
-  <button mat-stroked-button color="primary" routerLink="/quizz" *ngIf="authService.isAuthenticated()">Manage your quizzes</button>
+  <button mat-stroked-button color="primary" routerLink="/quizzes" *ngIf="authService.isAuthenticated()">Manage your quizzes</button>
 </div>
