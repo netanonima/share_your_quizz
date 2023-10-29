@@ -12,23 +12,47 @@
     <span class="example-spacer"></span>
     <div fxShow="true" fxHide.lt-md="true" class="normal-buttons">
       <!-- add a class is the current route is-->
-      <a mat-button routerLink="/" routerLinkActive="current" [routerLinkActiveOptions]="{exact:true}">Home</a>
-      <a mat-button routerLink="/login" routerLinkActive="current" *ngIf="!authService.isAuthenticated()">Login</a>
-      <a mat-button (click)="logout()" *ngIf="authService.isAuthenticated()">Logout</a>
-      <a mat-button routerLink="/register" routerLinkActive="current" *ngIf="!authService.isAuthenticated()">Register</a>
-      <a mat-button routerLink="/quizzes" routerLinkActive="current" *ngIf="authService.isAuthenticated()">Quizzes</a>
+      <a mat-button routerLink="/" routerLinkActive="current" [routerLinkActiveOptions]="{exact:true}" i18n>Home</a>
+      <a mat-button routerLink="/login" routerLinkActive="current" *ngIf="!authService.isAuthenticated()" i18n>Login</a>
+      <a mat-button (click)="logout()" *ngIf="authService.isAuthenticated()" i18n>Logout</a>
+      <a mat-button routerLink="/register" routerLinkActive="current" *ngIf="!authService.isAuthenticated()" i18n>Register</a>
+      <a mat-button routerLink="/quizzes" routerLinkActive="current" *ngIf="authService.isAuthenticated()" i18n>Quizzes</a>
     </div>
 
+    <mat-menu #languageMenu="matMenu" class="language-menu">
+      <button mat-menu-item (click)="changeLanguage('en')" class="language-menu-item">
+        <img src="assets/flags/en.png" alt="English" class="language-icon"/><span class="language-text">- En</span>
+      </button>
+      <button mat-menu-item (click)="changeLanguage('fr')" class="language-menu-item">
+        <img src="assets/flags/fr.png" alt="Français" class="language-icon"/><span class="language-text">- Fr</span>
+      </button>
+      <button mat-menu-item (click)="changeLanguage('fr')" class="language-menu-item">
+        <img src="assets/flags/de.png" alt="Deutsch" class="language-icon"/><span class="language-text">- De</span>
+      </button>
+      <button mat-menu-item (click)="changeLanguage('fr')" class="language-menu-item">
+        <img src="assets/flags/es.png" alt="Español" class="language-icon"/><span class="language-text">- Es</span>
+      </button>
+      <button mat-menu-item (click)="changeLanguage('fr')" class="language-menu-item">
+        <img src="assets/flags/it.png" alt="Italiano" class="language-icon"/><span class="language-text">- It</span>
+      </button>
+    </mat-menu>
+
+    <div class="language-selector">
+      <button mat-icon-button [matMenuTriggerFor]="languageMenu">
+        <!-- Vous pouvez utiliser une icône ou une image pour la langue actuelle -->
+        <img src="assets/flags/en.png" alt="English" />
+      </button>
+    </div>
   </mat-toolbar>
   <mat-sidenav-container fxFlexFill class="example-container">
 
     <mat-sidenav color="primary" #sidenav fxLayout="column" mode="over"  opened="false" fxHide.gt-sm="true">
       <div fxLayout="column">
-        <a mat-button routerLink="/">Home</a>
-        <a mat-button routerLink="/login" *ngIf="!authService.isAuthenticated()">Login</a>
-        <a mat-button routerLink="/logout" *ngIf="authService.isAuthenticated()">Logout</a>
-        <a mat-button routerLink="/register" *ngIf="!authService.isAuthenticated()">Register</a>
-        <a mat-button routerLink="/quizzes" *ngIf="authService.isAuthenticated()">Quizzes</a>
+        <a mat-button routerLink="/" i18n>Home</a>
+        <a mat-button routerLink="/login" *ngIf="!authService.isAuthenticated()" i18n>Login</a>
+        <a mat-button routerLink="/logout" *ngIf="authService.isAuthenticated()" i18n>Logout</a>
+        <a mat-button routerLink="/register" *ngIf="!authService.isAuthenticated()" i18n>Register</a>
+        <a mat-button routerLink="/quizzes" *ngIf="authService.isAuthenticated()" i18n>Quizzes</a>
       </div>
     </mat-sidenav>
     <mat-sidenav-content fxFlexFill>

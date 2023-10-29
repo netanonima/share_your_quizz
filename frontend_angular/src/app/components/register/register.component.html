@@ -1,9 +1,9 @@
-<h1>Registration</h1>
+<h1 i18n>Registration</h1>
 <form [formGroup]="registerForm" class="form-fields" @fadeInOut (ngSubmit)="register()">
   <div>
     <mat-form-field>
-      <mat-label>Enter your username</mat-label>
-      <input matInput placeholder="yourNickname" formControlName="username" required>
+      <mat-label i18n>Enter your username</mat-label>
+      <input matInput placeholder="James1234" formControlName="username" required>
       <mat-icon matSuffix>person_outline</mat-icon>
       <mat-error *ngIf="(registerForm.get('username')?.invalid)">
         {{getErrorMessage('username')}}
@@ -14,8 +14,8 @@
 
   <div>
     <mat-form-field>
-      <mat-label>Enter your email</mat-label>
-      <input matInput placeholder="your_name@example.com" formControlName="email" required>
+      <mat-label i18n>Enter your email</mat-label>
+      <input matInput placeholder="james@example.com" formControlName="email" required>
       <mat-icon matSuffix>mail_outline</mat-icon>
       <mat-error *ngIf="(registerForm.get('email')?.invalid)">
         {{getErrorMessage('email')}}
@@ -26,7 +26,7 @@
   <div formGroupName="passwords">
     <div>
       <mat-form-field>
-        <mat-label>Enter your password</mat-label>
+        <mat-label i18n>Enter your password</mat-label>
         <input type="password" matInput placeholder="********" formControlName="password" required>
         <mat-icon matSuffix>password_outline</mat-icon>
         <mat-error *ngIf="(registerForm.get('passwords.password')?.invalid)">
@@ -38,7 +38,7 @@
 
     <div>
       <mat-form-field>
-        <mat-label>Enter your password again</mat-label>
+        <mat-label i18n>Enter your password again</mat-label>
         <input type="password" matInput placeholder="********" formControlName="confirmPassword" required>
         <mat-icon matSuffix>password_outline</mat-icon>
         <mat-error *ngIf="(registerForm.get('passwords.confirmPassword')?.invalid) || (registerForm.get('passwords')?.hasError('mismatch'))">
@@ -50,6 +50,6 @@
 </form>
 
 <div class="form-buttons">
-  <button type="submit" mat-stroked-button color="primary" (click)="register()" [disabled]="registerForm.invalid">Register</button>
-  <button mat-stroked-button color="accent" (click)="cancel()">Cancel</button>
+  <button type="submit" mat-stroked-button color="primary" (click)="register()" [disabled]="registerForm.invalid" i18n>Register</button>
+  <button mat-stroked-button color="accent" (click)="cancel()" i18n>Cancel</button>
 </div>

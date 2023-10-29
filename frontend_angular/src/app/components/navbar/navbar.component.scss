@@ -59,6 +59,48 @@ mat-toolbar {
   padding-top: 64px;
 }
 
+.language-menu{
+  width: auto !important;
+  padding: 0 5px;
+}
+
+.language-menu-item{
+  margin: 0 0px;
+  padding: 0px;
+}
+
+.language-menu-item img{
+  position: relative;
+  top: 7px;
+  left: 23px;
+}
+
+.language-selector {
+  position: relative;
+}
+
+.language-selector img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.language-selector button {
+  border-radius: 50%;
+}
+
+.language-icon{
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.language-text{
+  position: relative;
+  top: 2px;
+  left: 34px;
+}
+
 footer{
   position: fixed;
   bottom: 0;

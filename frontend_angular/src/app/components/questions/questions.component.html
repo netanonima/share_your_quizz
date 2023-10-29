@@ -1,12 +1,12 @@
-<h1>Questions</h1>
+<h1 i18n>Questions</h1>
 <button mat-fab color="primary" (click)="add()" class="add-button">
   <mat-icon>add</mat-icon>
 </button>
 <div class="questions-content">
   <table matSort (matSortChange)="sortData($event)" class="questions">
     <tr>
-      <th mat-sort-header="question">Name</th>
-      <th>Actions</th>
+      <th mat-sort-header="question" i18n>Name</th>
+      <th i18n>Actions</th>
     </tr>
 
     <tr *ngFor="let question of sortedData">

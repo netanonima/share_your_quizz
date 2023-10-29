@@ -1,13 +1,13 @@
-<h1>Choices</h1>
+<h1 i18n>Choices</h1>
 <button mat-fab color="primary" (click)="add()" class="add-button">
   <mat-icon>add</mat-icon>
 </button>
 <div class="choices-content">
   <table matSort (matSortChange)="sortData($event)" class="choices">
     <tr>
-      <th mat-sort-header="choice">Name</th>
-      <th>Is a good answer</th>
-      <th>Actions</th>
+      <th mat-sort-header="choice" i18n>Name</th>
+      <th i18n>Is a good answer</th>
+      <th i18n>Actions</th>
     </tr>
 
     <tr *ngFor="let choice of sortedData">

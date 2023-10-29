@@ -51,18 +51,18 @@ export class RegisterComponent {
     const control = this.registerForm.get(controlName);
     if (control) {
       if (control.hasError('required')) {
-        return 'You must enter a value';
+        return $localize`:@@requiredError:You must enter a value`;
       }
 
       if(control.hasError('minlength')) {
-        return 'Minimum length is ' + control.getError('minlength').requiredLength;
+        return $localize`:@@minLengthError:Minimum length is ` + control.getError('minlength').requiredLength;
       }
 
       if(control.hasError('maxlength')) {
-        return 'Maximum length is ' + control.getError('maxlength').requiredLength;
+        return $localize`:@@maxLengthError:Maximum length is ` + control.getError('maxlength').requiredLength;
       }
 
-      return control.hasError('email') ? 'Not a valid email' : '';
+      return control.hasError('email') ? $localize`:@@hasErrorError:Not a valid email` : '';
     }
 
     return '';

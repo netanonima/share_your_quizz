@@ -1,13 +1,13 @@
-<h1>Quizzes</h1>
+<h1 i18n>Quizzes</h1>
 <button mat-fab color="primary" (click)="add()" class="add-button">
   <mat-icon>add</mat-icon>
 </button>
 <div class="quizzes-content">
   <table matSort (matSortChange)="sortData($event)" class="quizzes">
     <tr>
-      <th mat-sort-header="quizz">Name</th>
-      <th mat-sort-header="created_on">Creation</th>
-      <th mat-sort-header="modified_on">Last modification</th>
+      <th mat-sort-header="quizz" i18n>Name</th>
+      <th mat-sort-header="created_on" i18n>Creation</th>
+      <th mat-sort-header="modified_on" i18n>Last modification</th>
       <th>Actions</th>
     </tr>
 

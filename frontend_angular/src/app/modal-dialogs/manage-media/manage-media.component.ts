@@ -42,7 +42,7 @@ export class ManageMediaComponent {
     const control = this.manageMediaForm.get(controlName);
     if (control) {
       if (control.hasError('required')) {
-        return 'You must enter a value';
+        return $localize`:@@requiredError:You must enter a value`;
       }
     }
     return '';

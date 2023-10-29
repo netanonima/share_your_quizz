@@ -1,15 +1,15 @@
 <div class="play">
   <div *ngIf="authService.isAuthenticated()">
     <div *ngIf="error">
-      There's not current active session. Please go back to the <a (click)="navigateToQuizzes()" class="link-like">quizzes page</a> and start a new session.
+      <span i18n>There's not current active session. Please go back to the </span><a (click)="navigateToQuizzes()" class="link-like" i18n>quizzes page</a><span i18n> and start a new session.</span>
     </div>
 
     <div *ngIf="!error && readyToInvite && !gameLaunched">
       <h1>
-        <strong>Welcome to this session.</strong>
+        <strong i18n>Welcome to this session.</strong>
       </h1>
 
-      <h2>
+      <h2 i18n>
         Join the game scanning this QR code
       </h2>
       <div class="qr-code-container">
@@ -27,16 +27,16 @@
             </div>
           </div>
         </div>
-        <div *ngIf="players.length==0">
+        <div *ngIf="players.length==0" i18n>
           No players yet.
         </div>
       </div>
       <div>
-        <button class="admin-button" mat-raised-button color="primary" (click)="launchTheGame()" [disabled]="players.length<=0">Launch the game</button>
+        <button class="admin-button" mat-raised-button color="primary" (click)="launchTheGame()" [disabled]="players.length<=0" i18n>Launch the game</button>
       </div>
     </div>
     <div *ngIf="!error && readyToInvite && gameLaunched && currentQuestion.question===''">
-      <button class="admin-button" mat-raised-button color="primary" (click)="nextQuestion()">Next question</button>
+      <button class="admin-button" mat-raised-button color="primary" (click)="nextQuestion()" i18n>Next question</button>
     </div>
   </div>
 
@@ -45,8 +45,8 @@
       <form [formGroup]="setUsernameForm" class="form-fields" @fadeInOut (ngSubmit)="setUsername()">
         <div>
           <mat-form-field appearance="outline">
-            <mat-label>Enter your username</mat-label>
-            <input type="text" matInput placeholder="yourNickname" formControlName="playerUsername" autocomplete="off" required>
+            <mat-label i18n>Enter your username</mat-label>
+            <input type="text" matInput placeholder="James1234" formControlName="playerUsername" autocomplete="off" required>
             <mat-icon matSuffix>person_outline</mat-icon>
             <mat-error *ngIf="(setUsernameForm.get('playerUsername')?.invalid)">
               {{getErrorMessage('playerUsername')}}
@@ -54,8 +54,8 @@
           </mat-form-field>
         </div>
         <div class="form-buttons">
-          <button class="player-button" type="submit" mat-raised-button color="primary" [disabled]="setUsernameForm.invalid">Play</button>
-          <button class="player-button" mat-raised-button color="accent" (click)="setUsernameCancel()">Cancel</button>
+          <button class="player-button" type="submit" mat-raised-button color="primary" [disabled]="setUsernameForm.invalid" i18n>Play</button>
+          <button class="player-button" mat-raised-button color="accent" (click)="setUsernameCancel()" i18n>Cancel</button>
         </div>
       </form>
     </div>
@@ -63,18 +63,18 @@
 
   <div *ngIf="joined && !gameLaunched">
     <div class="container">
-      <p>You joined the game with success. </p>
-      <p>Please wait for the host to start the game.</p>
+      <p i18n>You joined the game with success. </p>
+      <p i18n>Please wait for the host to start the game.</p>
     </div>
   </div>
 
   <div *ngIf="joined && gameLaunched && currentQuestion.question==''">
     <div class="container">
-      <p>The game is about to start. </p>
-      <p>Get ready!</p>
+      <p i18n>The game is about to start. </p>
+      <p i18n>Get ready!</p>
     </div>
     <div *ngIf="authService.isAuthenticated()">
-      <button class="admin-button" mat-raised-button color="primary" (click)="nextQuestion()">Next question</button>
+      <button class="admin-button" mat-raised-button color="primary" (click)="nextQuestion()" i18n>Next question</button>
     </div>
   </div>
 
@@ -96,7 +96,7 @@
         </div>
       </div>
       <div *ngIf="authService.isAuthenticated()">
-        <button class="admin-button" mat-raised-button color="primary" (click)="showResults()">Show results</button>
+        <button class="admin-button" mat-raised-button color="primary" (click)="showResults()" i18n>Show results</button>
       </div>
     </div>
 
@@ -114,7 +114,7 @@
         </div>
       </div>
       <div>
-        <button class="admin-button" mat-raised-button color="primary" (click)="showQuestionResultsFunc()">Question Result</button>
+        <button class="admin-button" mat-raised-button color="primary" (click)="showQuestionResultsFunc()" i18n>Question Result</button>
       </div>
     </div>
 
@@ -134,14 +134,14 @@
         </div>
       </div>
       <div>
-        <button class="admin-button" mat-raised-button color="primary" (click)="showGlobalResultsFunc()">Global Result</button>
+        <button class="admin-button" mat-raised-button color="primary" (click)="showGlobalResultsFunc()" i18n>Global Result</button>
       </div>
     </div>
 
     <div *ngIf="authService.isAuthenticated() && gameLaunched && currentQuestion.question!='' && !showQuestionResult && showGlobalResult">
       <h1>
-        <span *ngIf="!gameIsOver">Global ranking</span>
-        <span *ngIf="gameIsOver">Final global ranking</span>
+        <span *ngIf="!gameIsOver" i18n>Global ranking</span>
+        <span *ngIf="gameIsOver" i18n>Final global ranking</span>
       </h1>
       <div class="results">
         <div *ngFor="let player of currentResult.players" class="player-result">
@@ -154,10 +154,10 @@
         </div>
       </div>
       <div *ngIf="!gameIsOver">
-        <button class="admin-button" mat-raised-button color="primary" (click)="nextQuestionFunc()">Next question</button>
+        <button class="admin-button" mat-raised-button color="primary" (click)="nextQuestionFunc()" i18n>Next question</button>
       </div>
       <div *ngIf="gameIsOver">
-        <button class="admin-button" mat-raised-button color="primary" (click)="navigateToQuizzes()" class="link-like">Back to quizzes page</button>
+        <button class="admin-button" mat-raised-button color="primary" (click)="navigateToQuizzes()" class="link-like" i18n>Back to quizzes page</button>
       </div>
     </div>
   </div>
@@ -166,23 +166,16 @@
   <div *ngIf="joined && gameLaunched && currentQuestion.question!='' && currentAnswer>0 && !gameIsOver">
     <div *ngIf="!authService.isAuthenticated()">
       <div class="container">
-        <p>Please wait for the results and the next question</p>
+        <p i18n>Please wait for the results and the next question</p>
       </div>
     </div>
   </div>
   <div *ngIf="joined && gameLaunched && currentQuestion.question!='' && currentAnswer>0 && gameIsOver">
     <div *ngIf="!authService.isAuthenticated()">
       <div class="container">
-        <p>Checks results on the main screen. </p>
-        <p><strong>Thanks for playing! </strong></p>
+        <p i18n>Checks results on the main screen. </p>
+        <p><strong i18n>Thanks for playing! </strong></p>
       </div>
     </div>
   </div>
-  <div *ngIf="authService.isAuthenticated() && joined && gameLaunched && currentQuestion.question!='' && !gameIsOver && currentResult!={players: []}">
-    results are...
-    <div *ngFor="let player of currentResult.players">
-      {{ player.username }}: {{ player.currentScore }}
-    </div>
-  </div>
-
 </div>
