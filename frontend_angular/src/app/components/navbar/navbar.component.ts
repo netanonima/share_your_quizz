@@ -4,6 +4,8 @@ import {AuthService} from "../../services/auth/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import * as moment from "moment";
 import {LanguageService} from "../../services/language/language.service";
+import { ViewChild } from '@angular/core';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-navbar',
@@ -12,6 +14,9 @@ import {LanguageService} from "../../services/language/language.service";
 })
 export class NavbarComponent implements OnInit{
   public currentLanguage: string = 'en';
+
+  @ViewChild('sidenav') sidenav!: MatSidenav;
+
 
   constructor(
     public authService: AuthService,
@@ -64,4 +69,9 @@ export class NavbarComponent implements OnInit{
   changeLanguage(lang: string) {
     this.languageService.changeLanguage(lang);
   }
+
+  closeSidenav() {
+    this.sidenav.close();
+  }
+
 }

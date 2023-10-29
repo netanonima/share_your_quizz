@@ -6,14 +6,14 @@
   <table matSort (matSortChange)="sortData($event)" class="quizzes">
     <tr>
       <th mat-sort-header="quizz" i18n>Name</th>
-      <th mat-sort-header="created_on" i18n>Creation</th>
-      <th mat-sort-header="modified_on" i18n>Last modification</th>
+      <th mat-sort-header="created_on" class="hide-on-small" i18n>Creation</th>
+      <th mat-sort-header="modified_on" class="hide-on-small" i18n>Last modification</th>
       <th>Actions</th>
     </tr>
 
     <tr *ngFor="let quizz of sortedData">
       <td>{{ quizz.quizz }}</td>
-      <td>
+      <td class="hide-on-small">
         <span *ngIf="quizz.created_on">
           {{ moment(quizz.created_on).format('LL LTS') }}
         </span>
@@ -21,7 +21,7 @@
           -
         </span>
       </td>
-      <td>
+      <td class="hide-on-small">
         <span *ngIf="quizz.modified_on">
           {{ moment(quizz.modified_on).format('LL LTS') }}
         </span>
