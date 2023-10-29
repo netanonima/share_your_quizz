@@ -49,6 +49,8 @@ export class NavbarComponent implements OnInit{
         this.currentLanguage = 'en';  // default to English
     }
     console.log('Current Language:', this.currentLanguage);  // Debug line
+    const momentLocale = this.currentLanguage === 'en' ? 'en-gb' : this.currentLanguage;
+    moment.locale(this.currentLanguage);
   }
 
   logout() {
