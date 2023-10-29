@@ -34,21 +34,24 @@ export class NavbarComponent implements OnInit{
       this.setCurrentLanguageFromUrl();
     }
 
-    setCurrentLanguageFromUrl(): void {
-      const langSegment = this.router.url.split('/')[1];
-      switch (langSegment) {
-        case 'de':
-        case 'es':
-        case 'fr':
-        case 'it':
-          this.currentLanguage = langSegment;
-          break;
-        default:
-          this.currentLanguage = 'en';  // default to English
-      }
+  setCurrentLanguageFromUrl(): void {
+    const path = window.location.pathname;
+    const langSegment = path.split('/')[1];
+    console.log('URL Segment:', langSegment);  // Debug line
+    switch (langSegment) {
+      case 'de':
+      case 'es':
+      case 'fr':
+      case 'it':
+        this.currentLanguage = langSegment;
+        break;
+      default:
+        this.currentLanguage = 'en';  // default to English
     }
+    console.log('Current Language:', this.currentLanguage);  // Debug line
+  }
 
-    logout() {
+  logout() {
         localStorage.removeItem('api_token');
         this.snackBar.open('Logout successful', 'Close', {
           panelClass: ['snackbar-success'],
