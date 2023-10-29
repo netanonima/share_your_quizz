@@ -1,14 +1,14 @@
-<h2 mat-dialog-title>Media management</h2>
+<h2 mat-dialog-title i18n>Media management</h2>
 <mat-dialog-content class="mat-typography">
   <div *ngIf="data">
-    <h3>Media deleting</h3>
-    <p>You are going to delete the file :</p>
+    <h3 i18n>Media deleting</h3>
+    <p i18n>You are going to delete the file :</p>
     <p><strong>{{ data.filename }}.{{ data.extension }}</strong></p>
   </div>
   <div *ngIf="!data">
-    <h3>Adding media</h3>
-    <p>Use this form if you want to add a media on your question. </p>
-    <p>Every audio, video and image files are allowed. </p>
+    <h3 i18n>Adding media</h3>
+    <p i18n>Use this form if you want to add a media on your question. </p>
+    <p i18n>Every audio, video and image files are allowed. </p>
   </div>
   <form *ngIf="!data" [formGroup]="manageMediaForm" class="form-fields" @fadeInOut (ngSubmit)="submitValue()">
     <div>
@@ -25,7 +25,7 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
-  <button *ngIf="!data" mat-button color="accent" (click)="resetForm()">Reset form</button>
-  <button *ngIf="!data" mat-button [mat-dialog-close]="true" color="primary" (click)="submitValue()" [disabled]="manageMediaForm.invalid" cdkFocusInitial>Send file</button>
-  <button *ngIf="data" mat-button [mat-dialog-close]="true" color="warn" (click)="submitErasing()" cdkFocusInitial>Delete file</button>
+  <button *ngIf="!data" mat-button color="accent" (click)="resetForm()" i18n>Reset form</button>
+  <button *ngIf="!data" mat-button [mat-dialog-close]="true" color="primary" (click)="submitValue()" [disabled]="manageMediaForm.invalid" cdkFocusInitial i18n>Send file</button>
+  <button *ngIf="data" mat-button [mat-dialog-close]="true" color="warn" (click)="submitErasing()" cdkFocusInitial i18n>Delete file</button>
 </mat-dialog-actions>

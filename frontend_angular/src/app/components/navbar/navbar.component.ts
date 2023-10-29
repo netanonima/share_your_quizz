@@ -3,6 +3,7 @@ import {provideRouter, Router} from "@angular/router";
 import {AuthService} from "../../services/auth/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import * as moment from "moment";
+import {LanguageService} from "../../services/language/language.service";
 
 @Component({
   selector: 'app-navbar',
@@ -13,7 +14,8 @@ export class NavbarComponent implements OnInit{
   constructor(
     public authService: AuthService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    public languageService: LanguageService
   ) {
   }
 
@@ -36,4 +38,8 @@ export class NavbarComponent implements OnInit{
           duration: 3000
         });
     }
+
+  changeLanguage(lang: string) {
+    this.languageService.changeLanguage(lang);
+  }
 }

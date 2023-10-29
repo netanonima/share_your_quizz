@@ -35,6 +35,7 @@ import { RenameElementComponent } from './modal-dialogs/rename-element/rename-el
 import { ChoicesComponent } from './components/choices/choices.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import { ManageMediaComponent } from './modal-dialogs/manage-media/manage-media.component';
+import {MatMenuModule} from "@angular/material/menu";
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { ManageMediaComponent } from './modal-dialogs/manage-media/manage-media.
     MatDialogModule,
     FormsModule,
     QRCodeModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]

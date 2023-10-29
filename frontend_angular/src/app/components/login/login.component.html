@@ -1,9 +1,9 @@
-<h1>Login</h1>
+<h1 i18n>Login</h1>
 <form [formGroup]="loginForm" class="form-fields" @fadeInOut (ngSubmit)="login()">
   <div>
     <mat-form-field>
-      <mat-label>Enter your username</mat-label>
-      <input matInput placeholder="yourNickname" formControlName="username" required>
+      <mat-label i18n>Enter your username</mat-label>
+      <input matInput placeholder="James1234" formControlName="username" required>
       <mat-icon matSuffix>person_outline</mat-icon>
       <mat-error *ngIf="(loginForm.get('username')?.invalid)">
         {{getErrorMessage('username')}}
@@ -13,7 +13,7 @@
 
   <div>
     <mat-form-field>
-      <mat-label>Enter your password</mat-label>
+      <mat-label i18n>Enter your password</mat-label>
       <input type="password" matInput placeholder="********" formControlName="password" required>
       <mat-icon matSuffix>password_outline</mat-icon>
       <mat-error *ngIf="(loginForm.get('passwords.password')?.invalid)">
@@ -23,11 +23,11 @@
   </div>
 
   <div class="form-buttons">
-    <button type="submit" mat-stroked-button color="primary" [disabled]="loginForm.invalid">Login</button>
-    <button mat-stroked-button color="accent" (click)="cancel()">Cancel</button>
+    <button type="submit" mat-stroked-button color="primary" [disabled]="loginForm.invalid" i18n>Login</button>
+    <button mat-stroked-button color="accent" (click)="cancel()" i18n>Cancel</button>
   </div>
 
   <div class="password-reset-link">
-    <a [routerLink]="['/reset-password-retrieve']">Forgot password?</a>
+    <a [routerLink]="['/reset-password-retrieve']" i18n>Forgot password?</a>
   </div>
 </form>

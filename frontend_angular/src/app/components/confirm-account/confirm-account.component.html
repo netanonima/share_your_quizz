@@ -1,8 +1,8 @@
-<h1>Account confirmation</h1>
+<h1 i18n>Account confirmation</h1>
 <form [formGroup]="confirmAccountForm" class="form-fields" @fadeInOut (ngSubmit)="confirmAccount()">
   <div>
     <mat-form-field>
-      <mat-label>Enter your username</mat-label>
+      <mat-label i18n>Enter your username</mat-label>
       <input matInput placeholder="yourNickname" formControlName="username" required>
       <mat-icon matSuffix>person_outline</mat-icon>
       <mat-error *ngIf="(confirmAccountForm.get('username')?.invalid)">
@@ -13,7 +13,7 @@
 
   <div>
     <mat-form-field>
-      <mat-label>Enter your password</mat-label>
+      <mat-label i18n>Enter your password</mat-label>
       <input type="password" matInput placeholder="********" formControlName="confirmationToken" required>
       <mat-icon matSuffix>password_outline</mat-icon>
       <mat-error *ngIf="(confirmAccountForm.get('confirmationToken')?.invalid)">
@@ -23,7 +23,7 @@
   </div>
 
   <div class="form-buttons">
-    <button type="submit" mat-stroked-button color="primary" [disabled]="confirmAccountForm.invalid">Confirm this account</button>
-    <button mat-stroked-button color="accent" (click)="cancel()">Cancel</button>
+    <button type="submit" mat-stroked-button color="primary" [disabled]="confirmAccountForm.invalid" i18n>Confirm this account</button>
+    <button mat-stroked-button color="accent" (click)="cancel()" i18n>Cancel</button>
   </div>
 </form>

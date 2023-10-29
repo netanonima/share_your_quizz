@@ -1,10 +1,10 @@
 <div class="home-content">
-  <h1>Welcome to Share your Quiz App</h1>
-  <p>Please log in to start managing your quizzes.</p>
-  <p>If you want to take part in a quiz, follow the link shared by the quiz owner.</p>
+  <h1 i18n>Welcome to Share your Quiz App</h1>
+  <p i18n>Please log in to start managing your quizzes.</p>
+  <p i18n>If you want to take part in a quiz, follow the link shared by the quiz owner.</p>
 </div>
 
 <div class="home-buttons">
-  <button mat-stroked-button color="primary" routerLink="/login" *ngIf="!authService.isAuthenticated()">Login</button>
-  <button mat-stroked-button color="primary" routerLink="/quizzes" *ngIf="authService.isAuthenticated()">Manage your quizzes</button>
+  <button mat-stroked-button color="primary" routerLink="/login" *ngIf="!authService.isAuthenticated()" i18n>Login</button>
+  <button mat-stroked-button color="primary" routerLink="/quizzes" *ngIf="authService.isAuthenticated()" i18n>Manage your quizzes</button>
 </div>
