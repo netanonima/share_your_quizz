@@ -11,6 +11,8 @@ import {LanguageService} from "../../services/language/language.service";
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit{
+  public currentLanguage: string = 'en';
+
   constructor(
     public authService: AuthService,
     private snackBar: MatSnackBar,
@@ -28,6 +30,21 @@ export class NavbarComponent implements OnInit{
       if(now.isAfter(expiresAt)){
         this.logout();
         this.router.navigate(['/login']);
+      }
+      this.setCurrentLanguageFromUrl();
+    }
+
+    setCurrentLanguageFromUrl(): void {
+      const langSegment = this.router.url.split('/')[1];
+      switch (langSegment) {
+        case 'de':
+        case 'es':
+        case 'fr':
+        case 'it':
+          this.currentLanguage = langSegment;
+          break;
+        default:
+          this.currentLanguage = 'en';  // default to English
       }
     }
 
