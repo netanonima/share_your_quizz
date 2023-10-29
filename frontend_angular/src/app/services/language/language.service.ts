@@ -10,6 +10,6 @@ export class LanguageService {
 
   changeLanguage(lang: string) {
     this.language.next(lang);
-    window.location.href = window.location.hostname+`/${lang}/`;
+    window.location.href = 'https://'+window.location.hostname+`/${lang}/`;
   }
 }
