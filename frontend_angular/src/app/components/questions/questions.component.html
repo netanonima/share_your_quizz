@@ -10,7 +10,7 @@
     </tr>
 
     <tr *ngFor="let question of sortedData">
-      <td>{{ question.question }}</td>
+      <td class="shorter-on-small">{{ question.question }}</td>
       <td>
         <button mat-icon-button color="primary" (click)="rename(question.id)">
           <mat-icon>abc</mat-icon>

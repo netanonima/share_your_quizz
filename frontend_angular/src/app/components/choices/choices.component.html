@@ -11,7 +11,7 @@
     </tr>
 
     <tr *ngFor="let choice of sortedData">
-      <td>{{ choice.choice }}</td>
+      <td class="shorter-on-small">{{ choice.choice }}</td>
       <td>
         <button *ngIf="choice.is_correct" mat-icon-button color="primary" (click)="isCorrectToggle(choice.id)" matTooltip="Yes" [matTooltipPosition]="'right'">
           <mat-icon>add</mat-icon>

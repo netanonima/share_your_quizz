@@ -25,9 +25,15 @@ button{
   flex: 1 1 auto;
 }
 
+mat-sidenav{
+  z-index: 3;
+  width: 250px;
+}
+
 .mat-sidenav-content{
   padding-top: 40px;
   text-align: center;
+  margin-top: 0px;
 }
 
 a.current {
@@ -49,10 +55,18 @@ mat-toolbar {
   z-index: 2;
 }
 
+mat-sidenav-container{
+  display: flex;
+  flex-direction: column;
+  margin-top: 55px;
+}
+
 .mat-sidenav-content {
+  flex: 1;
   margin-top: 64px;
   height: calc(100vh - 64px);
   overflow-y: auto;
+  padding-top: 0px;
 }
 
 .mat-sidenav-content {
@@ -109,4 +123,11 @@ footer{
   color: white;
   text-align: center;
   padding: 10px 0px;
+}
+
+@media (max-width: 600px) {
+  .mat-sidenav-content {
+    margin-top: 0;
+    padding-top: 0;
+  }
 }
