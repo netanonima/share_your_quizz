@@ -3,12 +3,14 @@
 ![](https://img.shields.io/github/license/netanonima/share_your_quizz.svg?style=flat-square)
 ![](https://img.shields.io/github/stars/netanonima/share_your_quizz.svg?style=flat-square)
 
-An app to generate dynamic quizz and share them with your friends, customers, students, etc for free.
+Free web application allowing you to create quizzes (multiple choice questions) and play online games.
+
+I invite people wishing to use the application to encourage an implementation by you. Without money entry and in case of large volumes I will limit the use of my implementation on  [Share-your-quizz.ch](https://www.share-your-quizz.ch).
+
+Please read the [licence](LICENSE) and comply with it.
 
 ## Contents
 
-- [Installation](#installation)
-- [Usage without installation](#usage_without_installation)
 - [Technologies used](#technologies)
     - [backend](#technologies-backend)
     - [frontend](#technologies-frontend)
@@ -16,6 +18,38 @@ An app to generate dynamic quizz and share them with your friends, customers, st
 - [Author](#author)
 - [Donate](#donate)
 - [License](#license)
+- [Installation](#installation)
+- [Usage without installation](#usage_without_installation)
+
+## Technologies used
+
+### Technologies backend
+
+- [Nestjs](https://nestjs.com/)
+
+### Technologies frontend
+
+- [Angular](https://angular.io/)
+
+### Technologies api
+
+- [apiRest](https://en.wikipedia.org/wiki/Representational_state_transfer)
+- [socketIo](https://socket.io/fr/)
+
+## Author
+
+[netanonima (Flavio Bertolini)](https://github.com/netanonima)
+
+
+## Donate
+
+If you like this project and wish to say thanks - I'm always open to a coffee!  :coffee:
+
+<a href="https://www.buymeacoffee.com/netanonima" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/black_img.png" alt="Buy Me A Coffee" width='180px' ></a>
+
+## License
+
+[LICENCE](LICENSE)
 
 ## Installation
 
@@ -67,36 +101,7 @@ An app to generate dynamic quizz and share them with your friends, customers, st
 
 ## Usage without installation
 
-Just visit [share_your_quizz](https://upcoming.url/)
+[share_your_quizz](https://www.share-your-quizz.ch)
 
-## Technologies used
-
-### Technologies backend
-
-- [Nestjs](https://nestjs.com/)
-
-### Technologies frontend
-
-- [Vuejs](https://vuejs.org/)
-
-### Technologies api
-
-- [apiRest](https://en.wikipedia.org/wiki/Representational_state_transfer)
-- [websocket](https://en.wikipedia.org/wiki/WebSocket)
-
-## Author
-
-[netanonima (Flavio Bertolini)](https://github.com/netanonima)
-
-
-## Donate
-
-If you like this project and wish to say thanks - I'm always open to a coffee!  :coffee:
-
-<a href="https://www.buymeacoffee.com/netanonima" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/black_img.png" alt="Buy Me A Coffee" width='180px' ></a>
-
-## License
-
-[MIT](https://github.com/netanonima/share_your_quizz/blob/master/LICENSE)
-
-You are welcome to use this however you wish within the MIT license, but please retain [my credentials](https://github.com/netanonima) and links back to [this repo](https://github.com/netanonima/share_your_quizz.svg).
+I reserve the right to limit or even delete the use of this implementation.
+Favor a custom implementation.
