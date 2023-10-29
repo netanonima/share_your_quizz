@@ -27,8 +27,10 @@ h1, h2, h3 {
 p {
   line-height: 1.2;
   font-size: 26px;
-  font-weight: bold;
+  font-weight: 400;
   text-align: center;
+  padding: 10px;
+  margin: 16px;
 }
 
 
@@ -48,6 +50,18 @@ p {
 
 .fade-in {
   animation: fadeIn 0.5s;
+}
+
+.admin-button{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.player-button{
+  margin: 10px;
+  padding: 5px;
+  min-width: 100px;
 }
 
 button {
@@ -83,7 +97,7 @@ qrcode{
 }
 
 .current-players{
-  margin-top: 80px;
+  margin-top: 20px;
 }
 
 button[mat-stroked-button] {
@@ -114,6 +128,9 @@ button[mat-stroked-button] {
   border-radius: 5px;
   background-color: grey;
   text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .new-player {
