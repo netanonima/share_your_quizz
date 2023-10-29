@@ -4,7 +4,7 @@
       There's not current active session. Please go back to the <a (click)="navigateToQuizzes()" class="link-like">quizzes page</a> and start a new session.
     </div>
 
-    <div *ngIf="!error && isReady && !gameLaunched">
+    <div *ngIf="!error && readyToInvite && !gameLaunched">
       <h1>
         Welcome to this session.
       </h1>
@@ -27,10 +27,16 @@
             </div>
           </div>
         </div>
+        <div *ngIf="players.length==0">
+          No players yet.
+        </div>
       </div>
-      <div *ngIf="players.length==0">
-        No players yet.
+      <div>
+        <button mat-stroked-button color="primary" (click)="launchTheGame()">Launch the game</button>
       </div>
+    </div>
+    <div *ngIf="!error && readyToInvite && gameLaunched && currentQuestion.question===''">
+      <button mat-stroked-button color="primary" (click)="nextQuestion()">Next question</button>
     </div>
   </div>
 
@@ -56,20 +62,24 @@
   </div>
 
   <div *ngIf="joined && !gameLaunched">
-    <p>You joined the game with success. </p>
-    <p>Please wait for the host to start the game.</p>
-  </div>
-
-  <div *ngIf="joined && gameLaunched && !currentQuestion.question">
-    <p>The game is about to start. </p>
-    <p>Get ready!</p>
-    <div *ngIf="authService.isAuthenticated()">
-      <button (click)="nextQuestion()">Next question</button>
+    <div class="container">
+      <p>You joined the game with success. </p>
+      <p>Please wait for the host to start the game.</p>
     </div>
   </div>
 
-  <div *ngIf="joined && gameLaunched && currentQuestion.question && currentAnswer<=0">
-    <div class="question">
+  <div *ngIf="joined && gameLaunched && currentQuestion.question==''">
+    <div class="container">
+      <p>The game is about to start. </p>
+      <p>Get ready!</p>
+    </div>
+    <div *ngIf="authService.isAuthenticated()">
+      <button mat-stroked-button color="primary" (click)="nextQuestion()">Next question</button>
+    </div>
+  </div>
+
+  <div *ngIf="(joined && gameLaunched && currentQuestion.question!='' && currentAnswer<=0)||(authService.isAuthenticated() && gameLaunched && currentQuestion.question!='')">
+    <div class="question" *ngIf="(joined && gameLaunched && currentQuestion.question!='' && currentAnswer<=0)||(authService.isAuthenticated() && thisQuestionResult.players.length==0)">
       <h1>
         {{ currentQuestion.question }}
       </h1>
@@ -85,23 +95,90 @@
           </div>
         </div>
       </div>
-      <div *ngIf="authService.isAuthenticated">
-        <button (click)="showResults()">Show results</button>
+      <div *ngIf="authService.isAuthenticated()">
+        <button mat-stroked-button color="primary" (click)="showResults()">Show results</button>
+      </div>
+    </div>
+
+
+    <div *ngIf="authService.isAuthenticated() && gameLaunched && currentQuestion.question!='' && showGoodAnswers && !showQuestionResult && !showGlobalResult">
+      <h1>
+        {{ currentQuestion.question }}
+      </h1>
+      <div class="answers">
+        <div
+                *ngFor="let choice of currentQuestion.choices"
+                [ngClass]="{'answer': true, 'correct': choice.isCorrect, 'incorrect': !choice.isCorrect}"
+        >
+          <mat-icon matSuffix *ngIf="choice.isCorrect">done</mat-icon>{{ choice.choice }}
+        </div>
+      </div>
+      <div>
+        <button mat-stroked-button color="primary" (click)="showQuestionResultsFunc()">Question Result</button>
+      </div>
+    </div>
+
+
+    <div *ngIf="authService.isAuthenticated() && gameLaunched && currentQuestion.question!='' && !showGoodAnswers && showQuestionResult && !showGlobalResult">
+      <h1>
+        Question ranking
+      </h1>
+      <div class="results">
+        <div *ngFor="let player of thisQuestionResult.players" class="player-result">
+          <div class="player-name">
+            {{ player.username }}
+          </div>
+          <div class="player-score">
+            {{ player.currentScore }}
+          </div>
+        </div>
+      </div>
+      <div>
+        <button mat-stroked-button color="primary" (click)="showGlobalResultsFunc()">Global Result</button>
+      </div>
+    </div>
+
+    <div *ngIf="authService.isAuthenticated() && gameLaunched && currentQuestion.question!='' && !showQuestionResult && showGlobalResult">
+      <h1>
+        <span *ngIf="!gameIsOver">Global ranking</span>
+        <span *ngIf="gameIsOver">Final global ranking</span>
+      </h1>
+      <div class="results">
+        <div *ngFor="let player of currentResult.players" class="player-result">
+          <div class="player-name">
+            {{ player.username }}
+          </div>
+          <div class="player-score">
+            {{ player.currentScore }}
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!gameIsOver">
+        <button mat-stroked-button color="primary" (click)="nextQuestionFunc()">Next question</button>
+      </div>
+      <div *ngIf="gameIsOver">
+        <button mat-stroked-button color="primary" (click)="navigateToQuizzes()" class="link-like">Back to quizzes page</button>
       </div>
     </div>
   </div>
-  <div *ngIf="joined && gameLaunched && currentQuestion.question && currentAnswer>0 && !gameIsOver">
+
+
+  <div *ngIf="joined && gameLaunched && currentQuestion.question!='' && currentAnswer>0 && !gameIsOver">
     <div *ngIf="!authService.isAuthenticated()">
-      <p>Please wait for the results and the next question</p>
+      <div class="container">
+        <p>Please wait for the results and the next question</p>
+      </div>
     </div>
   </div>
-  <div *ngIf="joined && gameLaunched && currentQuestion.question && currentAnswer>0 && gameIsOver">
+  <div *ngIf="joined && gameLaunched && currentQuestion.question!='' && currentAnswer>0 && gameIsOver">
     <div *ngIf="!authService.isAuthenticated()">
-      <p>Checks results on the main screen. </p>
-      <p>Thanks for playing! </p>
+      <div class="container">
+        <p>Checks results on the main screen. </p>
+        <p>Thanks for playing! </p>
+      </div>
     </div>
   </div>
-  <div *ngIf="authService.isAuthenticated() && joined && gameLaunched && currentQuestion.question && !gameIsOver && currentResult!={players: []}">
+  <div *ngIf="authService.isAuthenticated() && joined && gameLaunched && currentQuestion.question!='' && !gameIsOver && currentResult!={players: []}">
     results are...
     <div *ngFor="let player of currentResult.players">
       {{ player.username }}: {{ player.currentScore }}

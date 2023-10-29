@@ -6,6 +6,6 @@ export interface SessionInterface{
     users: UserInterface[];
     current: number;
     questions: any[];
-    ranking: any[];
+    ranking: { players: { username: string; currentScore: number; }[] };
     questionsRanking: any[];
 }
