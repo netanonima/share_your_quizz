@@ -85,16 +85,30 @@ If you like this project and wish to say thanks - I'm always open to a coffee!  
 - Copy 'backend/src/app.module.ts-lock' to 'backend/src/app.module.ts' and set your values
 - Copy 'frontend_angular/src/app/constants.ts-lock' to 'frontend_angular/src/app/constants.ts' and set your values
 - Launch the backend
+  - For development
   ```bash
     cd backend
     npm run start:dev
+  ```
+  - For production
+  ```bash
+    npm run build
+    cd dist
+    node main.js
   ```
 - Set your frontend constants in `frontend_angular/src/app/constants.ts`
 - Launch the frontend
   ```bash
     cd frontend_angular
     npm i
-    ng serve
+  ```
+  - For development
+  ```bash
+    npm run start
+  ```
+  - For production
+  ```bash
+    npm run build --localize
   ```
 - Open your browser and go to [localhost:8080](http://localhost:8080)
 
