@@ -16,7 +16,7 @@ import {AdminJoinInterface} from "play-sockets/interfaces/admin-join.interface";
 import { ConfigService } from '@nestjs/config'
 import { SessionsService } from '../sessions/sessions.service';
 import {QuizzsService} from "quizzs/quizzs.service";
-import axios from 'axios';
+import * as fs from 'fs';
 
 @UseFilters(new WsExceptionFilter())
 @WebSocketGateway({
@@ -46,11 +46,15 @@ export class PlaySocketsGateway {
     @UseGuards(WsJwtGuard)
     @SubscribeMessage('admin-join')
     handleAdminJoin(@MessageBody() data: AdminJoinInterface, @ConnectedSocket() client: Socket): void {
-        console.log('admin-join');
+        console.log('admin-join received');
         const { sessionId } = data;
-        // add client id to session
+        this.sessions.forEach((session, sessionId) => {
+            if (session.admin === '') {
+                this.sessions.delete(sessionId);
+            }
+        });
         if (!this.sessions.has(sessionId)) {
-            this.sessions.set(sessionId, { admin: '', opened: false, users: [], current: -1, questions: [], ranking: [], questionsRanking: [] });
+            this.sessions.set(sessionId, { admin: '', opened: false, users: [], current: -1, questions: [], ranking: {players: []}, questionsRanking: [] });
         }
         const session = this.sessions.get(sessionId);
         session.admin = client.id;
@@ -58,10 +62,10 @@ export class PlaySocketsGateway {
         console.log('Session state:', this.sessions);
 
         if(session.admin && session.admin != ''){
-            client.to(session.admin).emit('admin-join-response', 'Welcome admin!');
+            client.emit('admin-join-response', true);
         }
         session.users.forEach(user => {
-            client.to(user.id).emit('is-ready-response', `true`);
+            client.to(user.id).emit('is-ready-response', true);
         });
     }
 
@@ -90,7 +94,7 @@ export class PlaySocketsGateway {
         const { sessionId, username } = data;
 
         if (!this.sessions.has(sessionId)) {
-            this.sessions.set(sessionId, { admin: '', opened: false, users: [], current: -1, questions: [], ranking: [], questionsRanking: [] });
+            this.sessions.set(sessionId, { admin: '', opened: false, users: [], current: -1, questions: [], ranking: {players: []}, questionsRanking: [] });
         }
 
         const session = this.sessions.get(sessionId);
@@ -154,26 +158,48 @@ export class PlaySocketsGateway {
         }
 
         session.questions = shuffle(thisQuizz.questions);
+        let j = 0;
         for(let i=0;i<session.questions.length;i++){
             if(session.questions[i].media){
-                const mediaURL = session.questions[i].media.file_path + session.questions[i].media.filename + '.' + session.questions[i].media.extension;
-                try{
-                    const response = await axios.get(mediaURL, { responseType: 'arraybuffer' });
-                    const mediaBase64 = Buffer.from(response.data).toString('base64');
-                    session.questions[i].media = mediaBase64;
-                } catch (error) {
-                    console.log(error);
+                let mediaPath = session.questions[i].media.file_path + session.questions[i].media.filename + '.' + session.questions[i].media.extension;
+                // manage backslashes
+                mediaPath = mediaPath.replace(/\\/g, '/');
+                console.log('mediaPath');
+                console.log(mediaPath);
+                fs.readFile(mediaPath, (error, mediaData) => {
+                    if (error) {
+                        console.log(error);
+                        return;
+                    }
+                    const mediaBase64 = Buffer.from(mediaData).toString('base64');
+                    let realExtension = session.questions[i].media.extension;
+                    if(session.questions[i].media.extension.toLowerCase() ==='mp3')realExtension = 'mpeg';
+                    if(session.questions[i].media.extension.toLowerCase() ==='jpg')realExtension = 'jpeg';
+
+                    session.questions[i].media = "data:'"+session.questions[i].media.type+"/"+realExtension+"';base64,"+mediaBase64;
+                    console.log(session.questions[i].media.slice(0, 100) + '...');
+                    j++;
+                    if(j===session.questions.length){
+                        endingAction();
+                    }
+                });
+            }else{
+                j++;
+                if(j===session.questions.length){
+                    endingAction();
                 }
             }
         }
-        console.log(session.questions);
-        for(let i=0;i<session.questions.length;i++){
-            session.questionsRanking.push([]);
+        function endingAction(){
+            for(let i=0;i<session.questions.length;i++){
+                session.questionsRanking.push([]);
+            }
+            session.ranking = { players: session.users.map(user => ({ username: user.username, currentScore: 0 })) };
+            session.users.forEach(user => {
+                client.to(user.id).emit('game-is-ready', ``);
+            });
+            client.emit('game-is-ready', ``);
         }
-        console.log(session.questionsRanking);
-        session.users.forEach(user => {
-            client.to(user.id).emit('game-is-ready', ``);
-        });
 
     }
 
@@ -184,13 +210,33 @@ export class PlaySocketsGateway {
         const { sessionId } = data;
         const session = this.sessions.get(sessionId);
         session.current++;
+        if (!session) {
+            console.error('Session not found:', sessionId);
+            return;
+        }
+        if (!Array.isArray(session.questions)) {
+            console.error('session.questions is not an array:', session.questions);
+            return;
+        }
+        if (session.current >= session.questions.length) {
+            console.error('Invalid index:', session.current);
+            return;
+        }
+        if (!session.questions[session.current]) {
+            console.error('Question not found:', session.current);
+            return;
+        }
+
         session.questions[session.current].askingDatetime = new Date();
 
         let currentQuestion = {
             question: session.questions[session.current].question,
             choices: [],
         }
-        let currentAdminQuestion = currentQuestion;
+        let currentAdminQuestion = {
+            question: session.questions[session.current].question,
+            choices: [],
+        };
         session.questions[session.current].choices.forEach(choice => {
             currentQuestion.choices.push({
                 choiceId: choice.id,
@@ -203,44 +249,94 @@ export class PlaySocketsGateway {
             });
         });
 
+        console.log('question sent');
         session.users.forEach(user => {
             client.to(user.id).emit('question', currentQuestion);
         });
 
         if(session.admin && session.admin != ''){
-            client.to(session.admin).emit('question', currentAdminQuestion);
+            client.emit('question', currentAdminQuestion);
         }
     }
 
     @SubscribeMessage('answer')
     handleAnswer(@MessageBody() data: AnswerInterface, @ConnectedSocket() client: Socket): void {
         // check if response was true, calculate score, store it then send question-answers to admin
+        console.log('answer received');
         const currentDatetime = new Date();
         const { sessionId, choiceId } = data;
         const session = this.sessions.get(sessionId);
+        if (!session) {
+            console.error('Session not found:', sessionId);
+            return;
+        }
+        if (session.current < 0 || session.current >= session.questions.length) {
+            console.error('Invalid current question index:', session.current);
+            return;
+        }
         const currentQuestion = session.questions[session.current];
         const choice = currentQuestion.choices.find(choice => choice.id === choiceId);
         const isCorrect = choice.is_correct;
-        const username = session.users.find(user => user.id === client.id).username;
+        const user = session.users.find(user => user.id === client.id);
+        if (!user) {
+            console.error('User not found:', client.id);
+            return;
+        }
+        const username = user.username;
         if(isCorrect){
             const thisQuestionScore = Math.round(1000 - (currentDatetime.getTime() - currentQuestion.askingDatetime.getTime())/100);
-            // adding to question ranking (session.questionsRanking[session.current])
-            const questionsRankinguserIndex = session.questionsRanking[session.current].findIndex(user => user.userId === client.id);
-            if(questionsRankinguserIndex !== -1){
-                session.questionsRanking[session.current][questionsRankinguserIndex].currentScore += thisQuestionScore;
-            }else{
-                session.questionsRanking[session.current].push({username: username, currentScore: thisQuestionScore});
+            if (session.current === undefined || session.current < 0 || session.current >= session.questionsRanking.length) {
+                console.error('Invalid session.current:', session.current);
+                return;
             }
-            // adding to global ranking (session.ranking)
-            const rankingUserIndex = session.ranking.findIndex(user => user.userId === client.id);
-            if(rankingUserIndex !== -1){
-                session.ranking[rankingUserIndex].currentScore += thisQuestionScore;
+            if (Array.isArray(session.questionsRanking[session.current]) || !session.questionsRanking[session.current]) {
+                session.questionsRanking[session.current] = {players: []};
+            }
+            let questionRanking = session.questionsRanking[session.current];
+            const playerIndex = questionRanking.players.findIndex(player => player.username === username);
+            if(playerIndex !== -1){
+                questionRanking.players[playerIndex].currentScore += thisQuestionScore;
             }else{
-                session.ranking.push({username: username, currentScore: thisQuestionScore});
+                questionRanking.players.push({username: username, currentScore: thisQuestionScore});
+            }
+
+            session.questionsRanking[session.current] = questionRanking;
+
+            const rankingPlayerIndex = session.ranking.players.findIndex(player => player.username === username);
+            if(rankingPlayerIndex !== -1){
+                session.ranking.players[rankingPlayerIndex].currentScore += thisQuestionScore;
+            } else {
+                session.ranking.players.push({username: username, currentScore: thisQuestionScore});
+            }
+        }else{
+            const thisQuestionScore = 0;
+            if (session.current === undefined || session.current < 0 || session.current >= session.questionsRanking.length) {
+                console.error('Invalid session.current:', session.current);
+                return;
+            }
+            if (Array.isArray(session.questionsRanking[session.current]) || !session.questionsRanking[session.current]) {
+                session.questionsRanking[session.current] = {players: []};
+            }
+            let questionRanking = session.questionsRanking[session.current];
+            const playerIndex = questionRanking.players.findIndex(player => player.username === username);
+            if(playerIndex !== -1){
+                questionRanking.players[playerIndex].currentScore += thisQuestionScore;
+            }else{
+                questionRanking.players.push({username: username, currentScore: thisQuestionScore});
+            }
+
+            session.questionsRanking[session.current] = questionRanking;
+
+            const rankingPlayerIndex = session.ranking.players.findIndex(player => player.username === username);
+            if(rankingPlayerIndex !== -1){
+                session.ranking[rankingPlayerIndex].currentScore += thisQuestionScore;
+            }else{
+                session.ranking.players.push({username: username, currentScore: thisQuestionScore});
             }
         }
     }
 
+    @UseGuards(WsJwtGuard)
     @SubscribeMessage('stop-question')
     handleStopQuestion(@MessageBody() data: StopQuestionInterface, @ConnectedSocket() client: Socket): void {
         const { sessionId } = data;
@@ -253,20 +349,22 @@ export class PlaySocketsGateway {
         }
         const questionRanking = session.questionsRanking[session.current];
         const ranking = session.ranking;
+        questionRanking.players = questionRanking.players.sort((a, b) => (a.currentScore < b.currentScore) ? 1 : -1);
+        ranking.players.sort((a, b) => (a.currentScore < b.currentScore) ? 1 : -1);
         const results = {
-            questionRanking: questionRanking,
-            ranking: ranking
+            thisQuestionResult: questionRanking,
+            result: ranking
         };
         if(isLastQuestion){
             if(session.admin && session.admin != ''){
-                client.to(session.admin).emit('quizz-results', results);
+                client.emit('quizz-results', results);
             }
             session.users.forEach(user => {
                 client.to(user.id).emit('question-ended', ``);
             });
         }else{
             if(session.admin && session.admin != ''){
-                client.to(session.admin).emit('question-answers', results);
+                client.emit('question-answers', results);
             }
         }
     }

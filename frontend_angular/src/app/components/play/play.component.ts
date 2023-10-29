@@ -29,6 +29,7 @@ export class PlayComponent implements OnInit, OnDestroy {
   public players: PlayerInterface[] = [];
   public playerClasses: { [username: string]: string } = {};
   public isReady: boolean = false;
+  public readyToInvite: boolean = false;
   public joined: boolean = false;
   public gameLaunched: boolean = false;
   public currentQuestion: QuestionInterface = {question: '', choices: []};
@@ -41,6 +42,9 @@ export class PlayComponent implements OnInit, OnDestroy {
   public url: string = window.location.href;
   public myName: string = '';
   public sessionId = this.route.snapshot.queryParamMap.get('id');
+  public showGoodAnswers: boolean = false;
+  public showQuestionResult: boolean = false;
+  public showGlobalResult: boolean = false;
 
   setUsernameForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(20)])
@@ -55,6 +59,8 @@ export class PlayComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.webSocketService.resetState();
+
     if(this.sessionId){
       this.webSocketService.connect(parseInt(this.sessionId));
     }
@@ -69,6 +75,10 @@ export class PlayComponent implements OnInit, OnDestroy {
 
     this.webSocketService.isReady$.subscribe(isReady => {
       this.isReady = isReady;
+    });
+
+    this.webSocketService.readyToInvite$.subscribe(readyToInvite => {
+      this.readyToInvite = readyToInvite;
     });
 
     this.webSocketService.joined$.subscribe(joined => {
@@ -88,20 +98,52 @@ export class PlayComponent implements OnInit, OnDestroy {
     });
 
     this.webSocketService.thisQuestionResult$.subscribe(thisQuestionResult => {
+      console.log('thisQuestionResult:', thisQuestionResult);
       this.thisQuestionResult = thisQuestionResult;
     });
 
     this.webSocketService.currentResult$.subscribe(currentResult => {
+      console.log('currentResult:', currentResult);
       this.currentResult = currentResult;
     });
 
     this.webSocketService.lastResult$.subscribe(lastResult => {
       this.lastResult = lastResult;
     });
+
+    this.webSocketService.gameIsOver$.subscribe(gameIsOver => {
+      this.gameIsOver = gameIsOver;
+    });
   }
 
   ngOnDestroy(): void {
+    this.webSocketService.resetState();
     this.webSocketService.disconnect();
+  }
+
+  showGoodAnswersFunc(): void {
+    this.showGoodAnswers = true;
+    this.showQuestionResult = false;
+    this.showGlobalResult = false;
+  }
+
+  showQuestionResultsFunc(): void {
+    this.showGoodAnswers = false;
+    this.showQuestionResult = true;
+    this.showGlobalResult = false;
+  }
+
+  showGlobalResultsFunc(): void {
+    this.showGoodAnswers = false;
+    this.showGlobalResult = true;
+    this.showQuestionResult = false;
+  }
+
+  nextQuestionFunc(): void {
+    this.showGoodAnswers = false;
+    this.showQuestionResult = false;
+    this.showGlobalResult = false;
+    this.nextQuestion();  // Appelle votre méthode existante nextQuestion
   }
 
   drop(event: CdkDragDrop<string[]>): void {
@@ -118,6 +160,14 @@ export class PlayComponent implements OnInit, OnDestroy {
   }
 
   // admin actions
+  launchTheGame(): void {
+    if(this.authService.isAuthenticated()) {
+      this.webSocketService.gameLaunch();
+    }else{
+      console.log('You are not authenticated');
+    }
+  }
+
   nextQuestion(): void {
     if(this.authService.isAuthenticated()) {
       this.webSocketService.nextQuestion();
@@ -129,6 +179,7 @@ export class PlayComponent implements OnInit, OnDestroy {
   showResults(): void {
     if(this.authService.isAuthenticated()) {
       this.webSocketService.stopQuestion();
+      this.showGoodAnswersFunc();
     }else{
       console.log('You are not authenticated');
     }

@@ -18,6 +18,7 @@ export class WebSocketService {
   private playersSubject = new BehaviorSubject<PlayerInterface[]>([]);
   private playerClassesSubject = new BehaviorSubject<{ [username: string]: string }>({});
   private isReadySubject = new BehaviorSubject<boolean>(false);
+  private readyToInviteSubject = new BehaviorSubject<boolean>(false);
   private joinedSubject = new BehaviorSubject<boolean>(false);
   private gameLaunchedSubject = new BehaviorSubject<boolean>(false);
   private currentQuestionSubject = new BehaviorSubject<QuestionInterface>({question: '', choices: []});
@@ -26,8 +27,8 @@ export class WebSocketService {
   private thisQuestionResultSubject = new BehaviorSubject<ResultInterface>({players: []});
   private lastResultSubject = new BehaviorSubject<ResultInterface>({players: []});
   private gameIsOverSubject = new BehaviorSubject<boolean>(false);
+  private errorSubject = new BehaviorSubject<boolean>(false);
   private sessionId?: number;
-  public readyToInvite: boolean = false;
 
   constructor(private authService: AuthService) {}
 
@@ -45,26 +46,21 @@ export class WebSocketService {
 
     // everybody
     this.socket.on('connect', ()=>this.handleConnect());
+    this.socket.on('game-is-ready',(message: string)=>this.handleGameIsReady(message));
     this.socket.on('question',(message: QuestionInterface)=>this.handleQuestion(message));
 
     // admin
-    if(this.authService.isAuthenticated()){
       this.socket.on('admin-join-response',(message: string)=>this.handleAdminJoinResponse(message));
       this.socket.on('question-answers',(message: ResultsInterface)=>this.handleQuestionAnswers(message));
-      this.socket.on('quizz-results',(message: string)=>this.handleQuizzResults(message));
+      this.socket.on('quizz-results',(message: ResultsInterface)=>this.handleQuizzResults(message));
       this.socket.on('new-player', (message: string) => this.handleNewPlayer(message));
       this.socket.on('player-left', (message: string) => this.handlePlayerLeft(message));
-    }
     // players
-    if(!this.authService.isAuthenticated()){
       this.socket.on('is-ready-response',(message: boolean)=>this.handleIsReadyResponse(message));
       this.socket.on('join-response',(message: boolean)=>this.handleJoinResponse(message));
-      this.socket.on('game-is-ready',(message: string)=>this.handleGameIsReady(message));
       this.socket.on('question-ended',(message: string)=>this.handleQuestionEnded(message));
       this.socket.on('quizz-ended',(message: string)=>this.handleQuizzEnded(message));
       this.socket.on('error',(message: string)=>this.handleError(message));
-
-    }
   }
 
   /// receivers
@@ -92,7 +88,8 @@ export class WebSocketService {
   };
 
   private handleQuestion(message: QuestionInterface): void{
-    console.log('question');
+    console.log('question received');
+    this.currentAnswerSubject.next(-1);
     this.currentQuestionSubject.next(message);
     this.currentAnswerSubject.next(-1);
   };
@@ -124,6 +121,7 @@ export class WebSocketService {
 
   private handleError(message: string): void{
     console.log('error');
+    this.errorSubject.next(true);
   };
 
   // admin receivers
@@ -157,17 +155,20 @@ export class WebSocketService {
 
   private handleAdminJoinResponse(message: string): void{
     console.log('admin-join-response');
-    this.readyToInvite = true;
+    this.readyToInviteSubject.next(true);
   };
 
   private handleQuestionAnswers(message: ResultsInterface): void{
     console.log('question-answers');
+    console.log(message);
     this.thisQuestionResultSubject.next(message.thisQuestionResult);
     this.currentResultSubject.next(message.result);
   };
 
-  private handleQuizzResults(message: string): void{
+  private handleQuizzResults(message: ResultsInterface): void{
     console.log('quizz-results');
+    this.thisQuestionResultSubject.next(message.thisQuestionResult);
+    this.currentResultSubject.next(message.result);
     this.gameIsOverSubject.next(true);
   };
 
@@ -181,6 +182,10 @@ export class WebSocketService {
 
   get isReady$(): Observable<boolean> {
     return this.isReadySubject.asObservable();
+  }
+
+  get readyToInvite$(): Observable<boolean> {
+    return this.readyToInviteSubject.asObservable();
   }
 
   get joined$(): Observable<boolean> {
@@ -215,6 +220,10 @@ export class WebSocketService {
     return this.gameIsOverSubject.asObservable();
   }
 
+  get error$(): Observable<boolean> {
+    return this.errorSubject.asObservable();
+  }
+
   /// emitters
   // everybody's emitters
   disconnect(): void {
@@ -243,6 +252,7 @@ export class WebSocketService {
       sessionId: this.sessionId,
       choiceId: choiceId
     });
+    this.currentAnswerSubject.next(choiceId);
   }
 
   // admin emitters
@@ -262,7 +272,6 @@ export class WebSocketService {
       this.socket?.emit('game-launch', {
         sessionId: this.sessionId
       });
-      this.gameLaunchedSubject.next(true);
     }else{
       console.log('not authenticated');
     }
@@ -273,7 +282,7 @@ export class WebSocketService {
       this.socket?.emit('next-question', {
         sessionId: this.sessionId
       });
-      this.lastResultSubject.next(this.currentResultSubject.value);
+      this.lastResultSubject.next({players: []});
       this.currentResultSubject.next({players: []});
       this.thisQuestionResultSubject.next({players: []});
     }else{
@@ -291,5 +300,19 @@ export class WebSocketService {
     }
   }
 
-
+  resetState(): void {
+    this.playersSubject.next([]);
+    this.playerClassesSubject.next({});
+    this.isReadySubject.next(false);
+    this.readyToInviteSubject.next(false);
+    this.joinedSubject.next(false);
+    this.gameLaunchedSubject.next(false);
+    this.currentQuestionSubject.next({question: '', choices: []});
+    this.currentAnswerSubject.next(-1);
+    this.currentResultSubject.next({players: []});
+    this.thisQuestionResultSubject.next({players: []});
+    this.lastResultSubject.next({players: []});
+    this.gameIsOverSubject.next(false);
+    this.errorSubject.next(false);
+  }
 }

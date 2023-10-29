@@ -1,17 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
 .play {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f0f0f0;
-  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(to right, #ff7e5f, #feb47b);
+  font-family: 'Poppins', sans-serif;
+  color: #333;
 }
 
 
 h1, h2, h3 {
   color: #333;
 }
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  flex-direction: column;
+}
+
+p {
+  line-height: 1.2;
+  font-size: 26px;
+  font-weight: bold;
+  text-align: center;
+}
+
 
 .link-like {
   cursor: pointer;
@@ -36,6 +55,13 @@ button {
   border: none;
   border-radius: 4px;
   transition: background-color 0.3s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+  &:active {
+    transform: scale(0.95);
+  }
 }
 
 qrcode{
@@ -44,9 +70,16 @@ qrcode{
 }
 
 .qr-code-container {
-  border: 2px solid black; /* Ajustez la couleur et l'épaisseur de la bordure selon vos préférences */
-  display: inline-block; /* Cela assure que le conteneur s'ajuste à la taille du QR code */
-  padding: 0px; /* Ajustez l'espacement autour du QR code selon vos préférences */
+  border: 2px solid black;
+  display: inline-block;
+  padding: 0px;
+  border-radius: 0px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.qrcode canvas{
+  border-radius: 8px;
 }
 
 .current-players{
@@ -71,8 +104,8 @@ button[mat-stroked-button] {
 }
 
 .player-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 10px;
 }
 
@@ -107,4 +140,64 @@ button[mat-stroked-button] {
 
 .left-player {
   animation: popIn 0.5s reverse;
+}
+
+.question {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.answers {
+  margin-top: 20px;
+}
+
+.answer {
+  flex: 1 1 calc(50% - 20px);
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 20px;
+  &:hover {
+    background-color: #e0e0e0;
+  }
+}
+
+.answer.correct {
+  background-color: #d4edda; /* vert clair */
+}
+
+.answer.incorrect {
+  background-color: #f8d7da; /* rouge clair */
+}
+
+@media (max-width: 768px) {
+  .answers {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+mat-icon {
+  font-size: 1.5em;
+  vertical-align: middle;
+  color: #28a745; /* vert */
+}
+
+.player-result {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  margin-bottom: 10px;
+
+  .player-score {
+    font-weight: bold;
+  }
 }
