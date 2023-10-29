@@ -39,8 +39,7 @@
 
     <div class="language-selector">
       <button mat-icon-button [matMenuTriggerFor]="languageMenu">
-        <!-- Vous pouvez utiliser une icône ou une image pour la langue actuelle -->
-        <img src="assets/flags/en.png" alt="English" />
+        <img [src]="'assets/flags/' + currentLanguage + '.png'" class="language-icon" />
       </button>
     </div>
   </mat-toolbar>
