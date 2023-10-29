@@ -16,7 +16,9 @@ import { MediasModule } from './medias/medias.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { AuthModule } from './auth/auth.module';
 import { PlaySocketsModule } from './play-sockets/play-sockets.module';
-import { ConfigModule } from "@nestjs/config";
+import {ConfigModule, ConfigService} from "@nestjs/config";
+
+const configService = new ConfigService();
 
 @Module({
   imports: [
@@ -24,9 +26,9 @@ import { ConfigModule } from "@nestjs/config";
       type: 'mysql',
       host: 'localhost',
       port: 3306,
-      username: 'phpmyadmin',
-      password: 'phpmyadmin',
-      database: 'share_your_quizz',
+      username: configService.get('MYSQL_USER'),
+      password: configService.get('MYSQL_PASSWORD'),
+      database: configService.get('MYSQL_DB_NAME'),
       entities: [User, Quizz, Question, Choice, Media, Session],
       synchronize: true,
       autoLoadEntities: true,
