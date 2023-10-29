@@ -19,9 +19,6 @@ import { PlaySocketsModule } from './play-sockets/play-sockets.module';
 import {ConfigModule, ConfigService} from "@nestjs/config";
 
 const configService = new ConfigService();
-const mysqlUser = configService.get('MYSQL_USER');
-const mysqlPassword = configService.get('MYSQL_PASSWORD');
-const mysqlDbName = configService.get('MYSQL_DB_NAME');
 
 @Module({
   imports: [
@@ -29,9 +26,9 @@ const mysqlDbName = configService.get('MYSQL_DB_NAME');
       type: 'mysql',
       host: 'localhost',
       port: 3306,
-      username: mysqlUser,
-      password: mysqlPassword,
-      database: mysqlDbName,
+      username: 'phpmyadmin',
+      password: 'phpmyadmin',
+      database: 'share_your_quizz',
       entities: [User, Quizz, Question, Choice, Media, Session],
       synchronize: true,
       autoLoadEntities: true,
