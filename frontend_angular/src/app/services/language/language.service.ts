@@ -9,8 +9,7 @@ export class LanguageService {
   currentLanguage = this.language.asObservable();
 
   changeLanguage(lang: string) {
-    console.log('language set to: ' + lang);
     this.language.next(lang);
-    window.location.href = `/${lang}/`;
+    window.location.href = window.location.hostname+`/${lang}/`;
   }
 }
