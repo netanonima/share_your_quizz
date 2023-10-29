@@ -6,7 +6,7 @@
 
     <div *ngIf="!error && readyToInvite && !gameLaunched">
       <h1>
-        Welcome to this session.
+        <strong>Welcome to this session.</strong>
       </h1>
 
       <h2>
@@ -32,11 +32,11 @@
         </div>
       </div>
       <div>
-        <button mat-stroked-button color="primary" (click)="launchTheGame()">Launch the game</button>
+        <button class="admin-button" mat-raised-button color="primary" (click)="launchTheGame()" [disabled]="players.length<=0">Launch the game</button>
       </div>
     </div>
     <div *ngIf="!error && readyToInvite && gameLaunched && currentQuestion.question===''">
-      <button mat-stroked-button color="primary" (click)="nextQuestion()">Next question</button>
+      <button class="admin-button" mat-raised-button color="primary" (click)="nextQuestion()">Next question</button>
     </div>
   </div>
 
@@ -46,16 +46,16 @@
         <div>
           <mat-form-field appearance="outline">
             <mat-label>Enter your username</mat-label>
-            <input matInput placeholder="yourNickname" formControlName="username" required>
+            <input type="text" matInput placeholder="yourNickname" formControlName="playerUsername" autocomplete="off" required>
             <mat-icon matSuffix>person_outline</mat-icon>
-            <mat-error *ngIf="(setUsernameForm.get('username')?.invalid)">
-              {{getErrorMessage('username')}}
+            <mat-error *ngIf="(setUsernameForm.get('playerUsername')?.invalid)">
+              {{getErrorMessage('playerUsername')}}
             </mat-error>
           </mat-form-field>
         </div>
         <div class="form-buttons">
-          <button type="submit" mat-stroked-button color="primary" [disabled]="setUsernameForm.invalid">Play</button>
-          <button mat-stroked-button color="accent" (click)="setUsernameCancel()">Cancel</button>
+          <button class="player-button" type="submit" mat-raised-button color="primary" [disabled]="setUsernameForm.invalid">Play</button>
+          <button class="player-button" mat-raised-button color="accent" (click)="setUsernameCancel()">Cancel</button>
         </div>
       </form>
     </div>
@@ -74,7 +74,7 @@
       <p>Get ready!</p>
     </div>
     <div *ngIf="authService.isAuthenticated()">
-      <button mat-stroked-button color="primary" (click)="nextQuestion()">Next question</button>
+      <button class="admin-button" mat-raised-button color="primary" (click)="nextQuestion()">Next question</button>
     </div>
   </div>
 
@@ -96,7 +96,7 @@
         </div>
       </div>
       <div *ngIf="authService.isAuthenticated()">
-        <button mat-stroked-button color="primary" (click)="showResults()">Show results</button>
+        <button class="admin-button" mat-raised-button color="primary" (click)="showResults()">Show results</button>
       </div>
     </div>
 
@@ -114,7 +114,7 @@
         </div>
       </div>
       <div>
-        <button mat-stroked-button color="primary" (click)="showQuestionResultsFunc()">Question Result</button>
+        <button class="admin-button" mat-raised-button color="primary" (click)="showQuestionResultsFunc()">Question Result</button>
       </div>
     </div>
 
@@ -134,7 +134,7 @@
         </div>
       </div>
       <div>
-        <button mat-stroked-button color="primary" (click)="showGlobalResultsFunc()">Global Result</button>
+        <button class="admin-button" mat-raised-button color="primary" (click)="showGlobalResultsFunc()">Global Result</button>
       </div>
     </div>
 
@@ -154,10 +154,10 @@
         </div>
       </div>
       <div *ngIf="!gameIsOver">
-        <button mat-stroked-button color="primary" (click)="nextQuestionFunc()">Next question</button>
+        <button class="admin-button" mat-raised-button color="primary" (click)="nextQuestionFunc()">Next question</button>
       </div>
       <div *ngIf="gameIsOver">
-        <button mat-stroked-button color="primary" (click)="navigateToQuizzes()" class="link-like">Back to quizzes page</button>
+        <button class="admin-button" mat-raised-button color="primary" (click)="navigateToQuizzes()" class="link-like">Back to quizzes page</button>
       </div>
     </div>
   </div>
@@ -174,7 +174,7 @@
     <div *ngIf="!authService.isAuthenticated()">
       <div class="container">
         <p>Checks results on the main screen. </p>
-        <p>Thanks for playing! </p>
+        <p><strong>Thanks for playing! </strong></p>
       </div>
     </div>
   </div>

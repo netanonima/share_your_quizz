@@ -360,7 +360,7 @@ export class PlaySocketsGateway {
                 client.emit('quizz-results', results);
             }
             session.users.forEach(user => {
-                client.to(user.id).emit('question-ended', ``);
+                client.to(user.id).emit('quizz-ended', ``);
             });
         }else{
             if(session.admin && session.admin != ''){

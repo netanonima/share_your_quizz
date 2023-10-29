@@ -47,7 +47,7 @@ export class PlayComponent implements OnInit, OnDestroy {
   public showGlobalResult: boolean = false;
 
   setUsernameForm: FormGroup = new FormGroup({
-    username: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(20)])
+    playerUsername: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(20)])
   });
 
 
@@ -188,9 +188,9 @@ export class PlayComponent implements OnInit, OnDestroy {
   // user actions
   setUsername(): void {
     if (this.setUsernameForm.valid) {
-      const { username } = this.setUsernameForm.value;
+      const { playerUsername } = this.setUsernameForm.value;
       if (this.sessionId) {
-        this.webSocketService.join(username);
+        this.webSocketService.join(playerUsername);
       }
     }
   }
