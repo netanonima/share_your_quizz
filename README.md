@@ -1,6 +1,5 @@
-# share_your_quizz
+# Share your quizz
 
-![](https://img.shields.io/github/license/netanonima/share_your_quizz.svg?style=flat-square)
 ![](https://img.shields.io/github/stars/netanonima/share_your_quizz.svg?style=flat-square)
 
 Free web application allowing you to create quizzes (multiple choice questions) and play online games.
