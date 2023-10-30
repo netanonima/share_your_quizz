@@ -236,6 +236,7 @@ export class PlaySocketsGateway {
         let currentAdminQuestion = {
             question: session.questions[session.current].question,
             choices: [],
+            media: '',
         };
         session.questions[session.current].choices.forEach(choice => {
             currentQuestion.choices.push({
@@ -247,9 +248,11 @@ export class PlaySocketsGateway {
                 choice: choice.choice,
                 isCorrect: choice.is_correct,
             });
+            if( session.questions[session.current].media){
+                currentAdminQuestion.media =  session.questions[session.current].media;
+            }
         });
 
-        console.log('question sent');
         session.users.forEach(user => {
             client.to(user.id).emit('question', currentQuestion);
         });
@@ -347,10 +350,40 @@ export class PlaySocketsGateway {
                 client.to(user.id).emit('question-ended', ``);
             });
         }
+        // add 0 points to players who didn't answer in session.questionsRanking and in session.ranking
+        session.users.forEach(user => {
+            const username = user.username;
+            const rankingPlayerIndex = session.ranking.players.findIndex(player => player.username === username);
+            if(rankingPlayerIndex !== -1){
+                // do nothing
+            }else{
+                session.ranking.players.push({username: username, currentScore: 0});
+            }
+            if (session.current === undefined || session.current < 0 || session.current >= session.questionsRanking.length) {
+                console.error('Invalid session.current:', session.current);
+                return;
+            }
+            if (Array.isArray(session.questionsRanking[session.current]) || !session.questionsRanking[session.current]) {
+                session.questionsRanking[session.current] = {players: []};
+            }
+            let questionRanking = session.questionsRanking[session.current];
+            const playerIndex = questionRanking.players.findIndex(player => player.username === username);
+            if(playerIndex !== -1){
+                // do nothing
+            }else{
+                questionRanking.players.push({username: username, currentScore: 0});
+            }
+        });
+
+
         const questionRanking = session.questionsRanking[session.current];
         const ranking = session.ranking;
-        questionRanking.players = questionRanking.players.sort((a, b) => (a.currentScore < b.currentScore) ? 1 : -1);
-        ranking.players.sort((a, b) => (a.currentScore < b.currentScore) ? 1 : -1);
+        if(questionRanking.length > 1){
+            questionRanking.players = questionRanking.players.sort((a, b) => (a.currentScore < b.currentScore) ? 1 : -1);
+        }
+        if(ranking.players.length > 1){
+            ranking.players.sort((a, b) => (a.currentScore < b.currentScore) ? 1 : -1);
+        }
         const results = {
             thisQuestionResult: questionRanking,
             result: ranking
