@@ -104,13 +104,26 @@ If you like this project and wish to say thanks - I'm always open to a coffee!  
   ```
   - For development
   ```bash
-    npm run start
+    ng serve
   ```
   - For production
   ```bash
-    npm run build --localize
+    ng build --localize
   ```
 - Open your browser and go to [localhost:8080](http://localhost:8080)
+- For production you may need this .htaccess on apache server
+  ```apacheconf
+    RewriteEngine On
+    RewriteBase /
+
+    RewriteCond %{HTTP:Accept-Language} ^(de|es|fr|it) [NC]
+    RewriteRule ^$ /%1/ [L,R]
+
+    RewriteCond %{HTTP:Accept-Language} !^(de|es|fr|it) [NC]
+    RewriteRule ^$ /en/ [L,R]
+
+    RewriteRule ^([a-z]{2})/.*$ $1/index.html [L]
+  ```
 
 ## Usage without installation
 
