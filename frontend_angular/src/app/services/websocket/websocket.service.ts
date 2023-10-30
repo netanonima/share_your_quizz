@@ -88,7 +88,6 @@ export class WebSocketService {
   };
 
   private handleQuestion(message: QuestionInterface): void{
-    console.log('question received');
     this.currentAnswerSubject.next(-1);
     this.currentQuestionSubject.next(message);
     this.currentAnswerSubject.next(-1);

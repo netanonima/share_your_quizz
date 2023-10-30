@@ -16,6 +16,10 @@ h1, h2, h3 {
   color: #333;
 }
 
+.media img{
+  max-height: 200px;
+}
+
 .container {
   display: flex;
   align-items: center;
@@ -35,9 +39,9 @@ p {
 
 
 .link-like {
+  margin-top: 32px;
   cursor: pointer;
-  color: #007bff;
-  text-decoration: underline;
+  color: #ffffff;
   &:hover {
     text-decoration: none;
   }

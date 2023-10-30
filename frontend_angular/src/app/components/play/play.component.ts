@@ -45,6 +45,7 @@ export class PlayComponent implements OnInit, OnDestroy {
   public showGoodAnswers: boolean = false;
   public showQuestionResult: boolean = false;
   public showGlobalResult: boolean = false;
+  public mediaType: string = '';
 
   setUsernameForm: FormGroup = new FormGroup({
     playerUsername: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(20)])
@@ -91,6 +92,13 @@ export class PlayComponent implements OnInit, OnDestroy {
 
     this.webSocketService.currentQuestion$.subscribe(currentQuestion => {
       this.currentQuestion = currentQuestion;
+      if(currentQuestion.media && currentQuestion.media.startsWith('data:')){
+        const base64FirstPart = currentQuestion.media.split(';')[0];
+        const mimeType = base64FirstPart.split('\'')[1];
+        let type = mimeType.split('/')[0];
+        if(mimeType === 'video/mpeg') type = 'audio';
+        this.mediaType = type;
+      }
     });
 
     this.webSocketService.currentAnswer$.subscribe(currentAnswer => {
