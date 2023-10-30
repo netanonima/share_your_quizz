@@ -277,6 +277,11 @@ export class PlaySocketsGateway {
             console.error('Invalid current question index:', session.current);
             return;
         }
+        if(session.admin && session.admin != ''){
+            console.log('answer-received sent');
+            console.log(client.id);
+            client.to(session.admin).emit('answer-received', '');
+        }
         const currentQuestion = session.questions[session.current];
         const choice = currentQuestion.choices.find(choice => choice.id === choiceId);
         const isCorrect = choice.is_correct;
@@ -332,7 +337,11 @@ export class PlaySocketsGateway {
 
             const rankingPlayerIndex = session.ranking.players.findIndex(player => player.username === username);
             if(rankingPlayerIndex !== -1){
-                session.ranking[rankingPlayerIndex].currentScore += thisQuestionScore;
+                if(session.ranking.players[rankingPlayerIndex].currentScore){
+                    session.ranking.players[rankingPlayerIndex].currentScore += thisQuestionScore;
+                }else{
+                    session.ranking.players[rankingPlayerIndex].currentScore = thisQuestionScore;
+                }
             }else{
                 session.ranking.players.push({username: username, currentScore: thisQuestionScore});
             }

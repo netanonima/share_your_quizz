@@ -37,7 +37,6 @@ p {
   margin: 16px;
 }
 
-
 .link-like {
   margin-top: 32px;
   cursor: pointer;
@@ -54,6 +53,12 @@ p {
 
 .fade-in {
   animation: fadeIn 0.5s;
+}
+
+.answers-received{
+  position: relative;
+  top: 10px;
+  left: 40px;
 }
 
 .admin-button{

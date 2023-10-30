@@ -28,6 +28,7 @@ export class WebSocketService {
   private lastResultSubject = new BehaviorSubject<ResultInterface>({players: []});
   private gameIsOverSubject = new BehaviorSubject<boolean>(false);
   private errorSubject = new BehaviorSubject<boolean>(false);
+  private currentQuestionAnswersSubject = new BehaviorSubject<number>(0);
   private sessionId?: number;
 
   constructor(private authService: AuthService) {}
@@ -51,6 +52,7 @@ export class WebSocketService {
 
     // admin
       this.socket.on('admin-join-response',(message: string)=>this.handleAdminJoinResponse(message));
+      this.socket.on('answer-received',(message: string)=>this.handleAnswerReceived(message));
       this.socket.on('question-answers',(message: ResultsInterface)=>this.handleQuestionAnswers(message));
       this.socket.on('quizz-results',(message: ResultsInterface)=>this.handleQuizzResults(message));
       this.socket.on('new-player', (message: string) => this.handleNewPlayer(message));
@@ -88,6 +90,7 @@ export class WebSocketService {
   };
 
   private handleQuestion(message: QuestionInterface): void{
+    this.currentQuestionAnswersSubject.next(0);
     this.currentAnswerSubject.next(-1);
     this.currentQuestionSubject.next(message);
     this.currentAnswerSubject.next(-1);
@@ -157,6 +160,11 @@ export class WebSocketService {
     this.readyToInviteSubject.next(true);
   };
 
+  private handleAnswerReceived(message: string): void{
+    console.log('answer-received');
+    this.currentQuestionAnswersSubject.next(this.currentQuestionAnswersSubject.value+1);
+  }
+
   private handleQuestionAnswers(message: ResultsInterface): void{
     console.log('question-answers');
     console.log(message);
@@ -221,6 +229,10 @@ export class WebSocketService {
 
   get error$(): Observable<boolean> {
     return this.errorSubject.asObservable();
+  }
+
+  get currentQuestionAnswers$(): Observable<number> {
+    return this.currentQuestionAnswersSubject.asObservable();
   }
 
   /// emitters
