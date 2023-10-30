@@ -14,7 +14,7 @@
     <div>
       <input type="file" id="fileInput" #fileInputRef (change)="fileChanged($event)" style="display: none" />
       <mat-form-field appearance="outline" class="custom-file-input">
-        <input matInput [value]="fileName" readonly placeholder="No file chosen" disabled/>
+        <input matInput [value]="fileName" readonly placeholder="-" disabled/>
         <mat-icon matSuffix (click)="triggerFileInput()">attach_file</mat-icon>
         <mat-error *ngIf="(manageMediaForm.get('file')?.invalid)">
           {{getErrorMessage('file')}}
@@ -24,7 +24,7 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button mat-dialog-close i18n>Cancel</button>
   <button *ngIf="!data" mat-button color="accent" (click)="resetForm()" i18n>Reset form</button>
   <button *ngIf="!data" mat-button [mat-dialog-close]="true" color="primary" (click)="submitValue()" [disabled]="manageMediaForm.invalid" cdkFocusInitial i18n>Send file</button>
   <button *ngIf="data" mat-button [mat-dialog-close]="true" color="warn" (click)="submitErasing()" cdkFocusInitial i18n>Delete file</button>

@@ -49,7 +49,7 @@
       <div fxLayout="column" style="overflow-y: auto; height: 100%;">
         <a mat-button routerLink="/" (click)="closeSidenav()" i18n>Home</a>
         <a mat-button routerLink="/login" *ngIf="!authService.isAuthenticated()" (click)="closeSidenav()" i18n>Login</a>
-        <a mat-button routerLink="/logout" *ngIf="authService.isAuthenticated()" (click)="closeSidenav()" i18n>Logout</a>
+        <a mat-button (click)="logout()" *ngIf="authService.isAuthenticated()" (click)="closeSidenav()" i18n>Logout</a>
         <a mat-button routerLink="/register" *ngIf="!authService.isAuthenticated()" (click)="closeSidenav()" i18n>Register</a>
         <a mat-button routerLink="/quizzes" *ngIf="authService.isAuthenticated()" (click)="closeSidenav()" i18n>Quizzes</a>
       </div>

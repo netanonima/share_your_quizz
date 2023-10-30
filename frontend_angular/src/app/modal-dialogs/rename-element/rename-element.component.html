@@ -5,7 +5,7 @@
   <form [formGroup]="renameElementForm" class="form-fields" @fadeInOut (ngSubmit)="submitValue()">
     <div>
       <mat-form-field>
-        <mat-label>Enter your title</mat-label>
+        <mat-label i18n>Enter your title</mat-label>
         <input matInput placeholder="your title" formControlName="value" required>
         <mat-icon matSuffix>match_case</mat-icon>
         <mat-error *ngIf="(renameElementForm.get('value')?.invalid)">
