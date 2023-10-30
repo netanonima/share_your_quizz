@@ -46,6 +46,7 @@ export class PlayComponent implements OnInit, OnDestroy {
   public showQuestionResult: boolean = false;
   public showGlobalResult: boolean = false;
   public mediaType: string = '';
+  public currentQuestionAnswers: number = 0;
 
   setUsernameForm: FormGroup = new FormGroup({
     playerUsername: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(20)])
@@ -121,6 +122,14 @@ export class PlayComponent implements OnInit, OnDestroy {
 
     this.webSocketService.gameIsOver$.subscribe(gameIsOver => {
       this.gameIsOver = gameIsOver;
+    });
+
+    this.webSocketService.currentQuestionAnswers$.subscribe(currentQuestionAnswers => {
+      this.currentQuestionAnswers = currentQuestionAnswers;
+    });
+
+    this.webSocketService.error$.subscribe(error => {
+      this.error = error;
     });
   }
 
