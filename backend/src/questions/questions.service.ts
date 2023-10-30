@@ -95,8 +95,8 @@ export class QuestionsService {
       let duration = "";
       let newExtension = '';
       if(type === 'image') newExtension = 'png';
-      if(type === 'audio') newExtension = 'mp3';
-      if(type === 'video') newExtension = 'mp4';
+      if(type === 'audio' || mimeType.split('/')[1] == 'ogg') newExtension = 'mp3';
+      if(type === 'video' && mimeType.split('/')[1] != 'ogg') newExtension = 'mp4';
       const newMediaName = filename+'.'+newExtension;
       const filePath = this.config.get('MEDIA_PATH')+'/quizzesMedias/'+question.quizz.id+'/questions/'+question.id+'/';
       let newBuffer = null;
@@ -108,15 +108,21 @@ export class QuestionsService {
         size = Math.round(newBuffer.length / 1024 / 1024 * 100) / 100;
         thisExtension = newExtension;
       }
-      if(type === 'audio'){
+      if(type === 'audio' || mimeType.split('/')[1] == 'ogg'){
         duration = await this.mediaService.saveFile(updateQuestionDto.media, filePath + filename+ '.' + oldExtension);
         size = Math.round(updateQuestionDto.media.length / 1024 / 1024 * 100) / 100;
-        thisExtension = oldExtension;
+        const currentAudioFilePath = filePath + filename+ '.' + oldExtension;
+        const newAudioFilePath = filePath + filename+ '.' + newExtension;
+        await this.mediaService.convertFile(currentAudioFilePath, newAudioFilePath);
+        thisExtension = newExtension;
       }
-      if(type === 'video' && oldExtension !== 'ogg'){
+      if(type === 'video' && mimeType.split('/')[1] != 'ogg'){
         duration = await this.mediaService.saveFile(updateQuestionDto.media, filePath + filename+ '.' + oldExtension);
         size = Math.round(updateQuestionDto.media.length / 1024 / 1024 * 100) / 100;
-        thisExtension = oldExtension;
+        const currentAudioFilePath = filePath + filename+ '.' + oldExtension;
+        const newAudioFilePath = filePath + filename+ '.' + newExtension;
+        await this.mediaService.convertFile(currentAudioFilePath, newAudioFilePath);
+        thisExtension = newExtension;
       }
         media.file_path = filePath;
         media.filename = filename;

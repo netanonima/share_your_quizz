@@ -75,41 +75,21 @@ export class MediasService {
   }
 
   @UseFilters(new MediasExceptionsFilter())
-  async convertAudio(base64Audio: string): Promise<Buffer> {
-    const base64Data = base64Audio.split(',')[1];
-    const audioBuffer = Buffer.from(base64Data, 'base64');
-    const audioStream = new Readable();
-    audioStream.push(audioBuffer);
-    audioStream.push(null);
-
+  async convertFile(currentAudioFilePath, newAudioFilePath): Promise<void> {
     return new Promise((resolve, reject) => {
       ffmpeg.setFfmpegPath(this.config.get('FFMPEG_PATH'));
-      const compressionRate = this.config.get('AUDIO_CONVERTED_QUALITY');
-      const ffmpegCommand = ffmpeg(audioStream)
-          .outputOptions(`-b:a ${compressionRate}k`)
-          .format('mp3');
-
-      const chunks = [];
-      ffmpegCommand.on('end', () => {
-        resolve(Buffer.concat(chunks));
-      });
-      ffmpegCommand.on('error', (error) => {
-        reject(error);
-      });
-      ffmpegCommand.on('stderr', (stderrLine) => {
-        // console.log('Stderr output: ');
-        // console.log(stderrLine);
-      });
-      ffmpegCommand.on('progress', (progress) => {
-        // console.log(progress);
-      });
-      const output = ffmpegCommand.pipe();
-      output.on('data', (chunk) => {
-        chunks.push(chunk);
-      });
-      output.on('error', (error) => {
-        reject(error);
-      });
+      ffmpeg(currentAudioFilePath)
+          .output(newAudioFilePath)
+          .on('end', () => {
+            require('fs').unlink(currentAudioFilePath, (err) => {
+              if (err) reject(err);
+              else resolve();
+            });
+          })
+          .on('error', (err) => {
+            reject(err);
+          })
+          .run();
     });
   }
 
