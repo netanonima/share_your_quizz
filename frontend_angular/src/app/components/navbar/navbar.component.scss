@@ -2,10 +2,6 @@
   font-size: 100%;
 }
 
-div {
-  overflow: inherit;
-}
-
 a{
   text-decoration: none;
   font-size: 80%;
@@ -30,12 +26,6 @@ mat-sidenav{
   width: 250px;
 }
 
-.mat-sidenav-content{
-  padding-top: 40px;
-  text-align: center;
-  margin-top: 0px;
-}
-
 a.current {
   background-color: #34349d;
 }
@@ -58,19 +48,16 @@ mat-toolbar {
 mat-sidenav-container{
   display: flex;
   flex-direction: column;
-  margin-top: 55px;
+  margin-top: 10px;
 }
 
 .mat-sidenav-content {
   flex: 1;
   margin-top: 64px;
   height: calc(100vh - 64px);
-  overflow-y: auto;
+  overflow-y: auto; /* Permettre le défilement vertical si nécessaire */
   padding-top: 0px;
-}
-
-.mat-sidenav-content {
-  padding-top: 64px;
+  text-align: center;
 }
 
 .language-menu{
@@ -130,4 +117,14 @@ footer{
     margin-top: 0;
     padding-top: 0;
   }
+}
+
+.test{
+  border: 2px solid red;
+  height: 85%;
+}
+
+.router-content{
+  overflow-y: auto;
+  margin-bottom: 40px;
 }
