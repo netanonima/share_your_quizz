@@ -187,6 +187,7 @@ export class PlayComponent implements OnInit, OnDestroy {
 
   nextQuestion(): void {
     if(this.authService.isAuthenticated()) {
+      this.currentQuestion = {question: '', choices: []};
       this.webSocketService.nextQuestion();
     }else{
       console.log('You are not authenticated');

@@ -5,11 +5,13 @@
 <div class="questions-content">
   <table matSort (matSortChange)="sortData($event)" class="questions">
     <tr>
+      <th></th>
       <th mat-sort-header="question" i18n>Name</th>
       <th i18n>Actions</th>
     </tr>
 
-    <tr *ngFor="let question of sortedData">
+    <tr *ngFor="let question of sortedData; let i = index">
+      <td>{{ i + 1 }}</td>
       <td class="shorter-on-small">{{ question.question }}</td>
       <td>
         <button mat-icon-button color="primary" (click)="rename(question.id)">
