@@ -10,6 +10,8 @@ import {AuthService} from "../../services/auth/auth.service";
 import {Question} from "../questions/question.interface";
 import {QuestionInterface} from "./interfaces/question.interface";
 import {ResultInterface} from "./interfaces/result.interface";
+import {AnswerDistributionComponent} from "../answer-distribution/answer-distribution.component";
+import {AnswerDistributionInterface} from "./interfaces/answer-distribution.interface";
 
 @Component({
   selector: 'app-play',
@@ -45,6 +47,7 @@ export class PlayComponent implements OnInit, OnDestroy {
   public showGoodAnswers: boolean = false;
   public showQuestionResult: boolean = false;
   public showGlobalResult: boolean = false;
+  public answerDistribution: [AnswerDistributionInterface] = [{id: 0, value: 0, isCorrect: false}];
   public mediaType: string = '';
   public currentQuestionAnswers: number = 0;
 
@@ -130,6 +133,10 @@ export class PlayComponent implements OnInit, OnDestroy {
 
     this.webSocketService.error$.subscribe(error => {
       this.error = error;
+    });
+
+    this.webSocketService.answerDistribution$.subscribe(answerDistribution => {
+      this.answerDistribution = answerDistribution;
     });
   }
 

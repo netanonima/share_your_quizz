@@ -8,6 +8,7 @@ import { PlayerInterface } from "../../components/play/interfaces/player.interfa
 import {QuestionInterface} from "../../components/play/interfaces/question.interface";
 import {ResultInterface} from "../../components/play/interfaces/result.interface";
 import {ResultsInterface} from "../../components/play/interfaces/results.interface";
+import {AnswerDistributionInterface} from "../../components/play/interfaces/answer-distribution.interface";
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +30,7 @@ export class WebSocketService {
   private gameIsOverSubject = new BehaviorSubject<boolean>(false);
   private errorSubject = new BehaviorSubject<boolean>(false);
   private currentQuestionAnswersSubject = new BehaviorSubject<number>(0);
+  private answerDistributionSubject = new BehaviorSubject<[AnswerDistributionInterface]>([{id: 0, value: 0, isCorrect: false}]);
   private sessionId?: number;
 
   constructor(private authService: AuthService) {}
@@ -94,6 +96,9 @@ export class WebSocketService {
     this.currentAnswerSubject.next(-1);
     this.currentQuestionSubject.next(message);
     this.currentAnswerSubject.next(-1);
+    if(this.authService.isAuthenticated()){
+      this.answerDistributionSubject.next([{id:0, value: 0, isCorrect: false}]);
+    }
   };
 
   // players receivers
@@ -170,6 +175,7 @@ export class WebSocketService {
     console.log(message);
     this.thisQuestionResultSubject.next(message.thisQuestionResult);
     this.currentResultSubject.next(message.result);
+    this.answerDistributionSubject.next(message.answerDistribution);
   };
 
   private handleQuizzResults(message: ResultsInterface): void{
@@ -233,6 +239,10 @@ export class WebSocketService {
 
   get currentQuestionAnswers$(): Observable<number> {
     return this.currentQuestionAnswersSubject.asObservable();
+  }
+
+  get answerDistribution$(): Observable<[AnswerDistributionInterface]> {
+    return this.answerDistributionSubject.asObservable();
   }
 
   /// emitters

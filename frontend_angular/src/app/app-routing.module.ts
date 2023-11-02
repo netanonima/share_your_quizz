@@ -11,6 +11,7 @@ import { ResetPasswordRetrieveComponent } from "./components/reset-password-retr
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
 import { PlayComponent} from "./components/play/play.component";
 import {ChoicesComponent} from "./components/choices/choices.component";
+import {AnswerDistributionComponent} from "./components/answer-distribution/answer-distribution.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},

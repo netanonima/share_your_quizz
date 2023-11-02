@@ -134,6 +134,7 @@
           <mat-icon matSuffix *ngIf="choice.isCorrect">done</mat-icon>{{ choice.choice }}
         </div>
       </div>
+      <app-answer-distribution [data]="answerDistribution"></app-answer-distribution>
       <div>
         <button class="admin-button" mat-raised-button color="primary" (click)="showQuestionResultsFunc()" i18n>Question Result</button>
       </div>

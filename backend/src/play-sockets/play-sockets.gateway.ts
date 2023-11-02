@@ -54,7 +54,7 @@ export class PlaySocketsGateway {
             }
         });
         if (!this.sessions.has(sessionId)) {
-            this.sessions.set(sessionId, { admin: '', opened: false, users: [], current: -1, questions: [], ranking: {players: []}, questionsRanking: [] });
+            this.sessions.set(sessionId, { admin: '', opened: false, users: [], current: -1, questions: [], ranking: {players: []}, questionsRanking: [], answersDistribution: [] });
         }
         const session = this.sessions.get(sessionId);
         session.admin = client.id;
@@ -94,7 +94,7 @@ export class PlaySocketsGateway {
         const { sessionId, username } = data;
 
         if (!this.sessions.has(sessionId)) {
-            this.sessions.set(sessionId, { admin: '', opened: false, users: [], current: -1, questions: [], ranking: {players: []}, questionsRanking: [] });
+            this.sessions.set(sessionId, { admin: '', opened: false, users: [], current: -1, questions: [], ranking: {players: []}, questionsRanking: [], answersDistribution: [] });
         }
 
         const session = this.sessions.get(sessionId);
@@ -193,6 +193,17 @@ export class PlaySocketsGateway {
         function endingAction(){
             for(let i=0;i<session.questions.length;i++){
                 session.questionsRanking.push([]);
+                let choices = session.questions[i].choices;
+                let choicesList = [];
+                choices.forEach(choice => {
+                    let thisChoice = {
+                        id: choice.id,
+                        value: 0,
+                        isCorrect: choice.is_correct,
+                    }
+                    choicesList.push(thisChoice);
+                });
+                session.answersDistribution.push(choicesList);
             }
             session.ranking = { players: session.users.map(user => ({ username: user.username, currentScore: 0 })) };
             session.users.forEach(user => {
@@ -277,6 +288,10 @@ export class PlaySocketsGateway {
             console.error('Invalid current question index:', session.current);
             return;
         }
+        const currentQuestionAnswersDistribution = session.answersDistribution[session.current];
+        const choiceIndex = currentQuestionAnswersDistribution.findIndex(choice => choice.id === choiceId);
+        session.answersDistribution[session.current][choiceIndex].value++;
+
         if(session.admin && session.admin != ''){
             console.log('answer-received sent');
             console.log(client.id);
@@ -393,9 +408,12 @@ export class PlaySocketsGateway {
         if(ranking.players.length > 1){
             ranking.players.sort((a, b) => (a.currentScore < b.currentScore) ? 1 : -1);
         }
+        console.log('session.answersDistribution[session.current]');
+        console.log(session.answersDistribution[session.current]);
         const results = {
             thisQuestionResult: questionRanking,
-            result: ranking
+            result: ranking,
+            answerDistribution: session.answersDistribution[session.current],
         };
         if(isLastQuestion){
             if(session.admin && session.admin != ''){
