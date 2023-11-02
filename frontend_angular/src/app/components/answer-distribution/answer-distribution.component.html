@@ -1,0 +1,12 @@
+<div class="page">
+  <div *ngFor="let answer of data; let i = index" class="bar">
+    <div class="text">
+      <mat-icon matSuffix *ngIf="answer.isCorrect" class="icon-if-true">done</mat-icon>
+      {{ answer.value }}
+    </div>
+    <div [class]="answer.isCorrect? 'true-shape' : 'shape'" [style.height]="getBarHeight(answer.value)"></div>
+    <div class="question-number">
+      {{ i + 1 }}
+    </div>
+  </div>
+</div>

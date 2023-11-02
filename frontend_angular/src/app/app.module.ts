@@ -36,6 +36,7 @@ import { ChoicesComponent } from './components/choices/choices.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import { ManageMediaComponent } from './modal-dialogs/manage-media/manage-media.component';
 import {MatMenuModule} from "@angular/material/menu";
+import { AnswerDistributionComponent } from './components/answer-distribution/answer-distribution.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import {MatMenuModule} from "@angular/material/menu";
     QuestionsComponent,
     RenameElementComponent,
     ChoicesComponent,
-    ManageMediaComponent
+    ManageMediaComponent,
+    AnswerDistributionComponent
   ],
   imports: [
     BrowserModule,
