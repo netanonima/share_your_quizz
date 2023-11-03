@@ -182,6 +182,7 @@ export class WebSocketService {
     console.log('quizz-results');
     this.thisQuestionResultSubject.next(message.thisQuestionResult);
     this.currentResultSubject.next(message.result);
+    this.answerDistributionSubject.next(message.answerDistribution);
     this.gameIsOverSubject.next(true);
   };
 
@@ -290,6 +291,7 @@ export class WebSocketService {
 
   gameLaunch(): void {
     if(this.authService.isAuthenticated()) {
+      console.log('game-launch emitted');
       this.socket?.emit('game-launch', {
         sessionId: this.sessionId
       });

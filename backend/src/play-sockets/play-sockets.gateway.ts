@@ -137,7 +137,8 @@ export class PlaySocketsGateway {
     @UseGuards(WsJwtGuard)
     @SubscribeMessage('game-launch')
     async handleGameLaunch(@MessageBody() data: GameLaunchInterface, @ConnectedSocket() client: Socket): Promise<void> {
-        // set opened to false, get the questions (including choices and medias) and send is-ready-response to players
+        console.log('game-launch received');
+
         const { sessionId } = data;
         const session = this.sessions.get(sessionId);
         session.opened = false;
@@ -163,9 +164,9 @@ export class PlaySocketsGateway {
         }
 
         if(session.params.shuffle_questions){
-            thisQuizz.questions = shuffle(thisQuizz.questions);
+            session.questions = shuffle(thisQuizz.questions);
         }else{
-            thisQuizz.questions = thisQuizz.questions.sort((a, b) => (a.id > b.id) ? 1 : -1);
+            session.questions = thisQuizz.questions.sort((a, b) => (a.id > b.id) ? 1 : -1);
         }
 
         let j = 0;
@@ -444,6 +445,11 @@ export class PlaySocketsGateway {
             answerDistribution: session.answersDistribution[session.current],
         };
         if(isLastQuestion){
+            const winner = ranking.players[0];
+            const winnerUsername = winner.username;
+            const winnerPoints = winner.currentScore;
+            this.sessionsService.update(sessionId, {winner_username: winnerUsername, winner_points: winnerPoints});
+
             if(session.admin && session.admin != ''){
                 client.emit('quizz-results', results);
             }
