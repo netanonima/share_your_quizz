@@ -289,8 +289,22 @@ export class PlaySocketsGateway {
 
         if(session.params.shuffle_choices){
             currentQuestion.choices = shuffle(currentQuestion.choices);
+            let currentAdminQuestionChoices = [];
+            currentQuestion.choices.forEach(choice => {
+                let currentChoice = currentAdminQuestion.choices.find(currentChoice => currentChoice.choiceId === choice.choiceId);
+                currentAdminQuestionChoices.push(currentChoice);
+            });
+            currentAdminQuestion.choices = currentAdminQuestionChoices;
+            // set session.answersDistribution[session.current] in the same order as currentQuestion.choices
+            let currentQuestionAnswersDistribution = [];
+            currentQuestion.choices.forEach(choice => {
+                let currentChoice = session.answersDistribution[session.current].find(currentChoice => currentChoice.id === choice.choiceId);
+                currentQuestionAnswersDistribution.push(currentChoice);
+            });
+            session.answersDistribution[session.current] = currentQuestionAnswersDistribution;
         }else{
             currentQuestion.choices = currentQuestion.choices.sort((a, b) => (a.choiceId > b.choiceId) ? 1 : -1);
+            currentAdminQuestion.choices = currentAdminQuestion.choices.sort((a, b) => (a.choiceId > b.choiceId) ? 1 : -1);
         }
 
         session.users.forEach(user => {
