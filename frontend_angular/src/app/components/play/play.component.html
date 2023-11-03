@@ -17,7 +17,7 @@
       </div>
 
       <div class="current-players">
-        <h3>
+        <h3 i18n>
           Current players
         </h3>
         <div *ngIf="players.length > 0">
@@ -142,7 +142,7 @@
 
 
     <div *ngIf="authService.isAuthenticated() && gameLaunched && currentQuestion.question!='' && !showGoodAnswers && showQuestionResult && !showGlobalResult">
-      <h1>
+      <h1 i18n>
         Question ranking
       </h1>
       <div class="results">
