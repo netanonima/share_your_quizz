@@ -75,6 +75,18 @@ export class ApiService {
     return this.http.put<any>(url, data, { headers });
   }
 
+  updatingQuizzParams(id: string, shuffleQuestions: boolean, shuffleChoices: boolean): Observable<any> {
+    const url = `${this.apiUrl}/quizzs/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('api_token')}`
+    });
+    const data = {
+      param_shuffle_questions: shuffleQuestions,
+      param_shuffle_choices: shuffleChoices
+    };
+    return this.http.put<any>(url, data, { headers });
+  }
+
   // page questions
   getQuestions(id: string): Observable<any> {
     const url = `${this.apiUrl}/questions/quizz/${id}`;

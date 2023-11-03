@@ -37,6 +37,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import { ManageMediaComponent } from './modal-dialogs/manage-media/manage-media.component';
 import {MatMenuModule} from "@angular/material/menu";
 import { AnswerDistributionComponent } from './components/answer-distribution/answer-distribution.component';
+import { ManageQuizzParamsComponent } from './modal-dialogs/manage-quizz-params/manage-quizz-params.component';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -58,7 +60,8 @@ import { AnswerDistributionComponent } from './components/answer-distribution/an
     RenameElementComponent,
     ChoicesComponent,
     ManageMediaComponent,
-    AnswerDistributionComponent
+    AnswerDistributionComponent,
+    ManageQuizzParamsComponent
   ],
   imports: [
     BrowserModule,
@@ -80,7 +83,8 @@ import { AnswerDistributionComponent } from './components/answer-distribution/an
     FormsModule,
     QRCodeModule,
     MatTooltipModule,
-    MatMenuModule
+    MatMenuModule,
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]

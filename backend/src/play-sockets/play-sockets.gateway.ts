@@ -54,7 +54,7 @@ export class PlaySocketsGateway {
             }
         });
         if (!this.sessions.has(sessionId)) {
-            this.sessions.set(sessionId, { admin: '', opened: false, users: [], current: -1, questions: [], ranking: {players: []}, questionsRanking: [], answersDistribution: [] });
+            this.sessions.set(sessionId, { admin: '', opened: false, users: [], current: -1, questions: [], ranking: {players: []}, questionsRanking: [], answersDistribution: [], params: {shuffle_questions: false, shuffle_choices: false} });
         }
         const session = this.sessions.get(sessionId);
         session.admin = client.id;
@@ -94,7 +94,7 @@ export class PlaySocketsGateway {
         const { sessionId, username } = data;
 
         if (!this.sessions.has(sessionId)) {
-            this.sessions.set(sessionId, { admin: '', opened: false, users: [], current: -1, questions: [], ranking: {players: []}, questionsRanking: [], answersDistribution: [] });
+            this.sessions.set(sessionId, { admin: '', opened: false, users: [], current: -1, questions: [], ranking: {players: []}, questionsRanking: [], answersDistribution: [], params: {shuffle_questions: false, shuffle_choices: false} });
         }
 
         const session = this.sessions.get(sessionId);
@@ -157,7 +157,17 @@ export class PlaySocketsGateway {
             return array;
         }
 
-        session.questions = shuffle(thisQuizz.questions);
+        session.params = {
+            shuffle_questions: thisQuizz.param_shuffle_questions,
+            shuffle_choices: thisQuizz.param_shuffle_choices,
+        }
+
+        if(session.params.shuffle_questions){
+            thisQuizz.questions = shuffle(thisQuizz.questions);
+        }else{
+            thisQuizz.questions = thisQuizz.questions.sort((a, b) => (a.id > b.id) ? 1 : -1);
+        }
+
         let j = 0;
         for(let i=0;i<session.questions.length;i++){
             if(session.questions[i].media){
@@ -263,6 +273,24 @@ export class PlaySocketsGateway {
                 currentAdminQuestion.media =  session.questions[session.current].media;
             }
         });
+
+        function shuffle(array) {
+            let currentIndex = array.length, temporaryValue, randomIndex;
+            while (0 !== currentIndex) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
+            }
+            return array;
+        }
+
+        if(session.params.shuffle_choices){
+            currentQuestion.choices = shuffle(currentQuestion.choices);
+        }else{
+            currentQuestion.choices = currentQuestion.choices.sort((a, b) => (a.choiceId > b.choiceId) ? 1 : -1);
+        }
 
         session.users.forEach(user => {
             client.to(user.id).emit('question', currentQuestion);
