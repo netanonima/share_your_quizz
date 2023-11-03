@@ -185,6 +185,7 @@ export class PlayComponent implements OnInit, OnDestroy {
 
   // admin actions
   launchTheGame(): void {
+    console.log('launchTheGame');
     if(this.authService.isAuthenticated()) {
       this.webSocketService.gameLaunch();
     }else{
