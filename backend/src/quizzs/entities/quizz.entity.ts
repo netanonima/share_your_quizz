@@ -32,4 +32,9 @@ export class Quizz {
   @OneToMany(() => Session, (session) => session.quizz)
   sessions: Session[];
 
+  @Column({ default: false })
+  param_shuffle_questions: boolean;
+
+  @Column({ default: false })
+  param_shuffle_choices: boolean;
 }

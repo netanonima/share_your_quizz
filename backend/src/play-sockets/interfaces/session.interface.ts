@@ -1,5 +1,5 @@
 import {UserInterface} from "play-sockets/interfaces/user.interface";
-import {AnswerDistributionInterface} from "play-sockets/interfaces/answer-distribution.interface";
+import {ParamsInterface} from "play-sockets/interfaces/params.interface";
 
 export interface SessionInterface{
     admin: string;
@@ -10,4 +10,5 @@ export interface SessionInterface{
     ranking: { players: { username: string; currentScore: number; }[] };
     questionsRanking: any[];
     answersDistribution: any[];
+    params: ParamsInterface;
 }

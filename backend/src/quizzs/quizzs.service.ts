@@ -46,7 +46,7 @@ export class QuizzsService {
   async findAll(user: User): Promise<Quizz[]> {
     return this.quizzRepository.find({
       where: { user: { id: user.id } },
-      select: ['id', 'quizz', 'created_on', 'modified_on']
+      select: ['id', 'quizz', 'created_on', 'modified_on', 'param_shuffle_questions', 'param_shuffle_choices'],
     });
   }
 
@@ -57,8 +57,16 @@ export class QuizzsService {
     if(!quizz) {
         throw new NotFoundException(`Quizz not found`);
     }
-    quizz.quizz = updateQuizzDto.quizz;
+    if(updateQuizzDto.quizz !== undefined){
+      quizz.quizz = updateQuizzDto.quizz;
+    }
     quizz.modified_on = new Date();
+    if(updateQuizzDto.param_shuffle_questions !== undefined){
+        quizz.param_shuffle_questions = updateQuizzDto.param_shuffle_questions;
+    }
+    if(updateQuizzDto.param_shuffle_choices !== undefined){
+        quizz.param_shuffle_choices = updateQuizzDto.param_shuffle_choices;
+    }
     return await this.quizzRepository.save(quizz);
   }
 

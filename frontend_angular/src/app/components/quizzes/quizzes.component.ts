@@ -11,6 +11,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {NewElementComponent} from "../../modal-dialogs/new-element/new-element.component";
 import { Quizz } from "./quizz.interface";
 import {RenameElementComponent} from "../../modal-dialogs/rename-element/rename-element.component";
+import {ManageQuizzParamsComponent} from "../../modal-dialogs/manage-quizz-params/manage-quizz-params.component";
 // import 'moment/locale/en-US';
 
 @Component({
@@ -175,6 +176,48 @@ export class QuizzesComponent implements OnInit{
   edit(id: number){
     console.log('edit action');
     this.router.navigate(['/questions'], { queryParams: { id: id } });
+  }
+
+  param(id: number){
+    console.log('param action');
+    const dialogRef = this.dialog.open(ManageQuizzParamsComponent, {
+      data: {
+        shuffleQuestions: this.sortedData?.find((item) => item.id === id)?.param_shuffle_questions,
+        shuffleChoices: this.sortedData?.find((item) => item.id === id)?.param_shuffle_choices
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){
+        console.log('User submitted value', result);
+
+        this.apiService.updatingQuizzParams(id.toString(), result.shuffleQuestions, result.shuffleChoices).subscribe(
+            (response: any) => {
+              console.log('Element renamed', response);
+              this.snackBar.open('Element renamed', 'Close', {
+                panelClass: ['snackbar-success'],
+                duration: 3000
+              });
+              // update element in array
+              this.sortedData = this.sortedData?.map((item) => {
+                if(item.id === id){
+                  item.modified_on = response.modified_on;
+                  item.param_shuffle_questions = response.param_shuffle_questions;
+                  item.param_shuffle_choices = response.param_shuffle_choices;
+                }
+                return item;
+              });
+            },
+            (error: HttpErrorResponse) => {
+              console.log('An error occurred', error);
+              this.snackBar.open('An error occurred', 'Close', {
+                panelClass: ['snackbar-warning'],
+                duration: 3000
+              });
+            }
+        );
+      }
+    });
   }
 
   delete(id: number){
