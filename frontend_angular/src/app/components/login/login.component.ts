@@ -78,7 +78,7 @@ export class LoginComponent {
           const now = moment().toISOString();
           const expiresAt = moment().add(3, 'hours').toISOString();
           localStorage['expires_at'] = expiresAt;
-          this.snackBar.open('Login successful', 'Close', {
+          this.snackBar.open($localize`:@@loginSuccessful:Login successful`, $localize`:@@closeSnackbar:Close`, {
             panelClass: ['snackbar-success'],
             duration: 3000
           });
@@ -88,12 +88,12 @@ export class LoginComponent {
           console.error('Registration failed', error);
           if(error.error.message=='Account not confirmed'){
             console.log('Account not confirmed');
-            this.snackBar.open('Account not confirmed', 'Close', {
+            this.snackBar.open($localize`:@@accountNotConfirmed:Account not confirmed`, $localize`:@@closeSnackbar:Close`, {
               panelClass: ['snackbar-warning'],
               duration: 3000
             });
           }else{
-            this.snackBar.open('Login failed', 'Close', {
+            this.snackBar.open($localize`:@@loginFailed:Login failed`, $localize`:@@closeSnackbar:Close`, {
               panelClass: ['snackbar-warning'],
               duration: 3000
             });

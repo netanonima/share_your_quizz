@@ -87,7 +87,7 @@ export class ConfirmAccountComponent implements OnInit{
       this.apiService.confirmAccount(formData).subscribe(
         (response: LoginResponse) => {
           console.log('Account confirmation success', response);
-          this.snackBar.open('Account confirmed with success. Please login', 'Close', {
+          this.snackBar.open($localize`:@@accountConfirmed:Account confirmed with success. Please login`, $localize`:@@closeSnackbar:Close`, {
             panelClass: ['snackbar-success'],
             duration: 6000
           });
@@ -95,7 +95,7 @@ export class ConfirmAccountComponent implements OnInit{
         },
         (error: HttpErrorResponse) => {
           console.error('Account confirmation failed', error);
-          this.snackBar.open('Account confirmation failed', 'Close', {
+          this.snackBar.open($localize`:@@accountConfirmationFailed:Account confirmation failed`, $localize`:@@closeSnackbar:Close`, {
             panelClass: ['snackbar-warning'],
             duration: 3000
           });

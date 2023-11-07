@@ -87,6 +87,25 @@
     "5926649608575462753": "Vous allez renommer un élément.",
     "2778849798271455347": "Veuillez choisir un nouveau nom pour cet élément.",
     "6041115344061899387": "Renommer",
-    "5248717555542428023": "Nom d'utilisateur"
+    "5248717555542428023": "Nom d'utilisateur",
+    "errorOccurred": "Une erreur s'est produite",
+    "closeSnackbar": "Fermer",
+    "elementAdded": "Élément ajouté",
+    "elementRenamed": "Élément renommé",
+    "elementToggled": "Élément basculé",
+    "elementDeleted": "Élément supprimé",
+    "accountConfirmed": "Compte confirmé avec succès. Veuillez vous connecter",
+    "accountConfirmationFailed": "La confirmation du compte a échoué",
+    "loginSuccessful": "Connexion réussie",
+    "accountNotConfirmed": "Compte non confirmé",
+    "loginFailed": "Échec de la connexion",
+    "logoutSuccessful": "Déconnexion réussie",
+    "whitespaceError": "Les espaces ne sont pas autorisés",
+    "mediaRemoved": "Média supprimé",
+    "mediaUpdated": "Média mis à jour",
+    "gameSessionCreated": "Session de jeu créée",
+    "registrationSuccess": "Inscription réussie, veuillez confirmer votre e-mail avant de vous connecter",
+    "resetPasswordRetrieveSuccess": "Réinitialisation du mot de passe réussie, veuillez vérifier vos e-mails",
+    "passwordResetSuccess": "Réinitialisation du mot de passe réussie, veuillez vous connecter"
   }
 }

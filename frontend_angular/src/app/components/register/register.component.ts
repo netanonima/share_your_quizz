@@ -97,7 +97,7 @@ export class RegisterComponent {
       this.apiService.register(requestInput).subscribe(
         (response: RegistrationResponse) => {
           console.log('Registration successful', response);
-          this.snackBar.open('Registration success, please confirm your e-mail before login', 'Close', {
+          this.snackBar.open($localize`:@@registrationSuccess:Registration success, please confirm your e-mail before login`, $localize`:@@closeSnackbar:Close`, {
             panelClass: ['snackbar-success'],
             duration: 6000
           });
@@ -105,7 +105,7 @@ export class RegisterComponent {
         },
         (error: HttpErrorResponse) => {
           console.error('Registration failed', error);
-          this.snackBar.open('An error occurred', 'Close', {
+          this.snackBar.open($localize`:@@errorOccurred:An error occurred`, $localize`:@@closeSnackbar:Close`, {
             panelClass: ['snackbar-warning'],
             duration: 3000
           });
