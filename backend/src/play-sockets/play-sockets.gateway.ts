@@ -442,12 +442,15 @@ export class PlaySocketsGateway {
             }
         });
 
-
         const questionRanking = session.questionsRanking[session.current];
         const ranking = session.ranking;
-        if(questionRanking.length > 1){
-            questionRanking.players = questionRanking.players.sort((a, b) => (a.currentScore < b.currentScore) ? 1 : -1);
-        }
+
+        console.log('questionRanking before');
+        console.log(questionRanking.players);
+        questionRanking.players.sort((a, b) => b.currentScore - a.currentScore);
+        console.log('questionRanking after');
+        console.log(questionRanking.players);
+
         if(ranking.players.length > 1){
             ranking.players.sort((a, b) => (a.currentScore < b.currentScore) ? 1 : -1);
         }
