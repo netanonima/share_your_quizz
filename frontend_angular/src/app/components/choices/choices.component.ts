@@ -42,8 +42,8 @@ export class ChoicesComponent implements OnInit {
         },
         (error) => {
           console.log(error);
-          this.snackBar.open('An error occurred', 'Close', {
-            panelClass: ['snackbar-error'],
+          this.snackBar.open($localize`:@@errorOccurred:An error occurred`, $localize`:@@closeSnackbar:Close`, {
+            panelClass: ['snackbar-warning'],
             duration: 3000
           });
         }
@@ -84,7 +84,7 @@ export class ChoicesComponent implements OnInit {
           this.apiService.addingChoice(this.questionId, result).subscribe(
             (response: any) => {
               console.log('Element added', response);
-              this.snackBar.open('Element added', 'Close', {
+              this.snackBar.open($localize`:@@elementAdded:Element added`, $localize`:@@closeSnackbar:Close`, {
                 panelClass: ['snackbar-success'],
                 duration: 3000
               });
@@ -98,7 +98,7 @@ export class ChoicesComponent implements OnInit {
             },
             (error: HttpErrorResponse) => {
               console.error('An error occurred', error);
-              this.snackBar.open('An error occurred', 'Close', {
+              this.snackBar.open($localize`:@@errorOccurred:An error occurred`, $localize`:@@closeSnackbar:Close`, {
                 panelClass: ['snackbar-warning'],
                 duration: 3000
               });
@@ -125,7 +125,7 @@ export class ChoicesComponent implements OnInit {
           this.apiService.renamingChoice(id.toString(), result, currentIsCorrect).subscribe(
             (response: any) => {
               console.log('Element renamed', response);
-              this.snackBar.open('Element renamed', 'Close', {
+              this.snackBar.open($localize`:@@elementRenamed:Element renamed`, $localize`:@@closeSnackbar:Close`, {
                 panelClass: ['snackbar-success'],
                 duration: 3000
               });
@@ -140,7 +140,7 @@ export class ChoicesComponent implements OnInit {
             },
             (error: HttpErrorResponse) => {
               console.log('An error occurred', error);
-              this.snackBar.open('An error occurred', 'Close', {
+              this.snackBar.open($localize`:@@errorOccurred:An error occurred`, $localize`:@@closeSnackbar:Close`, {
                 panelClass: ['snackbar-warning'],
                 duration: 3000
               });
@@ -158,7 +158,7 @@ export class ChoicesComponent implements OnInit {
       this.apiService.isCorrectToggleChoice(id.toString(), currentChoice, currentIsCorrect).subscribe(
         (response: any) => {
           console.log('Is_correct toggled', response);
-          this.snackBar.open('Element toggled', 'Close', {
+          this.snackBar.open($localize`:@@elementToggled:Element toggled`, $localize`:@@closeSnackbar:Close`, {
             panelClass: ['snackbar-success'],
             duration: 3000
           });
@@ -173,7 +173,7 @@ export class ChoicesComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {
           console.log('An error occurred', error);
-          this.snackBar.open('An error occurred', 'Close', {
+          this.snackBar.open($localize`:@@errorOccurred:An error occurred`, $localize`:@@closeSnackbar:Close`, {
             panelClass: ['snackbar-warning'],
             duration: 3000
           });
@@ -193,7 +193,7 @@ export class ChoicesComponent implements OnInit {
         this.apiService.deleteChoice(id.toString()).subscribe(
           (response: any) => {
             console.log('Element deleted', response);
-            this.snackBar.open('Element deleted', 'Close', {
+            this.snackBar.open($localize`:@@elementDeleted:Element deleted`, $localize`:@@closeSnackbar:Close`, {
               panelClass: ['snackbar-success'],
               duration: 3000
             });
@@ -201,7 +201,7 @@ export class ChoicesComponent implements OnInit {
           },
           (error: HttpErrorResponse) => {
             console.error('An error occurred', error);
-            this.snackBar.open('An error occurred', 'Close', {
+            this.snackBar.open($localize`:@@errorOccurred:An error occurred`, $localize`:@@closeSnackbar:Close`, {
               panelClass: ['snackbar-warning'],
               duration: 3000
             });

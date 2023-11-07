@@ -87,6 +87,25 @@
     "5926649608575462753": "Sie werden ein Element umbenennen.",
     "2778849798271455347": "Bitte wählen Sie einen neuen Namen für dieses Element.",
     "6041115344061899387": "Umbenennen",
-    "5248717555542428023": "Benutzername"
+    "5248717555542428023": "Benutzername",
+    "errorOccurred": "Ein Fehler ist aufgetreten",
+    "closeSnackbar": "Schließen",
+    "elementAdded": "Element hinzugefügt",
+    "elementRenamed": "Element umbenannt",
+    "elementToggled": "Element umgeschaltet",
+    "elementDeleted": "Element gelöscht",
+    "accountConfirmed": "Konto erfolgreich bestätigt. Bitte einloggen",
+    "accountConfirmationFailed": "Konto-Bestätigung fehlgeschlagen",
+    "loginSuccessful": "Anmeldung erfolgreich",
+    "accountNotConfirmed": "Konto nicht bestätigt",
+    "loginFailed": "Anmeldung fehlgeschlagen",
+    "logoutSuccessful": "Abmeldung erfolgreich",
+    "whitespaceError": "Leerzeichen sind nicht erlaubt",
+    "mediaRemoved": "Medium entfernt",
+    "mediaUpdated": "Medium aktualisiert",
+    "gameSessionCreated": "Spielsitzung erstellt",
+    "registrationSuccess": "Registrierung erfolgreich, bitte bestätigen Sie Ihre E-Mail vor dem Einloggen",
+    "resetPasswordRetrieveSuccess": "Zurücksetzen des Passworts erfolgreich, bitte überprüfen Sie Ihre E-Mails",
+    "passwordResetSuccess": "Passwortzurücksetzung erfolgreich, bitte einloggen"
   }
 }

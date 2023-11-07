@@ -73,7 +73,7 @@ export class ResetPasswordRetrieveComponent {
       this.apiService.resetPasswordRetrieve(formData).subscribe(
         (response: ResetPasswordRetrieveResponse) => {
           console.log('Reset password retrieve success', response);
-          this.snackBar.open('Reset password retrieve success, please check your e-mails', 'Close', {
+          this.snackBar.open($localize`:@@resetPasswordRetrieveSuccess:Reset password retrieve success, please check your e-mails`, $localize`:@@closeSnackbar:Close`, {
             panelClass: ['snackbar-success'],
             duration: 6000
           });
@@ -81,7 +81,7 @@ export class ResetPasswordRetrieveComponent {
         },
         (error: HttpErrorResponse) => {
           console.error('Registration failed', error);
-          this.snackBar.open('An error occurred', 'Close', {
+          this.snackBar.open($localize`:@@errorOccurred:An error occurred`, $localize`:@@closeSnackbar:Close`, {
             panelClass: ['snackbar-warning'],
             duration: 3000
           });

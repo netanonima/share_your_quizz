@@ -87,6 +87,25 @@
     "5926649608575462753": "Vas a renombrar un elemento.",
     "2778849798271455347": "Por favor, elige un nuevo nombre para este elemento. ",
     "6041115344061899387": "Renombrar",
-    "5248717555542428023": "Nombre de usuario"
+    "5248717555542428023": "Nombre de usuario",
+    "errorOccurred": "Se produjo un error",
+    "closeSnackbar": "Cerrar",
+    "elementAdded": "Elemento añadido",
+    "elementRenamed": "Elemento renombrado",
+    "elementToggled": "Elemento alternado",
+    "elementDeleted": "Elemento eliminado",
+    "accountConfirmed": "Cuenta confirmada con éxito. Por favor, inicie sesión",
+    "accountConfirmationFailed": "La confirmación de la cuenta ha fallado",
+    "loginSuccessful": "Inicio de sesión exitoso",
+    "accountNotConfirmed": "Cuenta no confirmada",
+    "loginFailed": "Error en el inicio de sesión",
+    "logoutSuccessful": "Cierre de sesión exitoso",
+    "whitespaceError": "No se permiten espacios",
+    "mediaRemoved": "Medio eliminado",
+    "mediaUpdated": "Medio actualizado",
+    "gameSessionCreated": "Sesión de juego creada",
+    "registrationSuccess": "Registro exitoso, por favor confirme su correo electrónico antes de iniciar sesión",
+    "resetPasswordRetrieveSuccess": "Recuperación de contraseña exitosa, por favor revise sus correos electrónicos",
+    "passwordResetSuccess": "Reinicio de contraseña exitoso, por favor inicie sesión"
   }
 }

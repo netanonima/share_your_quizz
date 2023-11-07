@@ -110,7 +110,7 @@ export class ResetPasswordComponent implements OnInit{
       this.apiService.resetPassword(requestInput).subscribe(
         (response: ResetPasswordResponse) => {
           console.log('Password reset success', response);
-          this.snackBar.open('Password reset success, please login', 'Close', {
+          this.snackBar.open($localize`:@@passwordResetSuccess:Password reset success, please login`, $localize`:@@closeSnackbar:Close`, {
             panelClass: ['snackbar-success'],
             duration: 3000
           });
@@ -118,7 +118,7 @@ export class ResetPasswordComponent implements OnInit{
         },
         (error: HttpErrorResponse) => {
           console.error('Registration failed', error);
-          this.snackBar.open('An error occurred', 'Close', {
+          this.snackBar.open($localize`:@@errorOccurred:An error occurred`, $localize`:@@closeSnackbar:Close`, {
             panelClass: ['snackbar-warning'],
             duration: 3000
           });

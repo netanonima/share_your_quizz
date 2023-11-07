@@ -42,8 +42,8 @@ export class QuestionsComponent implements OnInit{
         },
         (error) => {
           console.log(error);
-          this.snackBar.open('An error occurred', 'Close', {
-            panelClass: ['snackbar-error'],
+          this.snackBar.open($localize`:@@errorOccurred:An error occurred`, $localize`:@@closeSnackbar:Close`, {
+            panelClass: ['snackbar-warning'],
             duration: 3000
           });
         }
@@ -84,7 +84,7 @@ export class QuestionsComponent implements OnInit{
           this.apiService.addingQuestion(this.quizzId, result).subscribe(
             (response: any) => {
               console.log('Element added', response);
-              this.snackBar.open('Element added', 'Close', {
+              this.snackBar.open($localize`:@@elementAdded:Element added`, $localize`:@@closeSnackbar:Close`, {
                 panelClass: ['snackbar-success'],
                 duration: 3000
               });
@@ -98,7 +98,7 @@ export class QuestionsComponent implements OnInit{
             },
             (error: HttpErrorResponse) => {
               console.error('An error occurred', error);
-              this.snackBar.open('An error occurred', 'Close', {
+              this.snackBar.open($localize`:@@errorOccurred:An error occurred`, $localize`:@@closeSnackbar:Close`, {
                 panelClass: ['snackbar-warning'],
                 duration: 3000
               });
@@ -124,7 +124,7 @@ export class QuestionsComponent implements OnInit{
         this.apiService.renamingQuestion(id.toString(), result).subscribe(
           (response: any) => {
             console.log('Element renamed', response);
-            this.snackBar.open('Element renamed', 'Close', {
+            this.snackBar.open($localize`:@@elementRenamed:Element renamed`, $localize`:@@closeSnackbar:Close`, {
               panelClass: ['snackbar-success'],
               duration: 3000
             });
@@ -138,7 +138,7 @@ export class QuestionsComponent implements OnInit{
           },
           (error: HttpErrorResponse) => {
             console.log('An error occurred', error);
-            this.snackBar.open('An error occurred', 'Close', {
+            this.snackBar.open($localize`:@@errorOccurred:An error occurred`, $localize`:@@closeSnackbar:Close`, {
               panelClass: ['snackbar-warning'],
               duration: 3000
             });
@@ -169,7 +169,7 @@ export class QuestionsComponent implements OnInit{
           this.apiService.removingMedia(this.sortedData?.find((item) => item.id === id)?.media.id.toString()).subscribe(
             (response: any) => {
               console.log('Media removed', response);
-              this.snackBar.open('Media removed', 'Close', {
+              this.snackBar.open($localize`:@@mediaRemoved:Media removed`, $localize`:@@closeSnackbar:Close`, {
                 panelClass: ['snackbar-success'],
                 duration: 3000
               });
@@ -182,7 +182,7 @@ export class QuestionsComponent implements OnInit{
             },
             (error: HttpErrorResponse) => {
               console.log('an error occurred', error);
-              this.snackBar.open('An error occurred', 'Close', {
+              this.snackBar.open($localize`:@@errorOccurred:An error occurred`, $localize`:@@closeSnackbar:Close`, {
                 panelClass: ['snackbar-warning'],
                 duration: 3000
               });
@@ -199,7 +199,7 @@ export class QuestionsComponent implements OnInit{
               this.apiService.updatingQuestionMedia(id.toString(), thisQuestion, modalResult.base64, modalResult.fileName).subscribe(
                 (response: any) => {
                   console.log('Media updated', response);
-                  this.snackBar.open('Media updated', 'Close', {
+                  this.snackBar.open($localize`:@@mediaUpdated:Media updated`, $localize`:@@closeSnackbar:Close`, {
                     panelClass: ['snackbar-success'],
                     duration: 3000
                   });
@@ -212,7 +212,7 @@ export class QuestionsComponent implements OnInit{
                 },
                 (error: HttpErrorResponse) => {
                   console.log('an error occurred', error);
-                  this.snackBar.open('An error occurred', 'Close', {
+                  this.snackBar.open($localize`:@@errorOccurred:An error occurred`, $localize`:@@closeSnackbar:Close`, {
                     panelClass: ['snackbar-warning'],
                     duration: 3000
                   });
@@ -238,7 +238,7 @@ export class QuestionsComponent implements OnInit{
         this.apiService.deleteQuestion(id.toString()).subscribe(
           (response: any) => {
             console.log('Element deleted', response);
-            this.snackBar.open('Element deleted', 'Close', {
+            this.snackBar.open($localize`:@@elementDeleted:Element deleted`, $localize`:@@closeSnackbar:Close`, {
               panelClass: ['snackbar-success'],
               duration: 3000
             });
@@ -246,7 +246,7 @@ export class QuestionsComponent implements OnInit{
           },
           (error: HttpErrorResponse) => {
             console.error('An error occurred', error);
-            this.snackBar.open('An error occurred', 'Close', {
+            this.snackBar.open($localize`:@@errorOccurred:An error occurred`, $localize`:@@closeSnackbar:Close`, {
               panelClass: ['snackbar-warning'],
               duration: 3000
             });
