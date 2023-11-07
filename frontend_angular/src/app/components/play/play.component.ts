@@ -1,17 +1,23 @@
-// play.component.ts
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {WebSocketService} from "../../services/websocket/websocket.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { animate, animateChild, query, stagger, state, style, transition, trigger } from "@angular/animations";
+import { animate, state, style, transition, trigger } from "@angular/animations";
 import {PlayerInterface} from "./interfaces/player.interface";
 import {AuthService} from "../../services/auth/auth.service";
-import {Question} from "../questions/question.interface";
 import {QuestionInterface} from "./interfaces/question.interface";
 import {ResultInterface} from "./interfaces/result.interface";
-import {AnswerDistributionComponent} from "../answer-distribution/answer-distribution.component";
 import {AnswerDistributionInterface} from "./interfaces/answer-distribution.interface";
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+
+function noWhitespaceValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const isWhitespace = (control.value || '').indexOf(' ') >= 0;
+    const isValid = !isWhitespace;
+    return isValid ? null : { whitespace: true };
+  };
+}
 
 @Component({
   selector: 'app-play',
@@ -27,6 +33,7 @@ import {AnswerDistributionInterface} from "./interfaces/answer-distribution.inte
     ])
   ]
 })
+
 export class PlayComponent implements OnInit, OnDestroy {
   public players: PlayerInterface[] = [];
   public playerClasses: { [username: string]: string } = {};
@@ -52,7 +59,12 @@ export class PlayComponent implements OnInit, OnDestroy {
   public currentQuestionAnswers: number = 0;
 
   setUsernameForm: FormGroup = new FormGroup({
-    playerUsername: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(20)])
+    playerUsername: new FormControl('', [
+      Validators.required,
+      Validators.minLength(4),
+      Validators.maxLength(20),
+      noWhitespaceValidator()
+    ])
   });
 
 
@@ -238,6 +250,10 @@ export class PlayComponent implements OnInit, OnDestroy {
 
       if(control.hasError('maxlength')) {
         return $localize`:@@maxLengthError:Maximum length is ` + control.getError('maxlength').requiredLength;
+      }
+
+      if (control.hasError('whitespace')) {
+        return $localize`:@@whitespaceError:No spaces are allowed`;
       }
     }
     return '';
