@@ -112,7 +112,7 @@ export class QuestionsService {
         duration = await this.mediaService.saveFile(updateQuestionDto.media, filePath + filename+ '.' + oldExtension);
         size = Math.round(updateQuestionDto.media.length / 1024 / 1024 * 100) / 100;
         const currentAudioFilePath = filePath + filename+ '.' + oldExtension;
-        const newAudioFilePath = filePath + filename+ '.' + newExtension;
+        const newAudioFilePath = filePath + filename+ '1.' + newExtension;
         await this.mediaService.convertFile(currentAudioFilePath, newAudioFilePath);
         thisExtension = newExtension;
       }
@@ -120,12 +120,12 @@ export class QuestionsService {
         duration = await this.mediaService.saveFile(updateQuestionDto.media, filePath + filename+ '.' + oldExtension);
         size = Math.round(updateQuestionDto.media.length / 1024 / 1024 * 100) / 100;
         const currentAudioFilePath = filePath + filename+ '.' + oldExtension;
-        const newAudioFilePath = filePath + filename+ '.' + newExtension;
+        const newAudioFilePath = filePath + filename+ '1.' + newExtension;
         await this.mediaService.convertFile(currentAudioFilePath, newAudioFilePath);
         thisExtension = newExtension;
       }
         media.file_path = filePath;
-        media.filename = filename;
+        media.filename = filename+'1';
         media.size = size;
         media.type = type;
         media.extension = thisExtension;
