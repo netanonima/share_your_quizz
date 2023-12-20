@@ -24,6 +24,7 @@ export class QuizzsService {
       private mediaRepository: Repository<Media>
   ) {}
   async create(currentUser: User, createQuizzDto: CreateQuizzDto): Promise<Quizz> {
+    console.log('current user while creating quizz', currentUser);
     const quizz = new Quizz();
     quizz.quizz = createQuizzDto.quizz;
     quizz.user = currentUser;
@@ -45,11 +46,10 @@ export class QuizzsService {
 
   async findAll(user: User): Promise<Quizz[]> {
     console.log('current userid', user.id);
-    return this.quizzRepository.createQueryBuilder("quizz")
-        .innerJoin("quizz.user", "user")
-        .where("user.id = :userId", { userId: user.id })
-        .select(['quizz.id', 'quizz.quizz', 'quizz.created_on', 'quizz.modified_on', 'quizz.param_shuffle_questions', 'quizz.param_shuffle_choices'])
-        .getMany();
+    return this.quizzRepository.find({
+      where: { user: { id: user.id } },
+      select: ['id', 'quizz', 'created_on', 'modified_on', 'param_shuffle_questions', 'param_shuffle_choices'],
+    });
   }
 
   async update(id: number, updateQuizzDto: UpdateQuizzDto, currentUser: User): Promise<Quizz> {
