@@ -7,6 +7,7 @@ import {Question} from "questions/entities/question.entity";
 import {Choice} from "choices/entities/choice.entity";
 import {Media} from "medias/entities/media.entity";
 import {User} from "users/entities/user.entity";
+import {Session} from "sessions/entities/session.entity";
 
 @Module({
   imports: [TypeOrmModule.forFeature([
@@ -14,7 +15,8 @@ import {User} from "users/entities/user.entity";
       Question,
       Choice,
       Media,
-      User
+      User,
+      Session
   ])],
   controllers: [QuizzsController],
   providers: [QuizzsService],
