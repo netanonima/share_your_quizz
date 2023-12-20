@@ -90,7 +90,7 @@ export class QuestionsService {
       const type = mimeType.split('/')[0];
       const mediaName = updateQuestionDto.mediaName;
       console.log('mediaName', mediaName);
-      const filename = mediaName.split('.').slice(0, -1).join('.');
+      let filename = mediaName.split('.').slice(0, -1).join('.');
       const oldExtension = mediaName.split('.').slice(-1).join('.');
       let duration = "";
       let newExtension = '';
@@ -112,7 +112,8 @@ export class QuestionsService {
         duration = await this.mediaService.saveFile(updateQuestionDto.media, filePath + filename+ '.' + oldExtension);
         size = Math.round(updateQuestionDto.media.length / 1024 / 1024 * 100) / 100;
         const currentAudioFilePath = filePath + filename+ '.' + oldExtension;
-        const newAudioFilePath = filePath + filename+ '1.' + newExtension;
+        filename = filename+'1';
+        const newAudioFilePath = filePath + filename+ newExtension;
         await this.mediaService.convertFile(currentAudioFilePath, newAudioFilePath);
         thisExtension = newExtension;
       }
@@ -120,16 +121,13 @@ export class QuestionsService {
         duration = await this.mediaService.saveFile(updateQuestionDto.media, filePath + filename+ '.' + oldExtension);
         size = Math.round(updateQuestionDto.media.length / 1024 / 1024 * 100) / 100;
         const currentAudioFilePath = filePath + filename+ '.' + oldExtension;
-        const newAudioFilePath = filePath + filename+ '1.' + newExtension;
+        filename = filename+'1';
+        const newAudioFilePath = filePath + filename+ newExtension;
         await this.mediaService.convertFile(currentAudioFilePath, newAudioFilePath);
         thisExtension = newExtension;
       }
         media.file_path = filePath;
-        if(type === 'image'){
-          media.filename = filename;
-        }else if(type === 'audio' || mimeType.split('/')[1] == 'ogg'){
-          media.filename = filename + '1';
-        }
+        media.filename = filename;
         media.size = size;
         media.type = type;
         media.extension = thisExtension;
