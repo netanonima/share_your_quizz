@@ -125,7 +125,11 @@ export class QuestionsService {
         thisExtension = newExtension;
       }
         media.file_path = filePath;
-        media.filename = filename+'1';
+        if(type === 'image'){
+          media.filename = filename;
+        }else if(type === 'audio' || mimeType.split('/')[1] == 'ogg'){
+          media.filename = filename + '1';
+        }
         media.size = size;
         media.type = type;
         media.extension = thisExtension;
