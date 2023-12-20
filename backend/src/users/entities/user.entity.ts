@@ -23,6 +23,9 @@ export class User {
   @Column({ length: 254 })
   email: string;
 
+  @Column({ length: 2 })
+  language: string;
+
   @Column()
   @CreateDateColumn()
   created_on: Date;
