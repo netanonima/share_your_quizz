@@ -60,6 +60,7 @@ export class NavbarComponent implements OnInit{
 
   logout() {
         localStorage.removeItem('api_token');
+        this.router.navigate(['/']);
         this.snackBar.open($localize`:@@logoutSuccessful:Logout successful`, $localize`:@@closeSnackbar:Close`, {
           panelClass: ['snackbar-success'],
           duration: 3000
