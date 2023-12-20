@@ -34,7 +34,7 @@ export class QuizzsService {
 
   async findOne(id: number): Promise<Quizz> {
     const thisQuizz = await this.quizzRepository.findOne( {
-      where: { id: id , user: { id: id } },
+      where: { id: id },
       relations: ['questions', 'questions.choices', 'questions.media'],
     });
     if(!thisQuizz) {
