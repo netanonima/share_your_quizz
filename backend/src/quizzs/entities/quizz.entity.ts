@@ -29,7 +29,7 @@ export class Quizz {
   @OneToMany(() => Question, (question) => question.quizz, { cascade: true })
   questions: Question[];
 
-  @OneToMany(() => Session, (session) => session.quizz, { cascade: true })
+  @OneToMany(() => Session, (session) => session.quizz)
   sessions: Session[];
 
   @Column({ default: false })

@@ -9,6 +9,7 @@ import {Question} from "questions/entities/question.entity";
 import {Choice} from "choices/entities/choice.entity";
 import {Media} from "medias/entities/media.entity";
 import {User} from "users/entities/user.entity";
+import {Session} from "sessions/entities/session.entity";
 import moment from "moment";
 
 @Injectable()
@@ -21,7 +22,9 @@ export class QuizzsService {
       @InjectRepository(Choice)
       private choiceRepository: Repository<Choice>,
       @InjectRepository(Media)
-      private mediaRepository: Repository<Media>
+      private mediaRepository: Repository<Media>,
+      @InjectRepository(Session)
+      private sessionRepository: Repository<Session>,
   ) {}
   async create(currentUser: User, createQuizzDto: CreateQuizzDto): Promise<Quizz> {
     const quizz = new Quizz();
@@ -101,6 +104,14 @@ export class QuizzsService {
 
     if (mediaIdsToRemove.length > 0) {
       await this.mediaRepository.delete(mediaIdsToRemove);
+    }
+
+    const sessions = await this.sessionRepository.find({
+        where: { quizz: { id: quizz.id } },
+    });
+
+    if (sessions && sessions.length > 0) {
+        await this.sessionRepository.remove(sessions);
     }
 
     await this.quizzRepository.remove(quizz);
