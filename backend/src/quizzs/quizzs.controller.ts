@@ -29,6 +29,7 @@ export class QuizzsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   findAll(@GetUser() user: User) {
+    console.log('current user', user);
     return this.quizzsService.findAll(user);
   }
 

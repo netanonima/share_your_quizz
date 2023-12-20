@@ -45,7 +45,7 @@ export class QuizzsService {
 
   async findAll(user: User): Promise<Quizz[]> {
     return this.quizzRepository.find({
-      where: { user: { id: user.id } },
+      where: { user: user },
       select: ['id', 'quizz', 'created_on', 'modified_on', 'param_shuffle_questions', 'param_shuffle_choices'],
     });
   }
