@@ -24,8 +24,8 @@ export class MailService {
       context: {
         name: name,
         token: token,
-        account_confirmation_url: this.config.get('FRONTEND_URL')+language+'/confirm-account',
-        password_reset_url: this.config.get('FRONTEND_URL')+language+'/reset-password',
+        account_confirmation_url: this.config.get('FRONTEND_URL')+'/'+language+'/confirm-account',
+        password_reset_url: this.config.get('FRONTEND_URL')+'/'+language+'/reset-password',
       },
     });
   }
