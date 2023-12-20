@@ -31,6 +31,7 @@ export class UsersService {
     user.username = createUserDto.username;
     user.password = await this.hashPassword(createUserDto.password);
     user.email = createUserDto.email;
+    user.language = createUserDto.language;
     user.confirmation_token = Math.random().toString(36).slice(2);
     user.confirm_before = moment()
       .add(this.config.get('HOURS_FOR_ACCOUNT_CONFIRMATION'), 'hours')
@@ -47,6 +48,7 @@ export class UsersService {
         await this.mailService.sendMail(
             user.email,
             user.username,
+            user.language,
             "'Share your quizz' account confirmation",
             user.confirmation_token,
             'account-confirmation',
@@ -112,6 +114,7 @@ export class UsersService {
       await this.mailService.sendMail(
         user.email,
         user.username,
+        user.language,
         "'Share your quizz' password reset",
         user.confirmation_token,
         'password-reset',

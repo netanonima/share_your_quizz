@@ -20,4 +20,8 @@ export class CreateUserDto {
   @IsString()
   @IsEmail()
   email: string;
+
+  @IsString()
+  @IsOptional()
+  language: string;
 }

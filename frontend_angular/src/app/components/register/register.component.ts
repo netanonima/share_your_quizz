@@ -89,10 +89,12 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       const formData = this.registerForm.value;
+      const currentLanguage = navigator.language.split('-')[0];
       const requestInput = {
         username: formData.username,
         email: formData.email,
-        password: formData.passwords.password
+        password: formData.passwords.password,
+        language: currentLanguage
       };
       this.apiService.register(requestInput).subscribe(
         (response: RegistrationResponse) => {

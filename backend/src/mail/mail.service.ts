@@ -12,6 +12,7 @@ export class MailService {
   async sendMail(
     email: string,
     name: string,
+    language: string,
     subject: string,
     token: string,
     template: string,
@@ -23,8 +24,8 @@ export class MailService {
       context: {
         name: name,
         token: token,
-        account_confirmation_url: this.config.get('FRONTEND_URL')+'/confirm-account',
-        password_reset_url: this.config.get('FRONTEND_URL')+'/reset-password',
+        account_confirmation_url: this.config.get('FRONTEND_URL')+language+'/confirm-account',
+        password_reset_url: this.config.get('FRONTEND_URL')+language+'/reset-password',
       },
     });
   }
