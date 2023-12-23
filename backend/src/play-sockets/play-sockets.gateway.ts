@@ -138,6 +138,10 @@ export class PlaySocketsGateway {
         console.log('Session state:', this.sessions);
         console.log('Session users:', session.users);
         client.emit('join-response', `true`);
+        client.emit('local-storage-data', {
+            sessionId: sessionId,
+            user_id: userId,
+        });
 
         // send message to admin
         const admin = this.sessions.get(sessionId).admin;
@@ -272,6 +276,7 @@ export class PlaySocketsGateway {
             question: session.questions[session.current].question,
             choices: [],
             media: '',
+            players: session.users.length,
         };
         session.questions[session.current].choices.forEach(choice => {
             currentQuestion.choices.push({
@@ -549,15 +554,16 @@ export class PlaySocketsGateway {
     handlePlayerReconnectTry(@MessageBody() data: ReconnectInterface, @ConnectedSocket() client: Socket): void {
         console.log('player-reconnect-try received');
         const { sessionId, user_id } = data;
-        const session = this.sessions.get(sessionId);
-        if (!session || !session.opened) {
+        const sessionExist = this.sessions.has(sessionId);
+        if (!sessionExist) {
             console.error('Session not found:', sessionId);
-            client.emit('join-response', `You can't join this game session.`);
+            client.emit('rejoin-response', `You can't join this game session.`);
             return;
         }
-        const isOver = session.current >= session.questionsRanking.length;
+        const session = this.sessions.get(sessionId);
+        const isOver = (session.current >= 0) && (session.current >= session.questionsRanking.length);
         if(isOver){
-            client.emit('join-response', `You can't join this game session.`);
+            client.emit('rejoin-response', `You can't join this game session.`);
             return;
         }
         const userIndex = session.oldUsers.findIndex(user => user.user_id === user_id);
@@ -565,7 +571,7 @@ export class PlaySocketsGateway {
             const username = session.oldUsers[userIndex].username;
             const activePlayerWithSameUsername = session.users.find(user => user.username === username);
             if(activePlayerWithSameUsername){
-                client.emit('join-response', `Username already exists`);
+                client.emit('rejoin-response', `Username already exists`);
                 return;
             }
             console.log(`User ${username} rejoined session ${sessionId}`);
@@ -573,9 +579,9 @@ export class PlaySocketsGateway {
             session.oldUsers.splice(userIndex, 1);
             const thisUser = session.users[userIndex];
             thisUser.id = client.id;
-            client.emit('join-response', `true`);
+            client.emit('rejoin-response', `true`);
         }else{
-            client.emit('join-response', `Wrong user_id`);
+            client.emit('rejoin-response', `Wrong user_id`);
         }
     }
 }
