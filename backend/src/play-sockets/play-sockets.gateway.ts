@@ -9,6 +9,7 @@ import {GameLaunchInterface} from "play-sockets/interfaces/game-launch.interface
 import {NextQuestionInterface} from "play-sockets/interfaces/next-question.interface";
 import {StopQuestionInterface} from "play-sockets/interfaces/stop-question.interface";
 import {AnswerInterface} from "play-sockets/interfaces/answer.interface";
+import {ReconnectInterface} from "play-sockets/interfaces/reconnect.interface";
 import {UseFilters, UseGuards} from "@nestjs/common";
 import {WsJwtGuard} from "play-sockets/guards/ws-jwt.guard";
 import {WsExceptionFilter} from "play-sockets/filters/ws-exception.filter";
@@ -17,6 +18,8 @@ import { ConfigService } from '@nestjs/config'
 import { SessionsService } from '../sessions/sessions.service';
 import {QuizzsService} from "quizzs/quizzs.service";
 import * as fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
+import { createHash } from 'crypto';
 
 @UseFilters(new WsExceptionFilter())
 @WebSocketGateway({
@@ -54,7 +57,7 @@ export class PlaySocketsGateway {
             }
         });
         if (!this.sessions.has(sessionId)) {
-            this.sessions.set(sessionId, { admin: '', opened: false, users: [], current: -1, questions: [], ranking: {players: []}, questionsRanking: [], answersDistribution: [], params: {shuffle_questions: false, shuffle_choices: false} });
+            this.sessions.set(sessionId, { admin: '', opened: false, users: [], oldUsers: [], current: -1, questions: [], ranking: {players: []}, questionsRanking: [], answersDistribution: [], params: {shuffle_questions: false, shuffle_choices: false} });
         }
         const session = this.sessions.get(sessionId);
         session.admin = client.id;
@@ -94,7 +97,7 @@ export class PlaySocketsGateway {
         const { sessionId, username } = data;
 
         if (!this.sessions.has(sessionId)) {
-            this.sessions.set(sessionId, { admin: '', opened: false, users: [], current: -1, questions: [], ranking: {players: []}, questionsRanking: [], answersDistribution: [], params: {shuffle_questions: false, shuffle_choices: false} });
+            this.sessions.set(sessionId, { admin: '', opened: false, users: [], oldUsers: [], current: -1, questions: [], ranking: {players: []}, questionsRanking: [], answersDistribution: [], params: {shuffle_questions: false, shuffle_choices: false} });
         }
 
         const session = this.sessions.get(sessionId);
@@ -118,7 +121,17 @@ export class PlaySocketsGateway {
             return;
         }
 
-        const user: UserInterface = { id: client.id, username };
+        function generateUserIdentifier(username) {
+            const uuid = uuidv4();
+            const dataToHash = `${uuid}-${username}-${new Date().toISOString()}`;
+            return createHash('sha256').update(dataToHash).digest('hex');
+        }
+
+        const userId = generateUserIdentifier(username);
+
+        const user: UserInterface = {
+            id: client.id, username, user_id: userId,
+        };
         session.users.push(user);
 
         console.log(`User ${username} joined session ${sessionId}`);
@@ -461,6 +474,29 @@ export class PlaySocketsGateway {
             result: ranking,
             answerDistribution: session.answersDistribution[session.current],
         };
+        console.log('current users');
+        console.log(session.users);
+        // users results
+        session.users.forEach(user => {
+            const username = user.username;
+            const currentQuestionPoints = questionRanking.players.find(player => player.username === username).currentScore;
+            let isCorrect = false;
+            if(currentQuestionPoints > 0)isCorrect = true;
+            const globalPoints = ranking.players.find(player => player.username === username).currentScore;
+            const globalRanking = ranking.players.findIndex(player => player.username === username) + 1;
+            const userResult = {
+                isCorrect: isCorrect,
+                currentQuestionPoints: currentQuestionPoints,
+                globalPoints: globalPoints,
+                globalRanking: globalRanking,
+            }
+            if(!isLastQuestion){
+                client.to(user.id).emit('current-ranking', userResult);
+            }else{
+                client.to(user.id).emit('final-ranking', userResult);
+            }
+
+        });
         if(isLastQuestion){
             const winner = ranking.players[0];
             const winnerUsername = winner.username;
@@ -489,6 +525,7 @@ export class PlaySocketsGateway {
             if (userIndex !== -1) {
                 const username = session.users[userIndex].username;
                 console.log(`User ${username} left session ${sessionId}`);
+                session.oldUsers.push(session.users[userIndex]);
                 session.users.splice(userIndex, 1);
                 if(session.admin && session.admin != ''){
                     client.to(session.admin).emit('player-left', username);
@@ -505,5 +542,40 @@ export class PlaySocketsGateway {
         });
 
         console.log('Session state after disconnect:', this.sessions);
+    }
+
+    // handling reconnection
+    @SubscribeMessage('player-reconnect-try')
+    handlePlayerReconnectTry(@MessageBody() data: ReconnectInterface, @ConnectedSocket() client: Socket): void {
+        console.log('player-reconnect-try received');
+        const { sessionId, user_id } = data;
+        const session = this.sessions.get(sessionId);
+        if (!session || !session.opened) {
+            console.error('Session not found:', sessionId);
+            client.emit('join-response', `You can't join this game session.`);
+            return;
+        }
+        const isOver = session.current >= session.questionsRanking.length;
+        if(isOver){
+            client.emit('join-response', `You can't join this game session.`);
+            return;
+        }
+        const userIndex = session.oldUsers.findIndex(user => user.user_id === user_id);
+        if (userIndex !== -1) {
+            const username = session.oldUsers[userIndex].username;
+            const activePlayerWithSameUsername = session.users.find(user => user.username === username);
+            if(activePlayerWithSameUsername){
+                client.emit('join-response', `Username already exists`);
+                return;
+            }
+            console.log(`User ${username} rejoined session ${sessionId}`);
+            session.users.push(session.oldUsers[userIndex]);
+            session.oldUsers.splice(userIndex, 1);
+            const thisUser = session.users[userIndex];
+            thisUser.id = client.id;
+            client.emit('join-response', `true`);
+        }else{
+            client.emit('join-response', `Wrong user_id`);
+        }
     }
 }
