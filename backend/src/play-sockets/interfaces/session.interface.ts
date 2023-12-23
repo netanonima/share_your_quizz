@@ -5,6 +5,7 @@ export interface SessionInterface{
     admin: string;
     opened: boolean;
     users: UserInterface[];
+    oldUsers: UserInterface[];
     current: number;
     questions: any[];
     ranking: { players: { username: string; currentScore: number; }[] };
