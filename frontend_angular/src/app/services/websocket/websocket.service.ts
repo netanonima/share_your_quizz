@@ -9,6 +9,7 @@ import {QuestionInterface} from "../../components/play/interfaces/question.inter
 import {ResultInterface} from "../../components/play/interfaces/result.interface";
 import {ResultsInterface} from "../../components/play/interfaces/results.interface";
 import {AnswerDistributionInterface} from "../../components/play/interfaces/answer-distribution.interface";
+import { LocalStorageDataInterface } from "../../components/play/interfaces/local-storage-data.interface";
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,7 @@ export class WebSocketService {
   private readyToInviteSubject = new BehaviorSubject<boolean>(false);
   private joinedSubject = new BehaviorSubject<boolean>(false);
   private gameLaunchedSubject = new BehaviorSubject<boolean>(false);
-  private currentQuestionSubject = new BehaviorSubject<QuestionInterface>({question: '', choices: []});
+  private currentQuestionSubject = new BehaviorSubject<QuestionInterface>({question: '', choices: [], players: 0});
   private currentAnswerSubject = new BehaviorSubject<number>(-1);
   private currentResultSubject = new BehaviorSubject<ResultInterface>({players: []});
   private thisQuestionResultSubject = new BehaviorSubject<ResultInterface>({players: []});
@@ -61,7 +62,9 @@ export class WebSocketService {
       this.socket.on('player-left', (message: string) => this.handlePlayerLeft(message));
     // players
       this.socket.on('is-ready-response',(message: boolean)=>this.handleIsReadyResponse(message));
-      this.socket.on('join-response',(message: boolean)=>this.handleJoinResponse(message));
+      this.socket.on('join-response',(message: string)=>this.handleJoinResponse(message));
+      this.socket.on('rejoin-response',(message: string)=>this.handleRejoinResponse(message));
+      this.socket.on('local-storage-data',(message: LocalStorageDataInterface)=>this.handleLocalStorageDataResponse(message));
       this.socket.on('question-ended',(message: string)=>this.handleQuestionEnded(message));
       this.socket.on('quizz-ended',(message: string)=>this.handleQuizzEnded(message));
       this.socket.on('error',(message: string)=>this.handleError(message));
@@ -105,11 +108,37 @@ export class WebSocketService {
   private handleIsReadyResponse(message: boolean): void{
     console.log('is-ready-response');
     this.isReadySubject.next(message);
+
+    // reconnect
+    const localStorageDataString = localStorage.getItem('parties');
+    const localStorageData = localStorageDataString ? JSON.parse(localStorageDataString) : [];
+    if(localStorageData.sessionId && localStorageData.user_id){
+      const lastSessionId = localStorageData.sessionId;
+      const lastUserId = localStorageData.user_id;
+      this.reconnect(lastSessionId, lastUserId);
+    }
   };
 
-  private handleJoinResponse(message: boolean): void{
-    console.log('join-response');
-    this.joinedSubject.next(message);
+  private handleJoinResponse(message: string): void{
+    let isOk = false;
+    if(message === 'true'){
+      isOk = true;
+    }
+    this.joinedSubject.next(isOk);
+  };
+
+  private handleRejoinResponse(message: string): void{
+    let isOk = false;
+    if(message === 'true'){
+      isOk = true;
+    }
+    this.joinedSubject.next(isOk);
+    this.gameLaunchedSubject.next(true);
+  };
+
+  private handleLocalStorageDataResponse(message: LocalStorageDataInterface): void{
+    console.log('local-storage-data');
+    localStorage.setItem('parties', JSON.stringify(message));
   };
 
   private handleGameIsReady(message: string): void{
@@ -269,6 +298,14 @@ export class WebSocketService {
     });
   }
 
+  reconnect(sessionId: number, userId: string): void {
+    console.log('reconnect');
+    this.socket?.emit('player-reconnect-try', {
+      sessionId: sessionId,
+      user_id: userId
+    });
+  }
+
   answer(choiceId: number): void {
     this.socket?.emit('answer', {
       sessionId: this.sessionId,
@@ -330,7 +367,7 @@ export class WebSocketService {
     this.readyToInviteSubject.next(false);
     this.joinedSubject.next(false);
     this.gameLaunchedSubject.next(false);
-    this.currentQuestionSubject.next({question: '', choices: []});
+    this.currentQuestionSubject.next({question: '', choices: [], players: 0});
     this.currentAnswerSubject.next(-1);
     this.currentResultSubject.next({players: []});
     this.thisQuestionResultSubject.next({players: []});

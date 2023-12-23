@@ -116,7 +116,7 @@
       <div *ngIf="authService.isAuthenticated()">
         <button class="admin-button" mat-raised-button color="primary" (click)="showResults()" i18n>Show results</button>
         <div class="answers-received">
-          {{currentQuestionAnswers}}/{{players.length}}
+          {{currentQuestionAnswers}}/{{currentQuestion.players}}
         </div>
       </div>
     </div>

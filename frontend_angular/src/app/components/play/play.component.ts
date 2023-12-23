@@ -41,7 +41,7 @@ export class PlayComponent implements OnInit, OnDestroy {
   public readyToInvite: boolean = false;
   public joined: boolean = false;
   public gameLaunched: boolean = false;
-  public currentQuestion: QuestionInterface = {question: '', choices: []};
+  public currentQuestion: QuestionInterface = {question: '', choices: [], players: 0};
   public currentAnswer: number = -1;
   public thisQuestionResult: ResultInterface = {players: []};
   public currentResult: ResultInterface = {players: []};
@@ -107,6 +107,7 @@ export class PlayComponent implements OnInit, OnDestroy {
     });
 
     this.webSocketService.currentQuestion$.subscribe(currentQuestion => {
+      console.log('currentQuestion:', currentQuestion);
       this.currentQuestion = currentQuestion;
       if(currentQuestion.media && currentQuestion.media.startsWith('data:')){
         const base64FirstPart = currentQuestion.media.split(';')[0];
@@ -207,7 +208,7 @@ export class PlayComponent implements OnInit, OnDestroy {
 
   nextQuestion(): void {
     if(this.authService.isAuthenticated()) {
-      this.currentQuestion = {question: '', choices: []};
+      this.currentQuestion = {question: '', choices: [], players: 0};
       this.webSocketService.nextQuestion();
     }else{
       console.log('You are not authenticated');

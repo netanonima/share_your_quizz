@@ -4,4 +4,5 @@ export interface QuestionInterface {
   question: string;
   choices: ChoiceInterface[];
   media?: string;
+  players?: number;
 }
