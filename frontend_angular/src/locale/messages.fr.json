@@ -107,13 +107,11 @@
     "registrationSuccess": "Inscription réussie, veuillez confirmer votre e-mail avant de vous connecter",
     "resetPasswordRetrieveSuccess": "Réinitialisation du mot de passe réussie, veuillez vérifier vos e-mails",
     "passwordResetSuccess": "Réinitialisation du mot de passe réussie, veuillez vous connecter",
-    "yourResultCurrentQuestion": "Votre résultat à la question actuelle",
-    "answerCorrect": "Votre réponse était correcte",
-    "answerIncorrect": "Votre réponse était incorrecte",
-    "pointsReceived": "Vous venez de gagner {{currentQuestionResultPoints}} points !",
-    "questionRank": "Votre rang dans cette question : {{ currentQuestionResultRanking }} sur {{ currentQuestion.players }}.",
-    "currentGlobalResult": "Votre résultat global actuel",
-    "globalPointsAccumulated": "Vous avez accumulé {{currentGlobalResultPoints}} points jusqu'à présent.",
-    "globalRanking": "Votre classement global actuel : {{ currentGlobalResultRanking }} sur {{ currentResult.players }}."
+    "6711008494698838625": "Votre réponse était correcte",
+    "8645807980926230374": "Votre réponse était incorrecte",
+    "yourQuestionPoints": "Vous venez de gagner {$INTERPOLATION} points !",
+    "yourQuestionRanking": "Votre rang dans cette question : {$INTERPOLATION} sur {$INTERPOLATION_1}.",
+    "yourGlobalPoints": "Vous avez accumulé {$INTERPOLATION} points jusqu'à présent.",
+    "yourGlobalRanking": "Votre classement global actuel : {$INTERPOLATION} sur {$INTERPOLATION_1}."
   }
 }
