@@ -487,19 +487,13 @@ export class PlaySocketsGateway {
             const currentQuestionPoints = questionRanking.players.find(player => player.username === username).currentScore;
             let isCorrect = false;
             if(currentQuestionPoints > 0)isCorrect = true;
-            const globalPoints = ranking.players.find(player => player.username === username).currentScore;
-            const globalRanking = ranking.players.findIndex(player => player.username === username) + 1;
+            const currentQuestionRanking = questionRanking.players.findIndex(player => player.username === username) + 1;
             const userResult = {
                 isCorrect: isCorrect,
                 currentQuestionPoints: currentQuestionPoints,
-                globalPoints: globalPoints,
-                globalRanking: globalRanking,
+                currentQuestionRanking: currentQuestionRanking,
             }
-            if(!isLastQuestion){
-                client.to(user.id).emit('current-ranking', userResult);
-            }else{
-                client.to(user.id).emit('final-ranking', userResult);
-            }
+            client.to(user.id).emit('current-question-ranking', userResult);
 
         });
         if(isLastQuestion){
@@ -519,6 +513,24 @@ export class PlaySocketsGateway {
                 client.emit('question-answers', results);
             }
         }
+    }
+
+    @UseGuards(WsJwtGuard)
+    @SubscribeMessage('current-global-ranking-trigger')
+    handleCurrentGlobalRankingTrigger(@MessageBody() data: {sessionId: number}, @ConnectedSocket() client: Socket): void {
+        const { sessionId } = data;
+        const session = this.sessions.get(sessionId);
+        const ranking = session.ranking;
+        session.users.forEach(user => {
+            const username = user.username;
+            const globalPoints = ranking.players.find(player => player.username === username).currentScore;
+            const globalRanking = ranking.players.findIndex(player => player.username === username) + 1;
+            const userResult = {
+                globalPoints: globalPoints,
+                globalRanking: globalRanking,
+            }
+            client.to(user.id).emit('current-global-ranking', userResult);
+        });
     }
 
     @SubscribeMessage('disconnect')
