@@ -591,7 +591,8 @@ export class PlaySocketsGateway {
             console.log(`User ${username} rejoined session ${sessionId}`);
             session.users.push(session.oldUsers[userIndex]);
             session.oldUsers.splice(userIndex, 1);
-            const thisUser = session.users[userIndex];
+            const thisUserIndex = session.users.findIndex(user => user.username === username);
+            const thisUser = session.users[thisUserIndex];
             thisUser.id = client.id;
             client.emit('rejoin-response', `true`);
         }else{
