@@ -192,15 +192,15 @@
       </div>
 
       <div class="container" *ngIf="currentQuestionResultRanking!=0 && currentGlobalResultRanking===0">
-        <p *ngIf="currentQuestionResultIsCorrect" i18n>You're answer was correct</p>
-        <p *ngIf="!currentQuestionResultIsCorrect" i18n>You're answer was incorrect</p>
-        <p i18n="@@yourPoints">You just got {{ currentQuestionResultPoints }} points!</p>
-        <p i18n="@@yourPoints">Your rank in this question: {{ currentQuestionResultRanking }} out of {{ currentQuestionTotalPlayers }}.</p>
+        <p *ngIf="currentQuestionResultIsCorrect" i18n>Your answer was correct</p>
+        <p *ngIf="!currentQuestionResultIsCorrect" i18n>Your answer was incorrect</p>
+        <p i18n="@@yourQuestionPoints">You just got {{ currentQuestionResultPoints }} points!</p>
+        <p i18n="@@yourQuestionRanking">Your rank in this question: {{ currentQuestionResultRanking }} out of {{ currentQuestionTotalPlayers }}.</p>
       </div>
 
       <div class="container" *ngIf="currentQuestionResultRanking!=0 && currentGlobalResultRanking!=0">
-        <p i18n="@@yourPoints">You have accumulated {{currentGlobalResultPoints}} points so far.</p>
-        <p i18n="@@yourPoints">Your current global ranking: {{ currentGlobalResultRanking }} out of {{ globalTotalPlayers }}.</p>
+        <p i18n="@@yourGlobalPoints">You have accumulated {{currentGlobalResultPoints}} points so far.</p>
+        <p i18n="@@yourGlobalRanking">Your current global ranking: {{ currentGlobalResultRanking }} out of {{ globalTotalPlayers }}.</p>
       </div>
     </div>
   </div>

@@ -131,3 +131,9 @@ If you like this project and wish to say thanks - I'm always open to a coffee!  
 
 I reserve the right to limit or even delete the use of this implementation.
 Favor a custom implementation.
+
+## Adding translations
+
+```bash
+ng extract-i18n --format=json --out-file src/locale/messages.json
+```
