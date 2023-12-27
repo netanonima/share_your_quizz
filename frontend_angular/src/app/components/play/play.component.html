@@ -187,8 +187,20 @@
 
   <div *ngIf="joined && gameLaunched && currentQuestion.question!='' && currentAnswer>0 && !gameIsOver">
     <div *ngIf="!authService.isAuthenticated()">
-      <div class="container">
+      <div class="container" *ngIf="currentQuestionResultRanking===0 && currentGlobalResultRanking===0">
         <p i18n>Please wait for the results and the next question</p>
+      </div>
+
+      <div class="container" *ngIf="currentQuestionResultRanking!=0 && currentGlobalResultRanking===0">
+        <p *ngIf="currentQuestionResultIsCorrect" i18n>You're answer was correct</p>
+        <p *ngIf="!currentQuestionResultIsCorrect" i18n>You're answer was incorrect</p>
+        <p i18n="@@yourPoints">You just got {{ currentQuestionResultPoints }} points!</p>
+        <p i18n="@@yourPoints">Your rank in this question: {{ currentQuestionResultRanking }} out of {{ currentQuestionTotalPlayers }}.</p>
+      </div>
+
+      <div class="container" *ngIf="currentQuestionResultRanking!=0 && currentGlobalResultRanking!=0">
+        <p i18n="@@yourPoints">You have accumulated {{currentGlobalResultPoints}} points so far.</p>
+        <p i18n="@@yourPoints">Your current global ranking: {{ currentGlobalResultRanking }} out of {{ globalTotalPlayers }}.</p>
       </div>
     </div>
   </div>

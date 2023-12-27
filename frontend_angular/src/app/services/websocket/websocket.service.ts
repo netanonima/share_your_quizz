@@ -10,6 +10,8 @@ import {ResultInterface} from "../../components/play/interfaces/result.interface
 import {ResultsInterface} from "../../components/play/interfaces/results.interface";
 import {AnswerDistributionInterface} from "../../components/play/interfaces/answer-distribution.interface";
 import { LocalStorageDataInterface } from "../../components/play/interfaces/local-storage-data.interface";
+import {CurrentQuestionRankingInterface} from "../../components/play/interfaces/current-question-ranking.interface";
+import {CurrentGlobalRankingInterface} from "../../components/play/interfaces/current-global-ranking.interface";
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +33,13 @@ export class WebSocketService {
   private gameIsOverSubject = new BehaviorSubject<boolean>(false);
   private errorSubject = new BehaviorSubject<boolean>(false);
   private currentQuestionAnswersSubject = new BehaviorSubject<number>(0);
+  private currentQuestionResultIsCorrectSubject = new BehaviorSubject<boolean>(false);
+  private currentQuestionResultPointsSubject = new BehaviorSubject<number>(0);
+  private currentQuestionResultRankingSubject = new BehaviorSubject<number>(0);
+  private currentQuestionTotalPlayersSubject = new BehaviorSubject<number>(0);
+  private currentGlobalResultPointsSubject = new BehaviorSubject<number>(0);
+  private currentGlobalResultRankingSubject = new BehaviorSubject<number>(0);
+  private globalTotalPlayersSubject = new BehaviorSubject<number>(0);
   private answerDistributionSubject = new BehaviorSubject<[AnswerDistributionInterface]>([{id: 0, value: 0, isCorrect: false}]);
   private sessionId?: number;
 
@@ -67,6 +76,8 @@ export class WebSocketService {
       this.socket.on('local-storage-data',(message: LocalStorageDataInterface)=>this.handleLocalStorageDataResponse(message));
       this.socket.on('question-ended',(message: string)=>this.handleQuestionEnded(message));
       this.socket.on('quizz-ended',(message: string)=>this.handleQuizzEnded(message));
+      this.socket.on('current-question-ranking',(message: CurrentQuestionRankingInterface)=>this.handleCurrentQuestionRanking(message));
+      this.socket.on('current-global-ranking',(message: CurrentGlobalRankingInterface)=>this.handleCurrentGlobalRanking(message));
       this.socket.on('error',(message: string)=>this.handleError(message));
   }
 
@@ -95,6 +106,11 @@ export class WebSocketService {
   };
 
   private handleQuestion(message: QuestionInterface): void{
+    // if not an admin
+    if(!this.authService.isAuthenticated()){
+      this.currentQuestionResultRankingSubject.next(0);
+      this.currentGlobalResultRankingSubject.next(0);
+    }
     this.currentQuestionAnswersSubject.next(0);
     this.currentAnswerSubject.next(-1);
     this.currentQuestionSubject.next(message);
@@ -154,6 +170,23 @@ export class WebSocketService {
     console.log('quizz-ended');
     this.gameIsOverSubject.next(true);
   };
+
+  private handleCurrentQuestionRanking(data: CurrentQuestionRankingInterface): void{
+    console.log('current-question-ranking');
+    console.log(data);
+    this.currentQuestionResultIsCorrectSubject.next(data.isCorrect);
+    this.currentQuestionResultPointsSubject.next(data.currentQuestionPoints);
+    this.currentQuestionResultRankingSubject.next(data.currentQuestionRanking);
+    this.currentQuestionTotalPlayersSubject.next(data.currentQuestionTotalPlayers);
+  }
+
+  private handleCurrentGlobalRanking(data: CurrentGlobalRankingInterface): void{
+    console.log('current-global-ranking');
+    console.log(data);
+    this.currentGlobalResultPointsSubject.next(data.globalPoints);
+    this.currentGlobalResultRankingSubject.next(data.globalRanking);
+    this.globalTotalPlayersSubject.next(data.globalTotalPlayers);
+  }
 
   private handleError(message: string): void{
     console.log('error');
@@ -271,6 +304,34 @@ export class WebSocketService {
     return this.currentQuestionAnswersSubject.asObservable();
   }
 
+  get currentQuestionResultIsCorrect$(): Observable<boolean> {
+    return this.currentQuestionResultIsCorrectSubject.asObservable();
+  }
+
+  get currentQuestionResultPoints$(): Observable<number> {
+    return this.currentQuestionResultPointsSubject.asObservable();
+  }
+
+  get currentQuestionResultRanking$(): Observable<number> {
+    return this.currentQuestionResultRankingSubject.asObservable();
+  }
+
+  get currentQuestionTotalPlayers$(): Observable<number> {
+    return this.currentQuestionTotalPlayersSubject.asObservable();
+  }
+
+  get currentGlobalResultPoints$(): Observable<number> {
+    return this.currentGlobalResultPointsSubject.asObservable();
+  }
+
+  get currentGlobalResultRanking$(): Observable<number> {
+    return this.currentGlobalResultRankingSubject.asObservable();
+  }
+
+  get globalTotalPlayers$(): Observable<number> {
+    return this.globalTotalPlayersSubject.asObservable();
+  }
+
   get answerDistribution$(): Observable<[AnswerDistributionInterface]> {
     return this.answerDistributionSubject.asObservable();
   }
@@ -353,6 +414,16 @@ export class WebSocketService {
   stopQuestion(): void {
     if(this.authService.isAuthenticated()) {
       this.socket?.emit('stop-question', {
+        sessionId: this.sessionId
+      });
+    }else{
+      console.log('not authenticated');
+    }
+  }
+
+  watchGlobalResults(): void {
+    if(this.authService.isAuthenticated()) {
+      this.socket?.emit('current-global-ranking-trigger', {
         sessionId: this.sessionId
       });
     }else{
