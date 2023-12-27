@@ -106,6 +106,14 @@
     "gameSessionCreated": "Spielsitzung erstellt",
     "registrationSuccess": "Registrierung erfolgreich, bitte bestätigen Sie Ihre E-Mail vor dem Einloggen",
     "resetPasswordRetrieveSuccess": "Zurücksetzen des Passworts erfolgreich, bitte überprüfen Sie Ihre E-Mails",
-    "passwordResetSuccess": "Passwortzurücksetzung erfolgreich, bitte einloggen"
+    "passwordResetSuccess": "Passwortzurücksetzung erfolgreich, bitte einloggen",
+    "yourResultCurrentQuestion": "Ihr Ergebnis der aktuellen Frage",
+    "answerCorrect": "Ihre Antwort war richtig",
+    "answerIncorrect": "Ihre Antwort war falsch",
+    "pointsReceived": "Sie haben gerade {{currentQuestionResultPoints}} Punkte erhalten!",
+    "questionRank": "Ihr Rang bei dieser Frage: {{ currentQuestionResultRanking }} von {{ currentQuestion.players }}.",
+    "currentGlobalResult": "Ihr aktuelles globales Ergebnis",
+    "globalPointsAccumulated": "Bis jetzt haben Sie {{currentGlobalResultPoints}} Punkte gesammelt.",
+    "globalRanking": "Ihr aktueller globaler Rang: {{ currentGlobalResultRanking }} von {{ currentResult.players }}."
   }
 }

@@ -57,6 +57,13 @@ export class PlayComponent implements OnInit, OnDestroy {
   public answerDistribution: [AnswerDistributionInterface] = [{id: 0, value: 0, isCorrect: false}];
   public mediaType: string = '';
   public currentQuestionAnswers: number = 0;
+  public currentQuestionResultIsCorrect: boolean = false;
+  public currentQuestionResultPoints: number = 0;
+  public currentQuestionResultRanking: number = 0;
+  public currentQuestionTotalPlayers: number = 0;
+  public currentGlobalResultPoints: number = 0;
+  public currentGlobalResultRanking: number = 0;
+  public globalTotalPlayers: number = 0;
 
   setUsernameForm: FormGroup = new FormGroup({
     playerUsername: new FormControl('', [
@@ -144,6 +151,34 @@ export class PlayComponent implements OnInit, OnDestroy {
       this.currentQuestionAnswers = currentQuestionAnswers;
     });
 
+    this.webSocketService.currentQuestionResultIsCorrect$.subscribe(currentQuestionResultIsCorrect => {
+      this.currentQuestionResultIsCorrect = currentQuestionResultIsCorrect;
+    });
+
+    this.webSocketService.currentQuestionResultPoints$.subscribe(currentQuestionResultPoints => {
+      this.currentQuestionResultPoints = currentQuestionResultPoints;
+    });
+
+    this.webSocketService.currentQuestionResultRanking$.subscribe(currentQuestionResultRanking => {
+      this.currentQuestionResultRanking = currentQuestionResultRanking;
+    });
+
+    this.webSocketService.currentQuestionTotalPlayers$.subscribe(currentQuestionTotalPlayers => {
+      this.currentQuestionTotalPlayers = currentQuestionTotalPlayers;
+    });
+
+    this.webSocketService.currentGlobalResultPoints$.subscribe(currentGlobalResultPoints => {
+      this.currentGlobalResultPoints = currentGlobalResultPoints;
+    });
+
+    this.webSocketService.currentGlobalResultRanking$.subscribe(currentGlobalResultRanking => {
+      this.currentGlobalResultRanking = currentGlobalResultRanking;
+    });
+
+    this.webSocketService.globalTotalPlayers$.subscribe(globalTotalPlayers => {
+      this.globalTotalPlayers = globalTotalPlayers;
+    });
+
     this.webSocketService.error$.subscribe(error => {
       this.error = error;
     });
@@ -174,6 +209,7 @@ export class PlayComponent implements OnInit, OnDestroy {
     this.showGoodAnswers = false;
     this.showGlobalResult = true;
     this.showQuestionResult = false;
+    this.webSocketService.watchGlobalResults();
   }
 
   nextQuestionFunc(): void {

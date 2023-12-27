@@ -106,6 +106,14 @@
     "gameSessionCreated": "Game session created",
     "registrationSuccess": "Registration success, please confirm your e-mail before login",
     "resetPasswordRetrieveSuccess": "Reset password retrieve success, please check your e-mails",
-    "passwordResetSuccess": "Password reset success, please login"
+    "passwordResetSuccess": "Password reset success, please login",
+    "yourResultCurrentQuestion": "Your result of the current question",
+    "answerCorrect": "Your answer was correct",
+    "answerIncorrect": "Your answer was incorrect",
+    "pointsReceived": "You just got {{currentQuestionResultPoints}} points!",
+    "questionRank": "Your rank in this question: {{ currentQuestionResultRanking }} out of {{ currentQuestion.players }}.",
+    "currentGlobalResult": "Your current global result",
+    "globalPointsAccumulated": "You have accumulated {{currentGlobalResultPoints}} points so far.",
+    "globalRanking": "Your current global ranking: {{ currentGlobalResultRanking }} out of {{ currentResult.players }}."
   }
 }

@@ -492,6 +492,7 @@ export class PlaySocketsGateway {
                 isCorrect: isCorrect,
                 currentQuestionPoints: currentQuestionPoints,
                 currentQuestionRanking: currentQuestionRanking,
+                currentQuestionTotalPlayers: questionRanking.players.length,
             }
             client.to(user.id).emit('current-question-ranking', userResult);
 
@@ -528,6 +529,7 @@ export class PlaySocketsGateway {
             const userResult = {
                 globalPoints: globalPoints,
                 globalRanking: globalRanking,
+                globalTotalPlayers: ranking.players.length,
             }
             client.to(user.id).emit('current-global-ranking', userResult);
         });
