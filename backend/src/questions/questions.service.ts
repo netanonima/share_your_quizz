@@ -113,7 +113,7 @@ export class QuestionsService {
         size = Math.round(updateQuestionDto.media.length / 1024 / 1024 * 100) / 100;
         const currentAudioFilePath = filePath + filename+ '.' + oldExtension;
         filename = filename+'1';
-        const newAudioFilePath = filePath + filename+ newExtension;
+        const newAudioFilePath = filePath + filename+ '.' + newExtension;
         await this.mediaService.convertFile(currentAudioFilePath, newAudioFilePath);
         thisExtension = newExtension;
       }
@@ -122,7 +122,7 @@ export class QuestionsService {
         size = Math.round(updateQuestionDto.media.length / 1024 / 1024 * 100) / 100;
         const currentAudioFilePath = filePath + filename+ '.' + oldExtension;
         filename = filename+'1';
-        const newAudioFilePath = filePath + filename+ newExtension;
+        const newAudioFilePath = filePath + filename+ '.' + newExtension;
         await this.mediaService.convertFile(currentAudioFilePath, newAudioFilePath);
         thisExtension = newExtension;
       }
