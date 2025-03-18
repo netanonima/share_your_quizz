@@ -80,7 +80,7 @@ If you like this project and wish to say thanks - I'm always open to a coffee!  
       where ffmpeg
     ```
     It's usually `C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin`
-- Change your JWT secret by a strong one in `backend/src/auth/constants.ts`
+- Change your JWT secret by a strong one in `backend/src/auth/constants.ts` copying `backend/src/auth/constants.ts-lock` to `backend/src/auth/constants.ts`
 - Copy 'backend/.env-lock' to 'backend/.env' and set your values
 - Copy 'backend/src/app.module.ts-lock' to 'backend/src/app.module.ts' and set your values
 - Copy 'frontend_angular/src/app/constants.ts-lock' to 'frontend_angular/src/app/constants.ts' and set your values
@@ -96,7 +96,7 @@ If you like this project and wish to say thanks - I'm always open to a coffee!  
     cd dist
     node main.js
   ```
-- Set your frontend constants in `frontend_angular/src/app/constants.ts`
+- Set your frontend constants in `frontend_angular/src/app/constants.ts` copying `frontend_angular/src/app/constants.ts-lock` to `frontend_angular/src/app/constants.ts`
 - Launch the frontend
   ```bash
     cd frontend_angular
