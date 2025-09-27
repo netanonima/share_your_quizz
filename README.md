@@ -146,3 +146,9 @@ Favor a custom implementation.
 ```bash
 ng extract-i18n --format=json --out-file src/locale/messages.json
 ```
+
+## Other documentation
+
+On "documentation" you'll find : 
+- project's postman collection for testing backend routes
+- drawio websocket intercations diagram (during a quiz)
