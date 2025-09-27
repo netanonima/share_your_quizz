@@ -3,7 +3,9 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  OneToMany, OneToOne, JoinColumn,
+  OneToMany,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Quizz } from '../../quizzs/entities/quizz.entity';
 import { Choice } from '../../choices/entities/choice.entity';

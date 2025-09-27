@@ -1,22 +1,27 @@
-import {ForbiddenException, Injectable, NotFoundException, UseFilters} from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+  UseFilters,
+} from '@nestjs/common';
 import * as sharp from 'sharp';
 import { promises as fs } from 'fs';
 import * as ffmpeg from 'fluent-ffmpeg';
 import ffmpegStatic from 'ffmpeg-static';
 import { Readable } from 'stream';
-import {ConfigService} from "@nestjs/config";
-import {MediasExceptionsFilter} from "medias/medias-exceptions.filter";
-import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
-import {Media} from "medias/entities/media.entity";
+import { ConfigService } from '@nestjs/config';
+import { MediasExceptionsFilter } from 'medias/medias-exceptions.filter';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Media } from 'medias/entities/media.entity';
 import { dirname, join } from 'path';
 
 @Injectable()
 export class MediasService {
   constructor(
-      private config: ConfigService,
-      @InjectRepository(Media)
-      private readonly mediaRepository: Repository<Media>
+    private config: ConfigService,
+    @InjectRepository(Media)
+    private readonly mediaRepository: Repository<Media>,
   ) {}
 
   @UseFilters(new MediasExceptionsFilter())
@@ -26,13 +31,13 @@ export class MediasService {
 
     try {
       const resizedImageBuffer = await sharp(imageBuffer)
-          .resize({
-            width: this.config.get('MAX_WIDTH'),
-            height: this.config.get('MAX_HEIGHT'),
-            fit: sharp.fit.inside,
-            withoutEnlargement: true
-          })
-          .toBuffer();
+        .resize({
+          width: this.config.get('MAX_WIDTH'),
+          height: this.config.get('MAX_HEIGHT'),
+          fit: sharp.fit.inside,
+          withoutEnlargement: true,
+        })
+        .toBuffer();
       return resizedImageBuffer;
     } catch (error) {
       throw new Error(`An error occurred: ${error.message}`);
@@ -40,7 +45,11 @@ export class MediasService {
   }
 
   @UseFilters(new MediasExceptionsFilter())
-  async eraseFile(filePath: string, filename: string, extension: string): Promise<void> {
+  async eraseFile(
+    filePath: string,
+    filename: string,
+    extension: string,
+  ): Promise<void> {
     try {
       const fullPath = `${filePath}${filename}.${extension}`;
       await fs.unlink(fullPath);
@@ -63,7 +72,11 @@ export class MediasService {
   }
 
   @UseFilters(new MediasExceptionsFilter())
-  async writeBufferToFile(buffer: Buffer, filePath: string, filenameAndExtension: string): Promise<void> {
+  async writeBufferToFile(
+    buffer: Buffer,
+    filePath: string,
+    filenameAndExtension: string,
+  ): Promise<void> {
     const fullPath = filePath + filenameAndExtension;
     console.log('writeBufferToFile');
     try {
@@ -79,24 +92,30 @@ export class MediasService {
     return new Promise((resolve, reject) => {
       ffmpeg.setFfmpegPath(this.config.get('FFMPEG_PATH'));
       ffmpeg(currentAudioFilePath)
-          .output(newAudioFilePath)
-          .on('end', () => {
-            require('fs').unlink(currentAudioFilePath, (err) => {
-              if (err) reject(err);
-              else resolve();
-            });
-          })
-          .on('error', (err) => {
-            reject(err);
-          })
-          .run();
+        .output(newAudioFilePath)
+        .on('end', () => {
+          require('fs').unlink(currentAudioFilePath, (err) => {
+            if (err) reject(err);
+            else resolve();
+          });
+        })
+        .on('error', (err) => {
+          reject(err);
+        })
+        .run();
     });
   }
 
   formatDuration(durationInSeconds: number): string {
-    const hours = Math.floor(durationInSeconds / 3600).toString().padStart(2, '0');
-    const minutes = Math.floor((durationInSeconds % 3600) / 60).toString().padStart(2, '0');
-    const seconds = Math.floor(durationInSeconds % 60).toString().padStart(2, '0');
+    const hours = Math.floor(durationInSeconds / 3600)
+      .toString()
+      .padStart(2, '0');
+    const minutes = Math.floor((durationInSeconds % 3600) / 60)
+      .toString()
+      .padStart(2, '0');
+    const seconds = Math.floor(durationInSeconds % 60)
+      .toString()
+      .padStart(2, '0');
     return `${hours}:${minutes}:${seconds}`;
   }
 
@@ -130,8 +149,6 @@ export class MediasService {
     }
   }
 
-
-
   @UseFilters(new MediasExceptionsFilter())
   async getVideoDuration(videoBuffer: Buffer): Promise<string> {
     const videoStream = new Readable();
@@ -140,18 +157,23 @@ export class MediasService {
 
     return new Promise((resolve, reject) => {
       ffmpeg.setFfmpegPath(this.config.get('FFMPEG_PATH'));
-      ffmpeg(videoStream)
-          .ffprobe((err, data) => {
-            if (err) {
-              reject(err);
-            } else {
-              const durationSeconds = data.format.duration;
-              const hours = Math.floor(durationSeconds / 3600).toString().padStart(2, '0');
-              const minutes = Math.floor((durationSeconds % 3600) / 60).toString().padStart(2, '0');
-              const seconds = Math.floor(durationSeconds % 60).toString().padStart(2, '0');
-              resolve(`${hours}:${minutes}:${seconds}`);
-            }
-          });
+      ffmpeg(videoStream).ffprobe((err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          const durationSeconds = data.format.duration;
+          const hours = Math.floor(durationSeconds / 3600)
+            .toString()
+            .padStart(2, '0');
+          const minutes = Math.floor((durationSeconds % 3600) / 60)
+            .toString()
+            .padStart(2, '0');
+          const seconds = Math.floor(durationSeconds % 60)
+            .toString()
+            .padStart(2, '0');
+          resolve(`${hours}:${minutes}:${seconds}`);
+        }
+      });
     });
   }
 
@@ -163,5 +185,4 @@ export class MediasService {
       throw new Error(`Impossible de lire le fichier : ${err}`);
     }
   }
-
 }

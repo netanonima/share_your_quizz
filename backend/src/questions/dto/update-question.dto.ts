@@ -1,13 +1,13 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateQuestionDto } from './create-question.dto';
-import {IsOptional, IsString} from "class-validator";
+import { IsOptional, IsString } from 'class-validator';
 
 export class UpdateQuestionDto extends PartialType(CreateQuestionDto) {
-    @IsOptional()
-    @IsString()
-    readonly media: string;
+  @IsOptional()
+  @IsString()
+  readonly media: string;
 
-    @IsOptional()
-    @IsString()
-    readonly mediaName: string;
+  @IsOptional()
+  @IsString()
+  readonly mediaName: string;
 }

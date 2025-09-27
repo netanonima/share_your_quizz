@@ -1,3 +1,3 @@
 export interface IsReadyInterface {
-    sessionId: number;
+  sessionId: number;
 }

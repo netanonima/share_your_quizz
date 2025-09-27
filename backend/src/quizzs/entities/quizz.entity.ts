@@ -23,7 +23,7 @@ export class Quizz {
   @Column()
   created_on: Date;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   modified_on: Date;
 
   @OneToMany(() => Question, (question) => question.quizz, { cascade: true })

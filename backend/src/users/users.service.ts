@@ -13,7 +13,7 @@ import { User } from 'users/entities/user.entity';
 import { MoreThan, Repository } from 'typeorm';
 import { MailService } from 'mail/mail.service';
 import { ForgotPasswordRetrieveDto } from 'users/dto/forgot-password-retrieve.dto';
-import * as moment from "moment";
+import * as moment from 'moment';
 import { ConfigService } from '@nestjs/config';
 import { ConfirmAccountDto } from 'users/dto/confirm-account.dto';
 
@@ -37,21 +37,26 @@ export class UsersService {
       .add(this.config.get('HOURS_FOR_ACCOUNT_CONFIRMATION'), 'hours')
       .toDate();
 
-    if(this.config.get('EMAIL_HOST')=='' || this.config.get('EMAIL_USER')=='' || this.config.get('EMAIL_PASSWORD')=='' || this.config.get('FRONTEND_URL')==''){
-      try{
+    if (
+      this.config.get('EMAIL_HOST') == '' ||
+      this.config.get('EMAIL_USER') == '' ||
+      this.config.get('EMAIL_PASSWORD') == '' ||
+      this.config.get('FRONTEND_URL') == ''
+    ) {
+      try {
         return await this.userRepository.save(user);
       } catch (error) {
         throw new BadRequestException('Failed to create user.');
       }
-    }else{
+    } else {
       try {
         await this.mailService.sendMail(
-            user.email,
-            user.username,
-            user.language,
-            "'Share your quizz' account confirmation",
-            user.confirmation_token,
-            'account-confirmation',
+          user.email,
+          user.username,
+          user.language,
+          "'Share your quizz' account confirmation",
+          user.confirmation_token,
+          'account-confirmation',
         );
 
         return await this.userRepository.save(user);
@@ -141,10 +146,10 @@ export class UsersService {
       );
     }
 
-    if(user.account_confirmed_on === null){
-        throw new NotFoundException(
-            `User with username ${forgotPasswordDto.username} is not confirmed.`,
-        );
+    if (user.account_confirmed_on === null) {
+      throw new NotFoundException(
+        `User with username ${forgotPasswordDto.username} is not confirmed.`,
+      );
     }
 
     user.password = await this.hashPassword(forgotPasswordDto.password);

@@ -1,4 +1,4 @@
 export interface AnswerInterface {
-    sessionId: number;
-    choiceId: number;
+  sessionId: number;
+  choiceId: number;
 }

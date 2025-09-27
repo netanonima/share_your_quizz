@@ -1,4 +1,4 @@
 export interface JoinInterface {
-    sessionId: number;
-    username: string;
+  sessionId: number;
+  username: string;
 }

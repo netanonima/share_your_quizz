@@ -1,3 +1,3 @@
-export interface StopQuestionInterface{
-    sessionId: number;
+export interface StopQuestionInterface {
+  sessionId: number;
 }

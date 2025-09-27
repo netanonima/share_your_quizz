@@ -1,3 +1,3 @@
 export interface AdminJoinInterface {
-    sessionId: number;
+  sessionId: number;
 }

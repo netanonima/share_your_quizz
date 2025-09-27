@@ -34,7 +34,7 @@ import { MailService } from 'mail/mail.service';
         },
       }),
       inject: [ConfigService],
-    })
+    }),
   ],
   controllers: [UsersController],
   providers: [UsersService, MailService],

@@ -1,32 +1,39 @@
-import {ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {Repository} from 'typeorm';
-import {CreateQuizzDto} from './dto/create-quizz.dto';
-import {UpdateQuizzDto} from './dto/update-quizz.dto';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateQuizzDto } from './dto/create-quizz.dto';
+import { UpdateQuizzDto } from './dto/update-quizz.dto';
 
-import {Quizz} from './entities/quizz.entity';
-import {Question} from "questions/entities/question.entity";
-import {Choice} from "choices/entities/choice.entity";
-import {Media} from "medias/entities/media.entity";
-import {User} from "users/entities/user.entity";
-import {Session} from "sessions/entities/session.entity";
-import moment from "moment";
+import { Quizz } from './entities/quizz.entity';
+import { Question } from 'questions/entities/question.entity';
+import { Choice } from 'choices/entities/choice.entity';
+import { Media } from 'medias/entities/media.entity';
+import { User } from 'users/entities/user.entity';
+import { Session } from 'sessions/entities/session.entity';
+import moment from 'moment';
 
 @Injectable()
 export class QuizzsService {
   constructor(
-      @InjectRepository(Quizz)
-      private quizzRepository: Repository<Quizz>,
-      @InjectRepository(Question)
-      private questionRepository: Repository<Question>,
-      @InjectRepository(Choice)
-      private choiceRepository: Repository<Choice>,
-      @InjectRepository(Media)
-      private mediaRepository: Repository<Media>,
-      @InjectRepository(Session)
-      private sessionRepository: Repository<Session>,
+    @InjectRepository(Quizz)
+    private quizzRepository: Repository<Quizz>,
+    @InjectRepository(Question)
+    private questionRepository: Repository<Question>,
+    @InjectRepository(Choice)
+    private choiceRepository: Repository<Choice>,
+    @InjectRepository(Media)
+    private mediaRepository: Repository<Media>,
+    @InjectRepository(Session)
+    private sessionRepository: Repository<Session>,
   ) {}
-  async create(currentUser: User, createQuizzDto: CreateQuizzDto): Promise<Quizz> {
+  async create(
+    currentUser: User,
+    createQuizzDto: CreateQuizzDto,
+  ): Promise<Quizz> {
     const quizz = new Quizz();
     quizz.quizz = createQuizzDto.quizz;
     quizz.user = currentUser;
@@ -36,11 +43,11 @@ export class QuizzsService {
   }
 
   async findOne(id: number): Promise<Quizz> {
-    const thisQuizz = await this.quizzRepository.findOne( {
+    const thisQuizz = await this.quizzRepository.findOne({
       where: { id: id },
       relations: ['questions', 'questions.choices', 'questions.media'],
     });
-    if(!thisQuizz) {
+    if (!thisQuizz) {
       throw new NotFoundException(`Quizz with ID ${id} not found`);
     }
     return thisQuizz;
@@ -49,26 +56,37 @@ export class QuizzsService {
   async findAll(user: User): Promise<Quizz[]> {
     return this.quizzRepository.find({
       where: { user: { id: user.id } },
-      select: ['id', 'quizz', 'created_on', 'modified_on', 'param_shuffle_questions', 'param_shuffle_choices'],
+      select: [
+        'id',
+        'quizz',
+        'created_on',
+        'modified_on',
+        'param_shuffle_questions',
+        'param_shuffle_choices',
+      ],
     });
   }
 
-  async update(id: number, updateQuizzDto: UpdateQuizzDto, currentUser: User): Promise<Quizz> {
+  async update(
+    id: number,
+    updateQuizzDto: UpdateQuizzDto,
+    currentUser: User,
+  ): Promise<Quizz> {
     const quizz = await this.quizzRepository.findOne({
-        where: { id: id , user: { id: currentUser.id } },
+      where: { id: id, user: { id: currentUser.id } },
     });
-    if(!quizz) {
-        throw new NotFoundException(`Quizz not found`);
+    if (!quizz) {
+      throw new NotFoundException(`Quizz not found`);
     }
-    if(updateQuizzDto.quizz !== undefined){
+    if (updateQuizzDto.quizz !== undefined) {
       quizz.quizz = updateQuizzDto.quizz;
     }
     quizz.modified_on = new Date();
-    if(updateQuizzDto.param_shuffle_questions !== undefined){
-        quizz.param_shuffle_questions = updateQuizzDto.param_shuffle_questions;
+    if (updateQuizzDto.param_shuffle_questions !== undefined) {
+      quizz.param_shuffle_questions = updateQuizzDto.param_shuffle_questions;
     }
-    if(updateQuizzDto.param_shuffle_choices !== undefined){
-        quizz.param_shuffle_choices = updateQuizzDto.param_shuffle_choices;
+    if (updateQuizzDto.param_shuffle_choices !== undefined) {
+      quizz.param_shuffle_choices = updateQuizzDto.param_shuffle_choices;
     }
     return await this.quizzRepository.save(quizz);
   }
@@ -84,7 +102,9 @@ export class QuizzsService {
     }
 
     if (quizz.user.id !== currentUser.id) {
-      throw new ForbiddenException('You do not have permission to delete this quizz.');
+      throw new ForbiddenException(
+        'You do not have permission to delete this quizz.',
+      );
     }
 
     const mediaIdsToRemove = [];
@@ -107,14 +127,13 @@ export class QuizzsService {
     }
 
     const sessions = await this.sessionRepository.find({
-        where: { quizz: { id: quizz.id } },
+      where: { quizz: { id: quizz.id } },
     });
 
     if (sessions && sessions.length > 0) {
-        await this.sessionRepository.remove(sessions);
+      await this.sessionRepository.remove(sessions);
     }
 
     await this.quizzRepository.remove(quizz);
   }
-
 }

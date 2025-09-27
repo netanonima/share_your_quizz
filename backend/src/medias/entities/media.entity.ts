@@ -1,4 +1,10 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne} from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToOne,
+} from 'typeorm';
 import { Question } from '../../questions/entities/question.entity';
 
 @Entity()

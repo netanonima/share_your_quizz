@@ -1,4 +1,4 @@
 export interface ParamsInterface {
-    shuffle_questions: boolean;
-    shuffle_choices: boolean;
+  shuffle_questions: boolean;
+  shuffle_choices: boolean;
 }

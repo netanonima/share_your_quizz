@@ -1,5 +1,5 @@
-export interface AnswerDistributionInterface{
-    id: number;
-    value: number;
-    isCorrect: boolean;
+export interface AnswerDistributionInterface {
+  id: number;
+  value: number;
+  isCorrect: boolean;
 }

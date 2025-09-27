@@ -1,3 +1,3 @@
 export interface GameLaunchInterface {
-    sessionId: number;
+  sessionId: number;
 }

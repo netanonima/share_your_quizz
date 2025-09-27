@@ -6,14 +6,16 @@ import {
   Put,
   Param,
   Delete,
-  UseGuards, UseInterceptors, ClassSerializerInterceptor,
+  UseGuards,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
-import {GetUser} from "decorators/user.decorator";
-import {User} from "users/entities/user.entity";
+import { GetUser } from 'decorators/user.decorator';
+import { User } from 'users/entities/user.entity';
 
 @Controller('questions')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -23,19 +25,16 @@ export class QuestionsController {
   @UseGuards(JwtAuthGuard)
   @Post(':quizzId')
   create(
-      @Param('quizzId') quizzId: number,
-      @Body() createQuestionDto: CreateQuestionDto,
-      @GetUser() user: User
+    @Param('quizzId') quizzId: number,
+    @Body() createQuestionDto: CreateQuestionDto,
+    @GetUser() user: User,
   ) {
     return this.questionsService.create(quizzId, createQuestionDto, user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('quizz/:quizzId')
-  findAllByQuizz(
-      @Param('quizzId') quizzId: number,
-      @GetUser() user: User
-  ) {
+  findAllByQuizz(@Param('quizzId') quizzId: number, @GetUser() user: User) {
     return this.questionsService.findAllByQuizz(quizzId, user);
   }
 
@@ -44,26 +43,20 @@ export class QuestionsController {
   update(
     @Param('id') id: string,
     @Body() updateQuestionDto: UpdateQuestionDto,
-    @GetUser() user: User
+    @GetUser() user: User,
   ) {
     return this.questionsService.update(+id, updateQuestionDto, user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(
-      @Param('id') id: string,
-      @GetUser() user: User
-  ) {
+  remove(@Param('id') id: string, @GetUser() user: User) {
     return this.questionsService.remove(+id, user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('media/:id')
-  removeMedia(
-      @Param('id') id: string,
-      @GetUser() user: User
-  ) {
+  removeMedia(@Param('id') id: string, @GetUser() user: User) {
     return this.questionsService.removeMedia(+id, user);
   }
 }

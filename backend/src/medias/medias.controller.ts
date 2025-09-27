@@ -1,12 +1,15 @@
 import {
   Controller,
   UseInterceptors,
-  ClassSerializerInterceptor, UseGuards, Delete, Param,
+  ClassSerializerInterceptor,
+  UseGuards,
+  Delete,
+  Param,
 } from '@nestjs/common';
 import { MediasService } from './medias.service';
-import {JwtAuthGuard} from "auth/guards/jwt-auth.guard";
-import {GetUser} from "decorators/user.decorator";
-import {User} from "users/entities/user.entity";
+import { JwtAuthGuard } from 'auth/guards/jwt-auth.guard';
+import { GetUser } from 'decorators/user.decorator';
+import { User } from 'users/entities/user.entity';
 
 @Controller('medias')
 @UseInterceptors(ClassSerializerInterceptor)

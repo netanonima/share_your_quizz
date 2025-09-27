@@ -1,37 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSessionDto } from './dto/create-session.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
-import { Session } from "sessions/entities/session.entity";
-import {InjectRepository} from "@nestjs/typeorm";
-import {Quizz} from "quizzs/entities/quizz.entity";
-import {Repository} from "typeorm";
+import { Session } from 'sessions/entities/session.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Quizz } from 'quizzs/entities/quizz.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class SessionsService {
   constructor(
-      @InjectRepository(Quizz)
-      private quizzRepository: Repository<Quizz>,
-      @InjectRepository(Session)
-      private sessionRepository: Repository<Session>,
+    @InjectRepository(Quizz)
+    private quizzRepository: Repository<Quizz>,
+    @InjectRepository(Session)
+    private sessionRepository: Repository<Session>,
   ) {}
   async create(createSessionDto: CreateSessionDto) {
     const session = new Session();
     const currentQuizz = await this.quizzRepository.findOne({
-      where: { id: createSessionDto.quizzId }
+      where: { id: createSessionDto.quizzId },
     });
-    if(!currentQuizz) {
+    if (!currentQuizz) {
       throw new Error('Quizz not found');
     }
     session.quizz = currentQuizz;
     session.started_on = new Date();
 
     const oldSessions = await this.sessionRepository.find({
-        where: { quizz: currentQuizz, finished_on: null }
+      where: { quizz: currentQuizz, finished_on: null },
     });
-    if(oldSessions.length > 0) {
-        for (const oldSession of oldSessions) {
-          await this.sessionRepository.delete(oldSession.id);
-        }
+    if (oldSessions.length > 0) {
+      for (const oldSession of oldSessions) {
+        await this.sessionRepository.delete(oldSession.id);
+      }
     }
 
     return await this.sessionRepository.save(session);
@@ -43,10 +43,10 @@ export class SessionsService {
 
   async findOne(id: number) {
     const thisSession = await this.sessionRepository.findOne({
-        where: { id: id },
-        relations: ['quizz']
+      where: { id: id },
+      relations: ['quizz'],
     });
-    if(!thisSession) {
+    if (!thisSession) {
       throw new Error('Session not found');
     }
     return thisSession;
@@ -54,13 +54,13 @@ export class SessionsService {
 
   async update(id: number, updateSessionDto: UpdateSessionDto) {
     const thisSession = await this.sessionRepository.findOne({
-        where: { id: id }
+      where: { id: id },
     });
-    if(!thisSession) {
+    if (!thisSession) {
       throw new Error('Session not found');
     }
-    if(!updateSessionDto.winner_username || !updateSessionDto.winner_points) {
-        throw new Error('Winner username or winner points not found');
+    if (!updateSessionDto.winner_username || !updateSessionDto.winner_points) {
+      throw new Error('Winner username or winner points not found');
     }
     thisSession.winner_username = updateSessionDto.winner_username;
     thisSession.winner_points = updateSessionDto.winner_points;
@@ -70,12 +70,11 @@ export class SessionsService {
 
   async remove(id: number) {
     const thisSession = await this.sessionRepository.findOne({
-        where: { id: id }
+      where: { id: id },
     });
-    if(!thisSession) {
+    if (!thisSession) {
       throw new Error('Session not found');
     }
     return this.sessionRepository.delete(id);
   }
-
 }
