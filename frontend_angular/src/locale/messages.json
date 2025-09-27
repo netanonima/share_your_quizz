@@ -19,6 +19,7 @@
     "requiredError": "You must enter a value",
     "minLengthError": "Minimum length is ",
     "maxLengthError": "Maximum length is ",
+    "patternError": "Only letters (without accents), numbers, underscores and hyphens are allowed",
     "accountConfirmed": "Account confirmed with success. Please login",
     "accountConfirmationFailed": "Account confirmation failed",
     "4909799888835048096": "Welcome to Share your Quiz App",

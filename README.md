@@ -106,6 +106,13 @@ If you like this project and wish to say thanks - I'm always open to a coffee!  
   ```bash
     ng serve
   ```
+  - For development in a specific language
+  ```
+    ng serve --configuration=fr
+    ng serve --configuration=de
+    ng serve --configuration=it
+    ng serve --configuration=es
+  ```
   - For production
   ```bash
     ng build --localize

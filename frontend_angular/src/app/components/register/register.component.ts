@@ -25,7 +25,7 @@ import {Router} from "@angular/router";
 })
 export class RegisterComponent {
   registerForm: FormGroup = new FormGroup({
-    username: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
+    username: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(20), Validators.pattern('^[a-zA-Z0-9_-]+$')]),
     email: new FormControl('', [Validators.required, Validators.email, Validators.minLength(10), Validators.maxLength(70)]),
     passwords: new FormGroup({
       password: new FormControl('', [Validators.required, Validators.minLength(8)]),
@@ -60,6 +60,10 @@ export class RegisterComponent {
 
       if(control.hasError('maxlength')) {
         return $localize`:@@maxLengthError:Maximum length is ` + control.getError('maxlength').requiredLength;
+      }
+
+      if (control.hasError('pattern')) {
+        return $localize`:@@patternError:Only letters (without accents), numbers, underscores and dashes are allowed`;
       }
 
       return control.hasError('email') ? $localize`:@@hasErrorError:Not a valid email` : '';

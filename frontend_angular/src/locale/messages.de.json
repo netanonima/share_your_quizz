@@ -13,6 +13,7 @@
     "requiredError": "Sie müssen einen Wert eingeben",
     "minLengthError": "Mindestlänge ist ",
     "maxLengthError": "Maximale Länge ist ",
+    "patternError": "Nur Buchstaben (ohne Akzente), Zahlen, Unterstriche und Bindestriche sind erlaubt",
     "4909799888835048096": "Willkommen bei der Share your Quiz App",
     "2400877691133061111": "Bitte melden Sie sich an, um Ihre Quiz zu verwalten.",
     "4634602891694221600": "Wenn Sie an einem Quiz teilnehmen möchten, folgen Sie dem Link, den der Quizbesitzer geteilt hat.",

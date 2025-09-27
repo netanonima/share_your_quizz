@@ -83,6 +83,22 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "fr": {
+              "localize": ["fr"],
+              "baseHref": "/fr/"
+            },
+            "de": {
+              "localize": ["de"],
+              "baseHref": "/de/"
+            },
+            "it": {
+              "localize": ["it"],
+              "baseHref": "/it/"
+            },
+            "es": {
+              "localize": ["es"],
+              "baseHref": "/es/"
             }
           },
           "defaultConfiguration": "production"
@@ -95,7 +111,11 @@
             },
             "development": {
               "browserTarget": "frontend:build:development"
-            }
+            },
+            "fr": { "browserTarget": "frontend:build:fr" },
+            "de": { "browserTarget": "frontend:build:de" },
+            "it": { "browserTarget": "frontend:build:it" },
+            "es": { "browserTarget": "frontend:build:es" }
           },
           "defaultConfiguration": "development"
         },

@@ -13,6 +13,7 @@
     "requiredError": "Debes introducir un valor",
     "minLengthError": "La longitud mínima es ",
     "maxLengthError": "La longitud máxima es ",
+    "patternError": "Solo se permiten letras (sin acentos), números, guiones bajos y guiones",
     "4909799888835048096": "Bienvenido a la aplicación Share your Quiz",
     "2400877691133061111": "Por favor, inicia sesión para empezar a gestionar tus cuestionarios.",
     "4634602891694221600": "Si deseas participar en un cuestionario, sigue el enlace compartido por el propietario del cuestionario.",
