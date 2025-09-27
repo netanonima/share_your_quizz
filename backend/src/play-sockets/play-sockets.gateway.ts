@@ -58,15 +58,16 @@ export class PlaySocketsGateway {
     @ConnectedSocket() client: Socket,
   ): void {
     console.log('admin-join received');
-    const { sessionId } = data;
+    const { sessionId, username } = data;
     this.sessions.forEach((session, sessionId) => {
       if (session.admin === '') {
         this.sessions.delete(sessionId);
+        // todo: seems not working
       }
     });
     if (!this.sessions.has(sessionId)) {
       this.sessions.set(sessionId, {
-        admin: '',
+        admin: client.id,
         opened: false,
         users: [],
         oldUsers: [],
@@ -79,16 +80,24 @@ export class PlaySocketsGateway {
       });
     }
     const session = this.sessions.get(sessionId);
-    session.admin = client.id;
     session.opened = true;
     console.log('Session state:', this.sessions);
 
     if (session.admin && session.admin != '') {
-      client.emit('admin-join-response', true);
+      if (session.admin !== client.id) {
+        //xoxo xxxx
+        // is administrator but not to this session
+        client.emit('logout-admin', true);
+        return;
+      } else {
+        // is the session administrator
+        session.users.forEach((user) => {
+          client.to(user.id).emit('is-ready-response', true);
+        });
+        client.emit('admin-join-response', 'true', username);
+        return;
+      }
     }
-    session.users.forEach((user) => {
-      client.to(user.id).emit('is-ready-response', true);
-    });
   }
 
   @SubscribeMessage('is-ready')

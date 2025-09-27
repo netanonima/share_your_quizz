@@ -64,6 +64,7 @@ export class WebSocketService {
 
     // admin
       this.socket.on('admin-join-response',(message: string)=>this.handleAdminJoinResponse(message));
+      this.socket.on('logout-admin',(message: boolean)=>this.handleLogoutAdmin(message));
       this.socket.on('answer-received',(message: string)=>this.handleAnswerReceived(message));
       this.socket.on('question-answers',(message: ResultsInterface)=>this.handleQuestionAnswers(message));
       this.socket.on('quizz-results',(message: ResultsInterface)=>this.handleQuizzResults(message));
@@ -126,12 +127,16 @@ export class WebSocketService {
     this.isReadySubject.next(message);
 
     // reconnect
+    // todo: do it only if connection was lost (not at the first connection)
     const localStorageDataString = localStorage.getItem('parties');
     const localStorageData = localStorageDataString ? JSON.parse(localStorageDataString) : [];
     if(localStorageData.sessionId && localStorageData.user_id){
+      console.warn('yes');
       const lastSessionId = localStorageData.sessionId;
       const lastUserId = localStorageData.user_id;
       this.reconnect(lastSessionId, lastUserId);
+    }else{
+      console.warn('no');
     }
   };
 
@@ -149,7 +154,18 @@ export class WebSocketService {
       isOk = true;
     }
     this.joinedSubject.next(isOk);
-    this.gameLaunchedSubject.next(true);
+
+    const gameIsLaunched = this.gameLaunchedSubject.value;
+    if(gameIsLaunched){
+      console.log('isOK');
+      this.gameLaunchedSubject.next(true);
+    }else{
+      console.log('isNotOkay');
+      this.gameLaunchedSubject.next(false);
+      // erase local storage then refresh
+      localStorage.removeItem('parties');
+      window.location.reload();
+    }
   };
 
   private handleLocalStorageDataResponse(message: LocalStorageDataInterface): void{
@@ -224,8 +240,30 @@ export class WebSocketService {
 
   private handleAdminJoinResponse(message: string): void{
     console.log('admin-join-response');
-    this.readyToInviteSubject.next(true);
+    if(message === 'true'){
+      this.readyToInviteSubject.next(true);
+    }else{
+      console.log('username is');
+      console.log(this.authService.getUsername());
+      // xxxx xoxo
+      console.warn('no');
+      this.socket?.emit('join', {
+        sessionId: this.sessionId,
+        username: this.authService.getUsername()
+      });
+    }
   };
+
+  private handleLogoutAdmin(message: boolean): void{
+    console.log('logout-admin');
+    if(message){
+      localStorage.removeItem('api_token');
+      localStorage.removeItem('expires_at');
+      localStorage.removeItem('parties');
+      localStorage.removeItem('username');
+      window.location.reload();
+    }
+  }
 
   private handleAnswerReceived(message: string): void{
     console.log('answer-received');
@@ -378,6 +416,12 @@ export class WebSocketService {
   // admin emitters
   adminjoin(): void {
     if(this.authService.isAuthenticated()) {
+      console.log('******************************');
+      console.log('******************************');
+      console.log('******************************');
+      console.log('******************************');
+      console.log('******************************');
+      console.warn(this.authService.getUsername());
       this.socket?.emit('admin-join', {
         sessionId: this.sessionId
       });

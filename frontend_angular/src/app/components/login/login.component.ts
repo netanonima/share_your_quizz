@@ -75,14 +75,25 @@ export class LoginComponent {
         (response: LoginResponse) => {
           console.log('Registration successful', response);
           localStorage['api_token'] = response.access_token;
-          const now = moment().toISOString();
-          const expiresAt = moment().add(3, 'hours').toISOString();
-          localStorage['expires_at'] = expiresAt;
-          this.snackBar.open($localize`:@@loginSuccessful:Login successful`, $localize`:@@closeSnackbar:Close`, {
-            panelClass: ['snackbar-success'],
-            duration: 3000
-          });
-          this.router.navigate(['/']);
+
+          const tokenParts = response.access_token.split('.');
+          if (tokenParts.length === 3) {
+            const payload = JSON.parse(atob(tokenParts[1]));
+            localStorage['username'] = payload.username;
+            localStorage['expires_at'] = moment.unix(payload.exp).toISOString();
+            this.snackBar.open($localize`:@@loginSuccessful:Login successful`, $localize`:@@closeSnackbar:Close`, {
+              panelClass: ['snackbar-success'],
+              duration: 3000
+            });
+            this.router.navigate(['/']);
+          }else{
+            console.error('Invalid token format');
+            this.snackBar.open($localize`:@@loginFailed:Login failed`, $localize`:@@closeSnackbar:Close`, {
+              panelClass: ['snackbar-warning'],
+              duration: 3000
+            })
+            this.router.navigate(['/']);
+          }
         },
         (error: HttpErrorResponse) => {
           console.error('Registration failed', error);
