@@ -82,6 +82,8 @@ If you like this project and wish to say thanks - I'm always open to a coffee!  
     It's usually `C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin`
 - Change your JWT secret by a strong one in `backend/src/auth/constants.ts` copying `backend/src/auth/constants.ts-lock` to `backend/src/auth/constants.ts`
 - Copy 'backend/.env-lock' to 'backend/.env' and set your values
+
+  If you want bypassing cors checks set ```DEVELOPMENT=1```
 - Copy 'backend/src/app.module.ts-lock' to 'backend/src/app.module.ts' and set your values
 - Copy 'frontend_angular/src/app/constants.ts-lock' to 'frontend_angular/src/app/constants.ts' and set your values
 - Launch the backend

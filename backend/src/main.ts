@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as bodyParser from 'body-parser';
 import { ValidationPipe } from '@nestjs/common';
-import {ConfigService} from "@nestjs/config";
+import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs';
 
 async function bootstrap() {
@@ -17,18 +17,21 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   const configService = new ConfigService();
 
-  app.enableCors({
-    allowedHeaders: '*',
-    origin: (origin, callback) => {
-      const allowedOrigin = configService.get('FRONTEND_URL');
-      if (!allowedOrigin || origin === allowedOrigin) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-  });
+  if (configService.get('DEVELOPMENT') !== '1') {
+    app.enableCors({
+      allowedHeaders: '*',
+      origin: (origin, callback) => {
+        const allowedOrigin = configService.get('FRONTEND_URL');
+        if (!allowedOrigin || origin === allowedOrigin) {
+          callback(null, true);
+        } else {
+          callback(new Error('Not allowed by CORS'));
+        }
+      },
+      credentials: true,
+    });
+  }
+
   await app.listen(configService.get('BACKEND_PORT'));
 }
 bootstrap();
