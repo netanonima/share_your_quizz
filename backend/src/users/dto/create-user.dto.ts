@@ -4,12 +4,17 @@ import {
   MinLength,
   MaxLength,
   IsOptional,
+  Matches,
 } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
   @MinLength(4)
   @MaxLength(24)
+  @Matches(/^[A-Za-z0-9_-]+$/, {
+    message:
+      'Username: only letters (no accents), numbers, underscores (_) and dashes (-) are allowed',
+  })
   username: string;
 
   @IsString()
