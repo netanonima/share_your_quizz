@@ -39,8 +39,7 @@ export class UsersService {
 
     if (
       this.config.get('EMAIL_HOST') == '' ||
-      this.config.get('EMAIL_USER') == '' ||
-      this.config.get('EMAIL_PASSWORD') == '' ||
+      this.config.get('EMAIL_PORT') == '' ||
       this.config.get('FRONTEND_URL') == ''
     ) {
       try {
